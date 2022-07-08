@@ -36,8 +36,14 @@ client.connect(() => {
  * API END POINTS
  */
 
-router.get("/getOdds", function(req, res) {
-  res.send(getOdds(req.query.country1, req.query.country2))
+router.get("/getOdds", async function(req, res) {
+  const data = await getOdds(req.query.country1, req.query.country2)
+  res.send(data)
+})
+
+router.get("/getScore", async function(req, res) {
+  const data = await getScore(req.query.country1, req.query.country2)
+  res.send(data)
 })
 
 router.get("/getUser", async (req, res) => {
@@ -46,7 +52,12 @@ router.get("/getUser", async (req, res) => {
 })
 
 router.post("/addUser", async (req, res) => {
-  await addUser(req.query.user)
+  await addUser(req.body)
+  res.status(201).send()
+})
+
+router.post("/updateUser", async (req, res) => {
+  await updateUser(req.body)
   res.status(201).send()
 })
 
@@ -84,20 +95,24 @@ function getCoins(user) {
 }
 
 
-function getOdds(country1, country2) {
-  axios.get("https://api.the-odds-api.com/v4/sports/upcoming/odds/?sport=soccer_fifa_world_cup&regions=eu&apiKey=88cb70d10ff95bda24c86159521a6590")
-    .then(res => {
-      console.log(findCountries(res.data, country1, country2))
-    })
-  return {oui: "non"}
+async function getOdds(country1, country2) {
+  const response = await axios.get("https://api.the-odds-api.com/v4/sports/upcoming/odds/?sport=soccer_fifa_world_cup&regions=eu&apiKey="+process.env.ODDS_API_KEY)
+  const match = findCountries(response.data, country1, country2)
+  return match.bookmakers.filter(bookmaker => bookmaker.key === 'unibet')[0].markets
+}
+
+async function getScore(country1, country2) {
+  const response = await axios.get("https://api.the-odds-api.com/v4/sports/soccer_fifa_world_cup/scores/?apiKey="+process.env.ODDS_API_KEY)
+  return findCountries(response.data, country1, country2)
 }
 
 function findCountries(data, country1, country2) {
   for(const game of data) {
     if(game.home_team === country1 && game.away_team === country2) {
-      return game.bookmakers.filter(bookmaker => bookmaker.key === 'unibet')[0].markets
+      return game
     }
   }
+  return null
 }
 
 module.exports = router;
