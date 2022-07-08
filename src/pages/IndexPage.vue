@@ -20,8 +20,9 @@ export default defineComponent({
   },
   methods : {
     getData() {
-      api.get('/getOdds', {params: {country1: "Senegal", country2: "Netherlands"}}).then( response => {
-        this.data = response.data.data
+      api.get('/getUser', {params: {username: "Eloi"}}).then( response => {
+        console.log(response);
+        this.data = response.data
       })
     }
   }
