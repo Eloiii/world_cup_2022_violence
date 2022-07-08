@@ -29,3 +29,5 @@ yarn-error.log*
 *.sln
 
 .vscode/
+
+.env
