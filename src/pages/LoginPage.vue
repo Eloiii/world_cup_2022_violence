@@ -1,73 +1,44 @@
 <template>
   <q-page class="flex flex-center bg-grey-4">
-    <q-card class="q-pa-lg card">
-      <q-card-section>
-        <div class="text-h5">
-          Créer un compte
-        </div>
-      </q-card-section>
+    <Transition name="slide-up">
+      <login-card v-if="loginView" @createAccount="loginView = false">
 
-      <q-form @submit="submit">
-      <q-card-section>
-          <q-input v-model="name" label="Nom" outlined class="q-mb-xs"
-                   :rules="[val => val.length <= 10 || '10 caractères max', val => !!val || 'Champ requis']" />
-          <q-input type="password" v-model="pass" label="Mot de passe" outlined class="q-mb-xs"
-                   :rules="[val => !!val || 'Champ requis']" />
-          <q-input type="password" v-model="passConfirmation" label="Confirmation mot de passe" outlined class="q-mb-xs"
-                   :rules="[val => !!val || 'Champ requis']" />
-          <q-input type="url" v-model="ppLink" label="Lien image de profil" outlined/>
+      </login-card>
+      <registration-card v-else @goBack="loginView = true">
 
-      </q-card-section>
-
-      <q-separator />
-
-      <q-card-section>
-        <div class="text-h6 q-mb-md">
-          Prévisualisation
-        </div>
-
-        <q-avatar v-if="ppLink?.length === 0 || ppLink === null" color="primary text-white" class="q-mr-sm">
-          {{ name?.substring(0, 2) }}
-        </q-avatar>
-        <q-avatar v-else class="q-mr-sm">
-          <img :src="ppLink" alt="user profile picture">
-        </q-avatar>
-
-        <span class="text-body1"> {{ name }} </span>
-
-      </q-card-section>
-      <q-card-actions>
-        <q-btn flat color="primary" type="submit">
-          Valider
-        </q-btn>
-      </q-card-actions>
-      </q-form>
-    </q-card>
+      </registration-card>
+    </Transition>
   </q-page>
 </template>
 
 <script>
+
+import LoginCard from "./LoginCard.vue";
+import RegistrationCard from "./RegistrationCard.vue";
+
 export default {
   name: "LoginPage",
+  components: { LoginCard, RegistrationCard },
   data: () => {
     return {
-      ppLink: "",
-      name: "",
-      pass: "",
-      passConfirmation: ""
+      loginView: true
     };
-  },
-  methods: {
-    submit() {
-      console.log('submited');
-    }
   }
 };
 </script>
 
 <style scoped>
-.card {
-  width: 100%;
-  max-width: 340px;
+.slide-up-enter-active{
+  transition: all 0.3s ease-out;
+}
+
+.slide-up-enter-from {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.slide-up-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
 }
 </style>
