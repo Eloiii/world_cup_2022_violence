@@ -1,8 +1,8 @@
 {
-  "name": "test-quasar",
+  "name": "world_cup_2022_violence",
   "version": "0.0.1",
-  "description": "A Quasar Project",
-  "productName": "Quasar App",
+  "description": "Forecasts website for the FIFA Worldcup 2022",
+  "productName": "Violence et le fout",
   "author": "Eloiii <eloi.charra@gmail.com>",
   "private": true,
   "scripts": {

@@ -75,11 +75,7 @@ async function updateUser(user) {
 
 
 async function getUser(username) {
-  let res = await collection_users.find({name: username}).toArray()
-  if(res.length > 1)
-    console.error("Multiple users with same name")
-  else
-    return res[0]
+  return await collection_users.findOne({name: username})
 }
 
 function getStats(user) {
@@ -116,4 +112,3 @@ function findCountries(data, country1, country2) {
 }
 
 module.exports = router;
-

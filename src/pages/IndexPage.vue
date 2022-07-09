@@ -21,7 +21,6 @@ export default defineComponent({
   methods : {
     getData() {
       api.get('/getUser', {params: {username: "Eloi"}}).then( response => {
-        console.log(response);
         this.data = response.data
       })
     }
