@@ -12,7 +12,6 @@
 </template>
 
 <script>
-
 import LoginCard from "./LoginCard.vue";
 import RegistrationCard from "./RegistrationCard.vue";
 

@@ -7,7 +7,6 @@ const axios = require("axios")
 const USER_TEST = {
   name : "Eloi",
   pass: "password",
-  color: "rgba(255,0,0,1)",
   avatar : "https://i.kym-cdn.com/photos/images/newsfeed/001/225/928/a11.jpg",
   score : {
     coins : [

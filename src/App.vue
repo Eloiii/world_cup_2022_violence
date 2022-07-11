@@ -1,5 +1,7 @@
 <template>
-  <router-view />
+  <Transition>
+    <router-view />
+  </Transition>
 </template>
 
 <script>
@@ -19,4 +21,15 @@ export default defineComponent({
 <style>
 @import url('https://rsms.me/inter/inter.css');
 * { font-family: 'Inter', sans-serif; }
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+
 </style>

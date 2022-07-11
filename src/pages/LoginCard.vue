@@ -27,6 +27,10 @@
 </template>
 
 <script>
+import { useQuasar } from "quasar";
+import bcrypt from 'bcryptjs'
+import { api } from '/src/boot/axios'
+
 export default {
   name: "LoginCard",
   data: () => {
@@ -36,9 +40,30 @@ export default {
     };
   },
   methods: {
-    submit() {
-      console.log('login');
+    async submit() {
+      const self = this
+      const user = await api.get('getUser', {params: {username : self.name}})
+      await bcrypt.compare(self.pass, user.data.pass, function (err, res) {
+        if (res) {
+          self.showNotif("Bienvenue bg", "positive")
+          localStorage.setItem('username', user.data.name)
+          self.$router.push('/')
+        } else {
+          self.showNotif("T'existes pas ou mot de passe incorrect", "negative")
+        }
+      });
     }
+  },
+  setup() {
+    const $q = useQuasar();
+    return {
+      showNotif(message, type) {
+        $q.notify({
+          message: message,
+          type: type
+        });
+      }
+    };
   }
 };
 </script>
