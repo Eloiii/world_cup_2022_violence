@@ -35,8 +35,8 @@ client.connect(() => {
  * API END POINTS
  */
 
-router.get("/getOdds", async function(req, res) {
-  const data = await getOdds(req.query.country1, req.query.country2)
+router.get("/getOddsApiData", async function(req, res) {
+  const data = await getOddsApiData()
   res.send(data)
 })
 
@@ -90,10 +90,9 @@ function getCoins(user) {
 }
 
 
-async function getOdds(country1, country2) {
-  const response = await axios.get("https://api.the-odds-api.com/v4/sports/upcoming/odds/?sport=soccer_fifa_world_cup&regions=eu&apiKey="+process.env.ODDS_API_KEY)
-  const match = findCountries(response.data, country1, country2)
-  return match.bookmakers.filter(bookmaker => bookmaker.key === 'unibet')[0].markets
+async function getOddsApiData() {
+  const data = await axios.get("https://api.the-odds-api.com/v4/sports/upcoming/odds/?sport=soccer_fifa_world_cup&regions=eu&apiKey="+process.env.ODDS_API_KEY)
+  return data.data
 }
 
 async function getScore(country1, country2) {
@@ -101,13 +100,5 @@ async function getScore(country1, country2) {
   return findCountries(response.data, country1, country2)
 }
 
-function findCountries(data, country1, country2) {
-  for(const game of data) {
-    if(game.home_team === country1 && game.away_team === country2) {
-      return game
-    }
-  }
-  return null
-}
 
 module.exports = router;

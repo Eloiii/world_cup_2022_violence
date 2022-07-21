@@ -7,6 +7,8 @@
 <script>
 import { defineComponent } from 'vue'
 import { api } from 'boot/axios'
+import { getData, getSchedule } from "src/getOddsApiData";
+
 export default defineComponent({
   name: 'App',
   async mounted() {
@@ -14,7 +16,12 @@ export default defineComponent({
     if(userCheck === null || userCheck === undefined || userCheck?.data?.length === 0) {
       this.$router.push('/login')
     }
-
+    if(sessionStorage.getItem("oddsApiData") === null) {
+      let data = (await getData()).data
+      sessionStorage.setItem("oddsApiData", JSON.stringify(data))
+      data = getSchedule(data)
+      this.nextMatch = this.getNextMatch(data)
+    }
   }
 })
 </script>

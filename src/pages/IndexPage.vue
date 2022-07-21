@@ -2,10 +2,10 @@
   <q-page class="flex justify-center items-start">
     <div class="row justify-evenly">
       <div class="col-md-3 col-12">
-        <MatchResult :title="'Dernier Résultat'" :date="date" :country1="country3" :country2="country4"/>
+        <MatchResult v-if="lastResult" :title="'Dernier Résultat'" :date="lastResult.time" :match="lastResult"/>
       </div>
       <div class="col-md-3 col-12">
-        <MatchResult :title="'Prochain Match'" :date="date" :country1="country1" :country2="country2"/>
+        <MatchResult v-if="nextMatch" :title="'Prochain Match'" :date="nextMatch.time" :match="nextMatch"/>
       </div>
     </div>
   </q-page>
@@ -13,9 +13,8 @@
 
 <script>
 import { defineComponent } from "vue";
-import { api } from "boot/axios";
 import MatchResult from "./MatchResult.vue";
-import { useQuasar } from 'quasar'
+import {getSchedule} from "src/getOddsApiData";
 
 export default defineComponent({
   name: 'IndexPage',
@@ -23,37 +22,31 @@ export default defineComponent({
   data : () => {
     return {
       data : "test",
-      date: new Date(),
-      country1: {
-        name: "Belgique",
-        score: "?"
-      },
-      country2: {
-        name: "Belgique",
-        score: "?"
-      },
-      country3: {
-        name: "Belgique",
-        score: "5"
-      },
-      country4: {
-        name: "Belgique",
-        score: "7"
-      }
+      lastResult : null,
+      nextMatch: null
     }
   },
   methods : {
-    getData() {
-      api.get('/getUser', {params: {username: "Eloi"}}).then( response => {
-        this.data = response.data
-      })
+    getNextMatch(matchs) {
+      const today = new Date()
+      let nextMatch = null
+      for(let match of matchs) {
+        if(match.time < today)
+          continue
+        nextMatch = match
+        break
+      }
+      return nextMatch
     }
+  },
+  mounted() {
+    const oddsApiData = JSON.parse(sessionStorage.getItem("oddsApiData"))
+    const schedule = getSchedule(oddsApiData)
+    this.nextMatch = this.getNextMatch(schedule)
   }
 })
 </script>
 <style scoped lang="scss">
-
-
 .row {
   width: 80%
 }

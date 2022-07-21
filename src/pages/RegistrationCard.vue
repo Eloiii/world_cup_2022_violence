@@ -81,7 +81,7 @@ export default {
             score : {
               coins : [
                 {
-                  amount : 0,
+                  amount : 100,
                   date: new Date("2022-11-18")
                 }
               ],
@@ -90,7 +90,7 @@ export default {
               wrong : 0
             }
           }
-          api.post('addUser', newUser).then(res => {
+          api.post('addUser', newUser).then(() => {
             self.showNotif("TOUT EST BON GO GO GO !", 'positive')
             self.$emit('goBack')
           })

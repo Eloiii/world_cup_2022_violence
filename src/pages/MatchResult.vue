@@ -17,21 +17,23 @@
         </q-item-label>
         <q-item>
           <q-item-section side>
-            <img src="//ssl.gstatic.com/onebox/media/sports/logos/6SF7yEoB60bU5knw-M7R5Q_96x96.png" height="32"
-                 width="32" class="q-ml-sm">
-            <div class="text-caption">{{ country1.name }}</div>
+            <div class="flex justify-center column items-center">
+              <img :src="'https://countryflagsapi.com/svg/'+match.country1.engName" height="32"
+                   width="32" alt="drapeau pays">
+              <div class="text-caption q-mt-xs">{{ match.country1.frName }}</div>
+            </div>
           </q-item-section>
 
-          <q-item-section class="text-center" v-if="country1.score !== '?'">
+          <q-item-section class="text-center" v-if="match.country1.score !== '?'">
             <q-item-label class="text-h6 flex justify-evenly">
               <div>
-                {{ country1.score  }}
+                {{ match.country1.score }}
               </div>
               <div>
                 &ndash;
               </div>
               <div>
-                {{ country2.score }}
+                {{ match.country2.score }}
               </div>
 
             </q-item-label>
@@ -44,9 +46,11 @@
 
 
           <q-item-section side>
-            <img src="//ssl.gstatic.com/onebox/media/sports/logos/6SF7yEoB60bU5knw-M7R5Q_96x96.png" height="32"
-                 width="32" class="q-mr-sm">
-            <div class="text-caption">{{ country2.name }}</div>
+            <div class="flex justify-center column items-center">
+              <img :src="'https://countryflagsapi.com/svg/'+match.country2.engName" height="32"
+                   width="32" alt="drapeau pays">
+              <div class="text-caption q-mt-xs">{{ match.country2.frName }}</div>
+            </div>
           </q-item-section>
         </q-item>
       </q-list>
@@ -59,8 +63,7 @@ export default {
   props: {
     title: String,
     date: Date,
-    country1: Object,
-    country2: Object
+    match: Object
   }
 };
 </script>
