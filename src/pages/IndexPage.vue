@@ -15,6 +15,7 @@
 import { defineComponent } from "vue";
 import MatchResult from "./MatchResult.vue";
 import {getSchedule} from "src/getOddsApiData";
+import {api} from "src/boot/axios.js"
 
 export default defineComponent({
   name: 'IndexPage',
@@ -37,12 +38,25 @@ export default defineComponent({
         break
       }
       return nextMatch
+    },
+    getLastResult() {
+
     }
   },
-  mounted() {
+  async mounted() {
+    const self = this
     const oddsApiData = JSON.parse(sessionStorage.getItem("oddsApiData"))
     const schedule = getSchedule(oddsApiData)
     this.nextMatch = this.getNextMatch(schedule)
+
+
+    const results = (await api.get('/getResults')).data
+    for(let result of results) {
+      result.time = new Date(result.time)
+    }
+    results.sort((a, b) => a.time.getTime() - b.time.getTime())
+    this.lastResult = results[0]
+
   }
 })
 </script>

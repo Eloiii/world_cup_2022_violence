@@ -25,10 +25,12 @@ const USER_TEST = {
  * Connect to MongoDB
  */
 let collection_users;
+let collection_results;
 const client = new MongoClient(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 client.connect(() => {
   const db = client.db("mondial_2022");
   collection_users = db.collection("users");
+  collection_results = db.collection("results");
 })
 
 /**
@@ -60,6 +62,16 @@ router.post("/updateUser", async (req, res) => {
   res.status(201).send()
 })
 
+router.get("/getResults", async (req, res) => {
+  const results = await getResults()
+  res.send(results)
+})
+
+router.post("/addResult", async (req, res) => {
+  await addResult(req.body)
+  res.status(201).send()
+})
+
 
 /* ----------------------------------- */
 
@@ -87,6 +99,15 @@ function getCoins(user) {
   let coins, rest
   ({coins, ...rest} = user.score)
   return coins
+}
+
+async function getResults() {
+  return await collection_results.find({}).toArray()
+}
+
+async function addResult(result) {
+  result.time = new Date(result.time)
+  await collection_results.insertOne(result)
 }
 
 
