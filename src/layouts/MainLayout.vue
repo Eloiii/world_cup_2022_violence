@@ -81,7 +81,14 @@
               {{ userData.name }}
             </q-item-label>
             <q-item-label caption>
-              {{ userData.score.correct }}
+                <span class="text-positive">
+                  + {{ userData.score.correct }}
+                </span>
+              /
+              <span class="text-negative">
+                   {{ userData.score.wrong }} -
+                </span>
+
             </q-item-label>
           </q-item-section>
           <q-item-section side>
@@ -93,6 +100,13 @@
             </q-badge>
           </q-item-section>
         </q-item>
+        <q-popup-proxy>
+          <q-card>
+            <q-btn color="red" @click="disconnectUser">
+              Deconnexion
+            </q-btn>
+          </q-card>
+        </q-popup-proxy>
       </q-card>
     </q-drawer>
 
@@ -143,9 +157,10 @@ export default defineComponent({
         return "warning";
       return "negative";
     },
-    disconnectUser() {
+    async disconnectUser() {
       localStorage.setItem("username", null)
       this.$router.push('/login')
+      this.userData = await this.getUserData()
     }
   },
   computed: {
