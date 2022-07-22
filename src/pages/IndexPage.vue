@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex justify-center items-start">
+  <q-page class="flex justify-center items-start q-mt-xl">
     <div class="row justify-evenly">
       <div class="col-md-3 col-12">
         <MatchResult v-if="lastResult" :title="'Dernier Résultat'" :date="lastResult.time" :match="lastResult"/>
@@ -8,6 +8,7 @@
         <MatchResult v-if="nextMatch" :title="'Prochain Match'" :date="nextMatch.time" :match="nextMatch"/>
       </div>
     </div>
+
   </q-page>
 </template>
 
@@ -38,9 +39,6 @@ export default defineComponent({
         break
       }
       return nextMatch
-    },
-    getLastResult() {
-
     }
   },
   async mounted() {

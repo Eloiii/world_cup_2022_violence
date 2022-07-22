@@ -78,6 +78,7 @@ export default {
             name : self.name,
             pass: hash,
             avatar : self.ppLink,
+            groups: [],
             score : {
               coins : [
                 {
