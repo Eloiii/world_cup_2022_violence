@@ -12,7 +12,7 @@
         </q-btn>
         <q-space />
         <q-toggle v-model="darkMode" icon="dark_mode" color="purple" />
-        <q-card v-if="userData" class="q-mt-xs desktop-only cursor-pointer" id="cardData" flat bordered>
+        <q-card v-if="userData" class="q-mt-xs desktop-only cursor-pointer" id="cardData" flat >
           <q-item>
             <q-item-section avatar>
               <q-avatar v-if="userData.avatar === ''" color="primary text-white" class="q-mr-sm">
@@ -161,6 +161,9 @@ export default defineComponent({
       localStorage.setItem("username", null)
       this.$router.push('/login')
       this.userData = await this.getUserData()
+    },
+    async refreshUserData() {
+      this.userData = await this.getUserData();
     }
   },
   computed: {
@@ -185,7 +188,10 @@ export default defineComponent({
     };
   },
   async updated() {
-    this.userData = await this.getUserData();
+    await this.refreshUserData()
+  },
+  async mounted() {
+    await this.refreshUserData()
     const darkModeStored = localStorage.getItem("darkmode");
     if (darkModeStored === "true") {
       this.darkMode = true

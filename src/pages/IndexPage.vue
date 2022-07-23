@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex justify-center items-start q-mt-xl">
-    <div class="row justify-evenly">
+    <div class="row justify-evenly q-col-gutter-xs-md">
       <div class="col-md-3 col-12">
         <MatchResult v-if="lastResult" :title="'Dernier Résultat'" :date="lastResult.time" :match="lastResult"/>
       </div>
