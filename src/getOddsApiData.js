@@ -1,112 +1,104 @@
-import { api } from "boot/axios";
-
-async function getData() {
-  return await api.get('/getOddsApiData')
-}
-
 function getOdds(data, country1, country2) {
-  const match = findCountries(data, country1, country2)
-  return match.bookmakers.filter(bookmaker => bookmaker.key === 'unibet')[0].markets
+  const match = findCountries(data, country1, country2);
+  return match.bookmakers.filter(bookmaker => bookmaker.key === "unibet")[0].markets;
 }
 
 function findCountries(data, country1, country2) {
-  for(const game of data) {
-    if(game.home_team === country1 && game.away_team === country2) {
-      return game
+  for (const game of data) {
+    if (game.home_team === country1 && game.away_team === country2) {
+      return game;
     }
   }
-  return null
+  return null;
 }
 
 function getSchedule(data) {
-  const res = []
-  for(const match of data) {
+  const res = [];
+  for (const match of data) {
     res.push({
       country1: {
-        engName: match.home_team,
-        frName: getFrCountryName(match.home_team),
-        score: '?'
+        name: match.home_team,
+        score: "?"
       },
       country2: {
-        engName: match.away_team,
-        frName: getFrCountryName(match.away_team),
-        score: '?'
+        name: match.away_team,
+        score: "?"
       },
       time: new Date(match.commence_time)
-    })
+    });
   }
-  return res
+  return res;
 }
 
 function getFrCountryName(countryName) {
-  switch(countryName) {
+  switch (countryName) {
     case "Qatar":
-      return "Qatar"
+      return "Qatar";
     case "Ecuador":
-      return "Equateur"
+      return "Equateur";
     case "Senegal":
-      return "Sénégal"
+      return "Sénégal";
     case "Netherlands":
-      return "Pays-Bas"
+      return "Pays-Bas";
     case "England":
-      return "Angleterre"
+      return "Angleterre";
     case "Iran":
-      return "Iran"
+      return "Iran";
     case "United States":
-      return "États-Unis"
+      return "États-Unis";
     case "Wales":
-      return "Pays de Galles"
+      return "Pays de Galles";
     case "Argentina":
-      return "Argentine"
+      return "Argentine";
     case "Saudia Arabia":
-      return "Arabie Saoudite"
+      return "Arabie Saoudite";
     case "Mexico":
-      return "Mexique"
+      return "Mexique";
     case "Poland":
-      return "Pologne"
+      return "Pologne";
     case "France":
-      return "France"
+      return "France";
     case "Australia":
-      return "Australie"
+      return "Australie";
     case "Denmark":
-      return "Danemark"
+      return "Danemark";
     case "Tunisia":
-      return "Tunisie"
+      return "Tunisie";
     case "Spain":
-      return "Espagne"
+      return "Espagne";
     case "Costa Rica":
-      return "Costa Rica"
+      return "Costa Rica";
     case "Germany":
-      return "Allemagne"
+      return "Allemagne";
     case "Japan":
-      return "Japon"
+      return "Japon";
     case "Belgium":
-      return "Belgique"
+      return "Belgique";
     case "Canada":
-      return "Canada"
+      return "Canada";
     case "Morocco":
-      return "Maroc"
+      return "Maroc";
     case "Croatia":
-      return "Croatie"
+      return "Croatie";
     case "Brazil":
-      return "Brésil"
+      return "Brésil";
     case "Serbia":
-      return "Serbie"
+      return "Serbie";
     case "Switzeland":
-      return "Suisse"
+      return "Suisse";
     case "Cameroon":
-      return "Cameroun"
+      return "Cameroun";
     case "Portugal":
-      return "Portgual"
+      return "Portgual";
     case "Ghana":
-      return "Ghana"
+      return "Ghana";
     case "Uruguay":
-      return "Uruguay"
+      return "Uruguay";
     case "South Korea":
-      return "Corée du Sud"
+      return "Corée du Sud";
     default:
-      return "Inconnu"
+      return "Inconnu";
   }
 }
 
-export {getData, getOdds, getSchedule}
+export { getOdds, getSchedule, getFrCountryName };

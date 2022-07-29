@@ -1,21 +1,21 @@
 <template>
   <q-layout view="hHh lpR fff">
-    <q-header reveal :class="bgColor">
+    <q-header :class="bgColor" reveal>
       <q-toolbar>
-        <q-btn v-if="!currentPageIsLogin" flat round dense :icon="drawer ? 'menu_open' : 'menu'" class="q-mr-sm"
+        <q-btn v-if="!currentPageIsLogin" :icon="drawer ? 'menu_open' : 'menu'" class="q-mr-sm" dense flat round
                @click="drawer = !drawer" />
-        <q-btn flat rounded :to="currentPageIsLogin ? '/login' : '/'">
+        <q-btn :to="currentPageIsLogin ? '/login' : '/'" flat rounded>
           <q-avatar class="q-mr-md">
-            <img src="src/assets/logo.png" alt="logo">
+            <img alt="logo" src="~assets/logo.png">
           </q-avatar>
           <span class="text-h6">Pronostics de la coupe du monde 2022 de la violence</span>
         </q-btn>
         <q-space />
-        <q-toggle v-model="darkMode" icon="dark_mode" color="purple" />
-        <q-card v-if="userData" class="q-mt-xs desktop-only cursor-pointer" id="cardData" flat >
+        <q-toggle v-model="darkMode" color="purple" icon="dark_mode" />
+        <q-card v-if="userData" id="cardData" class="q-mt-xs desktop-only cursor-pointer" flat>
           <q-item>
             <q-item-section avatar>
-              <q-avatar v-if="userData.avatar === ''" color="primary text-white" class="q-mr-sm">
+              <q-avatar v-if="userData.avatar === ''" class="q-mr-sm" color="primary text-white">
                 {{ userData.name?.substring(0, 2) }}
               </q-avatar>
               <q-avatar v-else class="q-mr-sm">
@@ -38,11 +38,11 @@
               </q-item-label>
             </q-item-section>
             <q-item-section side>
-              <q-badge rounded :color="badgeColor()">
+              <q-badge :color="badgeColor()" rounded>
                 <span class="text-subtitle2">
                   {{ getUserCoins() }}
                 </span>
-                <q-icon name="toll" class="q-ml-xs" />
+                <q-icon class="q-ml-xs" name="toll" />
               </q-badge>
             </q-item-section>
           </q-item>
@@ -55,10 +55,10 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="drawer" overlay bordered class="rounded-borders">
+    <q-drawer v-model="drawer" bordered class="rounded-borders" overlay>
       <q-scroll-area class="fit">
         <q-list separator>
-          <q-item clickable v-ripple>
+          <q-item v-ripple clickable>
             <q-item-section>
               Programme
             </q-item-section>
@@ -66,10 +66,10 @@
         </q-list>
       </q-scroll-area>
       <q-space />
-      <q-card v-if="userData" class="q-mt-xs mobile-only" flat bordered>
+      <q-card v-if="userData" bordered class="q-mt-xs mobile-only" flat>
         <q-item>
           <q-item-section avatar>
-            <q-avatar v-if="userData.avatar === ''" color="primary text-white" class="q-mr-sm">
+            <q-avatar v-if="userData.avatar === ''" class="q-mr-sm" color="primary text-white">
               {{ userData.name?.substring(0, 2) }}
             </q-avatar>
             <q-avatar v-else class="q-mr-sm">
@@ -92,11 +92,11 @@
             </q-item-label>
           </q-item-section>
           <q-item-section side>
-            <q-badge rounded :color="badgeColor()">
+            <q-badge :color="badgeColor()" rounded>
                 <span class="text-subtitle2">
                   {{ getUserCoins() }}
                 </span>
-              <q-icon name="toll" class="q-ml-xs" />
+              <q-icon class="q-ml-xs" name="toll" />
             </q-badge>
           </q-item-section>
         </q-item>
@@ -120,7 +120,10 @@
 <script>
 import { defineComponent } from "vue";
 import { useQuasar } from "quasar";
-import { api } from "boot/axios";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth, db } from "boot/firebaseConnection";
+import { doc, getDoc } from "firebase/firestore";
+
 
 export default defineComponent({
   name: "MainLayout",
@@ -132,10 +135,15 @@ export default defineComponent({
     };
   },
   methods: {
-    async getUserData() {
-      const username = localStorage.getItem("username");
-      const user = await api.get("getUser", { params: { username: username } });
-      return user.data;
+    async getUserData(user) {
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        return docSnap.data();
+      } else {
+        console.log("No such document!");
+      }
     },
     toggleDarkMode() {
       this.$q.dark.toggle();
@@ -158,11 +166,7 @@ export default defineComponent({
       return "negative";
     },
     async disconnectUser() {
-      localStorage.setItem("username", null)
-      this.$router.push('/login')
-      this.userData = await this.getUserData()
-    },
-    async refreshUserData() {
+      await signOut(auth);
       this.userData = await this.getUserData();
     }
   },
@@ -187,20 +191,23 @@ export default defineComponent({
       $q
     };
   },
-  async updated() {
-    await this.refreshUserData()
-  },
   async mounted() {
-    await this.refreshUserData()
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        this.userData = await this.getUserData(user);
+      } else {
+        this.userData = null;
+      }
+    });
     const darkModeStored = localStorage.getItem("darkmode");
     if (darkModeStored === "true") {
-      this.darkMode = true
+      this.darkMode = true;
     } else
-      this.$q.dark.set(false)
+      this.$q.dark.set(false);
   }
 
 });
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
 
 </style>

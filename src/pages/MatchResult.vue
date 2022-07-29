@@ -5,7 +5,7 @@
         {{ title }}
       </div>
       <q-list>
-        <q-item-label header class="q-pt-none q-pl-none">
+        <q-item-label class="q-pt-none q-pl-none" header>
           {{ date.toLocaleDateString("fr-FR", {
           weekday: "long",
           year: "numeric",
@@ -18,13 +18,13 @@
         <q-item>
           <q-item-section side>
             <div class="flex justify-center column items-center">
-              <img :src="'https://countryflagsapi.com/svg/'+match.country1.engName" height="32"
-                   width="32" alt="drapeau pays">
-              <div class="text-caption q-mt-xs">{{ match.country1.frName }}</div>
+              <img :src="'https://countryflagsapi.com/svg/'+match.country1.name" alt="drapeau pays"
+                   height="32" width="32">
+              <div class="text-caption q-mt-xs">{{ getFrCountryName(match.country1.name) }}</div>
             </div>
           </q-item-section>
 
-          <q-item-section class="text-center" v-if="match.country1.score !== '?'">
+          <q-item-section v-if="match.country1.score !== '?'" class="text-center">
             <q-item-label class="text-h6 flex justify-evenly">
               <div>
                 {{ match.country1.score }}
@@ -47,9 +47,9 @@
 
           <q-item-section side>
             <div class="flex justify-center column items-center">
-              <img :src="'https://countryflagsapi.com/svg/'+match.country2.engName" height="32"
-                   width="32" alt="drapeau pays">
-              <div class="text-caption q-mt-xs">{{ match.country2.frName }}</div>
+              <img :src="'https://countryflagsapi.com/svg/'+match.country2.name" alt="drapeau pays"
+                   height="32" width="32">
+              <div class="text-caption q-mt-xs">{{ getFrCountryName(match.country2.name) }}</div>
             </div>
           </q-item-section>
         </q-item>
@@ -58,12 +58,17 @@
   </q-card>
 </template>
 <script>
+import { getFrCountryName } from "src/getOddsApiData";
+
 export default {
   name: "MatchResult",
   props: {
     title: String,
     date: Date,
     match: Object
+  },
+  methods: {
+    getFrCountryName
   }
 };
 </script>

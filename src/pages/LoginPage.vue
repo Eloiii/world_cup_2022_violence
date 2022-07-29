@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex flex-center" :class="backgroundColor">
+  <q-page :class="backgroundColor" class="flex flex-center">
     <Transition name="slide-up">
       <login-card v-if="loginView" @createAccount="loginView = false">
 
@@ -27,14 +27,14 @@ export default {
     backgroundColor() {
       if (this.$q.dark.isActive)
         return "bg-dark";
-      return  "bg-grey-4"
+      return "bg-grey-4";
     }
   }
 };
 </script>
 
 <style scoped>
-.slide-up-enter-active{
+.slide-up-enter-active {
   transition: all 0.3s ease-out;
 }
 

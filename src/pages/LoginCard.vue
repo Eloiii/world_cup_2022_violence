@@ -8,17 +8,17 @@
 
     <q-form @submit="submit">
       <q-card-section>
-        <q-input v-model="name" label="Nom" outlined class="q-mb-xs"
-                 :rules="[val => !!val || 'Champ requis']" />
-        <q-input type="password" v-model="pass" label="Mot de passe" outlined class="q-mb-xs"
-                 :rules="[val => !!val || 'Champ requis']" />
+        <q-input v-model="email" :rules="[val => !!val || 'Champ requis']" class="q-mb-xs" label="E-mail"
+                 outlined />
+        <q-input v-model="pass" :rules="[val => !!val || 'Champ requis']" class="q-mb-xs" label="Mot de passe" outlined
+                 type="password" />
       </q-card-section>
 
       <q-card-actions>
-        <q-btn flat color="primary" type="submit">
+        <q-btn color="primary" flat type="submit">
           Connexion
         </q-btn>
-        <q-btn flat color="primary" @click="$emit('createAccount')">
+        <q-btn color="primary" flat @click="$emit('createAccount')">
           Créer un compte
         </q-btn>
       </q-card-actions>
@@ -28,30 +28,36 @@
 
 <script>
 import { useQuasar } from "quasar";
-import bcrypt from 'bcryptjs'
-import { api } from '/src/boot/axios'
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "boot/firebaseConnection";
 
 export default {
   name: "LoginCard",
   data: () => {
     return {
-      name: "",
-      pass: "",
+      email: "",
+      pass: ""
     };
   },
   methods: {
     async submit() {
-      const self = this
-      const user = await api.get('getUser', {params: {username : self.name}})
-      await bcrypt.compare(self.pass, user.data.pass, function (err, res) {
-        if (res) {
-          self.showNotif("Bienvenue bg", "positive")
-          localStorage.setItem('username', user.data.name)
-          self.$router.push('/')
-        } else {
-          self.showNotif("T'existes pas ou mot de passe incorrect", "negative")
-        }
-      });
+      const self = this;
+      signInWithEmailAndPassword(auth, this.email, this.pass)
+        .then((userCredential) => {
+          self.showNotif("Bienvenue bg", "positive");
+          self.$router.push("/");
+        })
+        .catch((error) => {
+          self.showNotif(error.code + "-" + error.message, "negative");
+        });
+      /*const login = await loginUser({email : this.email, pass: this.pass})
+      if (login) {
+        this.showNotif("Bienvenue bg", "positive")
+        localStorage.setItem('uidLogged', login.uid)
+        this.$router.push('/')
+      } else {
+        this.showNotif("T'existes pas ou mot de passe incorrect", "negative")
+      }*/
     }
   },
   setup() {
