@@ -6,7 +6,7 @@
       </div>
       <q-list>
         <q-item-label class="q-pt-none q-pl-none" header>
-          {{ date.toLocaleDateString("fr-FR", {
+          {{ match.date.toLocaleDateString("fr-FR", {
           weekday: "long",
           year: "numeric",
           month: "long",

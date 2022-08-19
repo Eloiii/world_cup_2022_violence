@@ -2,10 +2,12 @@
   <q-page class="flex justify-center items-start q-mt-xl">
     <div class="row justify-evenly q-col-gutter-xs-md">
       <div class="col-md-3 col-12">
-        <MatchResult v-if="lastResult" :date="lastResult.time" :match="lastResult" :title="'Dernier Résultat'" />
+        <MatchResult v-if="lastResult" :match="lastResult" :title="'Dernier Résultat'" />
+        <MatchResultSkeleton v-else/>
       </div>
       <div class="col-md-3 col-12">
-        <MatchResult v-if="nextMatch" :date="nextMatch.time" :match="nextMatch" :title="'Prochain Match'" />
+        <MatchResult v-if="nextMatch" :match="nextMatch" :title="'Prochain Match'" />
+        <MatchResultSkeleton v-else/>
       </div>
     </div>
     <div class="row">
@@ -21,6 +23,7 @@
 <script>
 import { defineComponent, ref } from "vue";
 import MatchResult from "./MatchResult.vue";
+import MatchResultSkeleton from "./MatchResultSkeleton.vue";
 import { getSchedule } from "src/getOddsApiData";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "boot/firebaseConnection";
@@ -64,7 +67,7 @@ export default defineComponent({
     }
   },
   name: "IndexPage",
-  components: { MatchResult },
+  components: { MatchResult, MatchResultSkeleton },
   data: () => {
     return {
       data: "test",
@@ -107,7 +110,7 @@ export default defineComponent({
       const today = new Date();
       let nextMatch = null;
       for (let match of matchs) {
-        if (match.time < today)
+        if (match.date < today)
           continue;
         nextMatch = match;
         break;
@@ -118,7 +121,13 @@ export default defineComponent({
       const querySnapshot = await getDocs(collection(db, "results"));
       const res = [];
       querySnapshot.forEach((doc) => {
-        res.push(doc.data());
+        const rawData= doc.data()
+        res.push({
+          country1: rawData.country1,
+          country2: rawData.country2,
+          winner: rawData.winner,
+          date: rawData.date.toDate()
+        })
       });
       return res;
     }
@@ -135,9 +144,9 @@ export default defineComponent({
     const rawResults = await this.getResults();
     const results = Object.entries(rawResults);
     for (let result of results) {
-      result[1].time = new Date(result[1].time);
+      result[1].date = new Date(result[1].date);
     }
-    results.sort((a, b) => a[1].time.getTime() - b[1].time.getTime());
+    results.sort((a, b) => a[1].date.getTime() - b[1].date.getTime());
     this.lastResult = results[0][1];
 
   }

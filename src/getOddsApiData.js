@@ -24,7 +24,7 @@ function getSchedule(data) {
         name: match.away_team,
         score: "?"
       },
-      time: new Date(match.commence_time)
+      date: new Date(match.commence_time)
     });
   }
   return res;
