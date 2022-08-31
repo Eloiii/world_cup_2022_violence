@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
+    "apexcharts": "^3.35.5",
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -22,7 +23,9 @@
     "nodemon": "^2.0.19",
     "quasar": "^2.6.0",
     "vue": "^3.0.0",
-    "vue-router": "^4.0.0"
+    "vue-apexcharts": "^1.6.2",
+    "vue-router": "^4.0.0",
+    "vue3-apexcharts": "^1.4.1"
   },
   "devDependencies": {
     "@quasar/app-vite": "^1.0.0",

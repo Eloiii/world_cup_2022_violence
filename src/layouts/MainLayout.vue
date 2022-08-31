@@ -31,14 +31,14 @@
                   + {{ userData.score.correct }}
                 </span>
                 /
-                <span class="text-negative">
+                <span class="text-red">
                    {{ userData.score.wrong }} -
                 </span>
 
               </q-item-label>
             </q-item-section>
             <q-item-section side>
-              <q-badge :color="badgeColor()" rounded>
+              <q-badge :color="badgeColor()" rounded class="text-dark">
                 <span class="text-subtitle2">
                   {{ getUserCoins() }}
                 </span>
@@ -58,9 +58,19 @@
     <q-drawer v-model="drawer" bordered class="rounded-borders" overlay>
       <q-scroll-area class="fit">
         <q-list separator>
+          <q-item v-ripple clickable to="/">
+            <q-item-section>
+              Accueil
+            </q-item-section>
+          </q-item>
           <q-item v-ripple clickable>
             <q-item-section>
               Programme
+            </q-item-section>
+          </q-item>
+          <q-item v-ripple clickable to="/bet">
+            <q-item-section>
+              Parier
             </q-item-section>
           </q-item>
         </q-list>

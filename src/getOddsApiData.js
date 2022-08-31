@@ -1,35 +1,41 @@
-function getOdds(data, country1, country2) {
-  const match = findCountries(data, country1, country2);
-  return match.bookmakers.filter(bookmaker => bookmaker.key === "unibet")[0].markets;
-}
-
-function findCountries(data, country1, country2) {
-  for (const game of data) {
-    if (game.home_team === country1 && game.away_team === country2) {
-      return game;
-    }
-  }
-  return null;
-}
-
 function getSchedule(data) {
-  const res = [];
+  const res = []
   for (const match of data) {
+    let odds;
+    if(match.bookmakers.length > 0) {
+      odds = match.bookmakers.filter(bookmaker => bookmaker.key === "unibet")[0]
+      if(odds === undefined) {
+        odds = match.bookmakers[0]
+      }
+    } else
+      odds = {key: null}
     res.push({
       country1: {
         name: match.home_team,
+        odds: retrievePrice(odds, match.home_team),
         score: "?"
       },
       country2: {
         name: match.away_team,
+        odds: retrievePrice(odds, match.away_team),
         score: "?"
       },
+      draw: {
+        name: "Nul",
+        odds: retrievePrice(odds, "Draw")
+      },
+      service: odds.key,
       date: new Date(match.commence_time)
     });
   }
-  return res;
+  return res
 }
 
+function retrievePrice(odds, teamName) {
+  if(odds.markets)
+    return odds.markets.filter(market => market.key === "h2h")[0].outcomes.filter(team => team.name === teamName)[0].price;
+  return null
+}
 function getFrCountryName(countryName) {
   switch (countryName) {
     case "Qatar":
@@ -46,11 +52,13 @@ function getFrCountryName(countryName) {
       return "Iran";
     case "United States":
       return "États-Unis";
+    case "USA":
+      return "États-Unis";
     case "Wales":
       return "Pays de Galles";
     case "Argentina":
       return "Argentine";
-    case "Saudia Arabia":
+    case "Saudi Arabia":
       return "Arabie Saoudite";
     case "Mexico":
       return "Mexique";
@@ -96,9 +104,11 @@ function getFrCountryName(countryName) {
       return "Uruguay";
     case "South Korea":
       return "Corée du Sud";
+    case "Nul":
+      return "Nul";
     default:
       return "Inconnu";
   }
 }
 
-export { getOdds, getSchedule, getFrCountryName };
+export { getSchedule, getFrCountryName };

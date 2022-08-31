@@ -1,89 +1,146 @@
 <template>
-  <q-page class="flex justify-center items-start q-mt-xl">
+  <q-page padding class="q-col-gutter-xl">
     <div class="row justify-evenly q-col-gutter-xs-md">
       <div class="col-md-3 col-12">
         <MatchResult v-if="lastResult" :match="lastResult" :title="'Dernier Résultat'" />
-        <MatchResultSkeleton v-else/>
+        <MatchResultSkeleton v-else />
       </div>
       <div class="col-md-3 col-12">
         <MatchResult v-if="nextMatch" :match="nextMatch" :title="'Prochain Match'" />
-        <MatchResultSkeleton v-else/>
+        <MatchResultSkeleton v-else />
       </div>
     </div>
-    <div class="row">
-      <q-table v-model:pagination="pagination" :columns="columns" :loading="loading" :rows="rows" title="Leaderboard"
-               @request="onRequest">
+    <div class="row justify-center">
+      <div class="col-md-8 col-sm-12">
+        <q-table
+          :columns="columns"
+          :loading="loading"
+          :rows="rows"
+          title="Leaderboard"
+          v-if="rows"
+          :grid="tableGridView"
+          row-key="name"
+          v-model:pagination="pagination"
+          hide-bottom
+        >
+          <template v-slot:top-right>
+            <q-toggle v-model="tableGridView" color="purple" label="Grille" />
+          </template>
+          <template v-slot:body-cell="props">
+            <q-td
+              :props="props"
+              :class="rowBackground(props.row.name)"
+            >
+              {{ props.value }}
+            </q-td>
+          </template>
+          <template v-slot:body-cell-coins="props">
+            <q-td :props="props" :class="rowBackground(props.row.name)">
+              <div>
+                <q-badge :color="badgeColor(props.value)" rounded transparent class="text-dark">
+                <span class="text-caption">
+                  {{ props.value }}
+                </span>
+                  <q-icon class="q-ml-xs" name="toll" />
+                </q-badge>
+              </div>
+            </q-td>
+          </template>
 
-      </q-table>
+        </q-table>
+        <q-markup-table v-else>
+          <thead>
+          <tr>
+            <th class="text-left" style="width: 150px">
+              <q-skeleton animation="blink" type="text" />
+            </th>
+            <th class="text-right">
+              <q-skeleton animation="blink" type="text" />
+            </th>
+            <th class="text-right">
+              <q-skeleton animation="blink" type="text" />
+            </th>
+            <th class="text-right">
+              <q-skeleton animation="blink" type="text" />
+            </th>
+            <th class="text-right">
+              <q-skeleton animation="blink" type="text" />
+            </th>
+            <th class="text-right">
+              <q-skeleton animation="blink" type="text" />
+            </th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr v-for="n in 5" :key="n">
+            <td class="text-left">
+              <q-skeleton animation="blink" type="text" width="85px" />
+            </td>
+            <td class="text-right">
+              <q-skeleton animation="blink" type="text" width="50px" />
+            </td>
+            <td class="text-right">
+              <q-skeleton animation="blink" type="text" width="35px" />
+            </td>
+            <td class="text-right">
+              <q-skeleton animation="blink" type="text" width="65px" />
+            </td>
+            <td class="text-right">
+              <q-skeleton animation="blink" type="text" width="25px" />
+            </td>
+            <td class="text-right">
+              <q-skeleton animation="blink" type="text" width="85px" />
+            </td>
+          </tr>
+          </tbody>
+        </q-markup-table>
+      </div>
     </div>
-
+    <div class="row justify-center">
+      <div class="col-md-8">
+        <apexchart width="100%" height="300" type="line" :options="options" :series="series"></apexchart>
+      </div>
+    </div>
   </q-page>
 </template>
-
 <script>
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent } from "vue";
 import MatchResult from "./MatchResult.vue";
 import MatchResultSkeleton from "./MatchResultSkeleton.vue";
 import { getSchedule } from "src/getOddsApiData";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "boot/firebaseConnection";
+import { auth, db } from "boot/firebaseConnection";
 import axios from "axios";
 
+import * as fr from "apexcharts/dist/locales/fr.json";
+import { useQuasar } from "quasar";
 
 export default defineComponent({
-  setup() {
-    const rows = ref([]);
-    const loading = ref(false);
-    const pagination = ref({
-      sortBy: "desc",
-      descending: false,
-      page: 1,
-      rowsPerPage: 3,
-      rowsNumber: 10
-    });
-
-    function getDataFromDB() {
-      return getAllUsers();
-    }
-
-    function getRowsNumberCount(filter, data) {
-      if (!filter) {
-        return originalRows.length;
-      }
-      let count = 0;
-      originalRows.forEach(treat => {
-        if (treat.name.includes(filter)) {
-          ++count;
-        }
-      });
-      return count;
-    }
-
-    function onRequest(props) {
-      const { page, rowsPerPage, sortBy, descending } = props.pagination;
-      const filter = props.filter;
-
-      loading.value = true;
-    }
-  },
   name: "IndexPage",
   components: { MatchResult, MatchResultSkeleton },
   data: () => {
     return {
-      data: "test",
+      currentUserData: null,
+      usersData: null,
       lastResult: null,
       nextMatch: null,
+      rows: null,
+      tableGridView: false,
+      series: [],
       columns: [
         {
           name: "name",
           label: "Nom",
+          align: "left",
           sortable: true,
           field: "name",
           required: true
         },
         {
           name: "coins",
-          label: "Money",
+          label: "Argent",
+          align: "center",
           sortable: true,
           field: "coins",
           required: true
@@ -91,6 +148,7 @@ export default defineComponent({
         {
           name: "correct",
           label: "Corrects",
+          align: "center",
           sortable: true,
           field: "correct",
           required: true
@@ -98,11 +156,16 @@ export default defineComponent({
         {
           name: "wrong",
           label: "Ratés",
+          align: "center",
           sortable: true,
           field: "wrong",
           required: true
         }
-      ]
+      ],
+      pagination: {
+        sortBy: "coins",
+        descending: true
+      }
     };
   },
   methods: {
@@ -121,24 +184,93 @@ export default defineComponent({
       const querySnapshot = await getDocs(collection(db, "results"));
       const res = [];
       querySnapshot.forEach((doc) => {
-        const rawData= doc.data()
+        const rawData = doc.data();
         res.push({
           country1: rawData.country1,
           country2: rawData.country2,
           winner: rawData.winner,
           date: rawData.date.toDate()
-        })
+        });
       });
       return res;
+    },
+    async getCurrentUserData() {
+      const currentUserEmail = auth.currentUser.email;
+      const querySnapshot = await getDocs(collection(db, "users"));
+      let res = null;
+      querySnapshot.forEach((doc) => {
+        const rawData = doc.data();
+        if (rawData.email === currentUserEmail) {
+          res = rawData;
+        }
+      });
+      this.currentUserData = res;
+    },
+    async getUsersData() {
+      const querySnapshot = await getDocs(collection(db, "users"));
+      const res = [];
+      querySnapshot.forEach((doc) => {
+        const rawData = doc.data();
+        res.push(rawData);
+      });
+      this.usersData = res;
+    },
+    async getLeaderboardData() {
+      const res = [];
+      for (const userData of this.usersData) {
+        if (this.currentUserData.groups.some(r => userData.groups.includes(r)))
+
+          res.push({
+            name: userData.name,
+            coins: userData.score.coins[userData.score.coins.length - 1].amount,
+            correct: userData.score.correct,
+            wrong: userData.score.wrong
+          });
+      }
+      this.rows = res;
+    },
+    getChartData() {
+      const res = [];
+      for (const userData of this.usersData) {
+        let data = [];
+        for (const record of userData.score.coins) {
+          const offset = Math.abs(record.date.toDate().getTimezoneOffset() / 60);
+          const roundDate = new Date(record.date.toDate().setHours(offset, 0, 0, 0));
+          data.push({
+            x: roundDate.getTime(),
+            y: record.amount
+          });
+        }
+        let userSeries = {
+          name: userData.name,
+          data: data
+        };
+        res.push(userSeries);
+      }
+      this.series = res;
+    },
+    bleu() {
+
+    },
+    rowBackground(name) {
+      if (this.currentUserData.name === name) {
+        if (this.$q.dark.isActive)
+          return "bg-grey-9";
+        return "bg-grey-3";
+      }
+    },
+    badgeColor(coinsAmount) {
+      if (coinsAmount >= 100)
+        return "positive";
+      if (coinsAmount < 100 && coinsAmount >= 25)
+        return "warning";
+      return "negative";
     }
   },
   async mounted() {
-    if (sessionStorage.getItem("oddsApiData") === null || sessionStorage.getItem("oddsApiData") === "null") {
-      const getOddsApiData = await axios.get("https://europe-west1-violence-qatar2022.cloudfunctions.net/getOddsApiData");
-      sessionStorage.setItem("oddsApiData", JSON.stringify(getOddsApiData.data));
-    }
+
     const oddsApiData = JSON.parse(sessionStorage.getItem("oddsApiData"));
-    const schedule = getSchedule(oddsApiData);
+    const schedule = getSchedule(oddsApiData.data);
     this.nextMatch = this.getNextMatch(schedule);
 
     const rawResults = await this.getResults();
@@ -149,11 +281,49 @@ export default defineComponent({
     results.sort((a, b) => a[1].date.getTime() - b[1].date.getTime());
     this.lastResult = results[0][1];
 
+    await this.getCurrentUserData();
+    await this.getUsersData();
+
+    await this.getLeaderboardData();
+    this.getChartData();
+  },
+  setup() {
+    const $q = useQuasar();
+    const options = computed(() => {
+      const options = {
+        title: {
+          text: "Évolutions de l'argent",
+          offsetY: 10,
+          style: {
+            fontSize: "1rem",
+            fontWeight: "400",
+            lineHeight: "1.75rem",
+            letterSpacing: "0.00937em",
+            fontFamily: "Inter"
+          }
+        },
+        theme: {
+          mode: "dark"
+        },
+        chart: {
+          locales: [fr],
+          defaultLocale: "fr"
+        },
+        stroke: {
+          curve: "straight"
+        },
+        xaxis: {
+          type: "datetime"
+        },
+        markers: {
+          size: 5
+        }
+      };
+      return options;
+    });
+    return {
+      options
+    };
   }
 });
 </script>
-<style lang="scss" scoped>
-.row {
-  width: 80%
-}
-</style>

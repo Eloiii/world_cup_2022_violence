@@ -18,7 +18,7 @@
         <q-item>
           <q-item-section side>
             <div class="flex justify-center column items-center">
-              <img :src="'https://countryflagsapi.com/svg/'+match.country1.name" alt="drapeau pays"
+              <img :src="'https://countryflagsapi.com/svg/'+match.country1.name" alt="drapeau"
                    height="32" width="32">
               <div class="text-caption q-mt-xs">{{ getFrCountryName(match.country1.name) }}</div>
             </div>
@@ -47,7 +47,7 @@
 
           <q-item-section side>
             <div class="flex justify-center column items-center">
-              <img :src="'https://countryflagsapi.com/svg/'+match.country2.name" alt="drapeau pays"
+              <img :src="'https://countryflagsapi.com/svg/'+match.country2.name" alt="drapeau"
                    height="32" width="32">
               <div class="text-caption q-mt-xs">{{ getFrCountryName(match.country2.name) }}</div>
             </div>
