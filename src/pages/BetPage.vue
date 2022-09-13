@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class="row justify-around q-col-gutter-xs-md">
-      <div class="col-md-8">
+      <div class="col-md-8 col-12">
         <template v-for="date of schedule" :key="date">
           <q-list class="q-mb-xl" bordered padding v-if="date">
             <q-item-label header v-if="date">
@@ -31,7 +31,7 @@
               }}
             </q-item-label>
             <template v-for="match of date" :key="match.date">
-              <q-item>
+              <q-item class="mobile-hide">
                 <q-item-section side>
                   <div class="flex">
                     <div class="flex justify-center column items-center country">
@@ -93,16 +93,81 @@
                   </span>
                 </q-item-section>
               </q-item>
+              <q-item class="mobile-only block">
+                <q-item-section class="flex" style="flex-direction:row;">
+                  <div class="flex justify-center column items-center country">
+                    <img :src="'https://countryflagsapi.com/svg/'+match.country1.name" alt="drapeau"
+                         height="32" width="32">
+                    <div class="text-body2 q-mt-xs text-weight-bold">{{ getFrCountryName(match.country1.name) }}</div>
+                  </div>
+                  &ndash;
+                  <div class="flex justify-center column items-center country">
+                    <img :src="'https://countryflagsapi.com/svg/'+match.country2.name" alt="drapeau"
+                         height="32" width="32">
+                    <div class="text-body2 q-mt-xs text-weight-bold">{{ getFrCountryName(match.country2.name) }}</div>
+                  </div>
+                </q-item-section>
+                <q-item-section class="items-center q-mt-xl" style="margin-left: 0 !important;">
+                  <div class="flex justify-between full-width">
+                    <q-btn :color="buttonColor(match, match.country1.name)" class="buttonOdds"
+                           :text-color="buttonTextColor(match, match.country1.name)"
+                           @click="addItemToBasket(match, match.country1)">
+                      <div class="flex column no-wrap ellipsis">
+                        <div class="text-caption ellipsis">
+                          {{ getFrCountryName(match.country1.name) }}
+                        </div>
+                        <div>
+                          {{ match.country1.odds }}
+                        </div>
+                      </div>
+                    </q-btn>
+                    <q-btn :color="buttonColor(match, match.draw.name)" class="buttonOdds"
+                           :text-color="buttonTextColor(match, match.draw.name)"
+                           @click="addItemToBasket(match, match.draw)">
+                      <div class="flex column">
+                        <div class="text-caption">
+                          {{ getFrCountryName(match.draw.name) }}
+                        </div>
+                        <div>
+                          {{ match.draw.odds }}
+                        </div>
+                      </div>
+                    </q-btn>
+                    <q-btn :color="buttonColor(match, match.country2.name)" class="buttonOdds"
+                           :text-color="buttonTextColor(match, match.country2.name)"
+                           @click="addItemToBasket(match, match.country2)">
+                      <div class="flex column no-wrap ellipsis">
+                        <div class="text-caption ellipsis">
+                          {{ getFrCountryName(match.country2.name) }}
+                        </div>
+                        <div>
+                          {{ match.country2.odds }}
+                        </div>
+                      </div>
+                    </q-btn>
+                  </div>
+                </q-item-section>
+                <q-item-section side class="q-mt-xl text-caption">
+                  <span class="cote">
+                    cotes de {{ match.service }}
+                  </span>
+                </q-item-section>
+              </q-item>
               <q-separator v-if="date.indexOf(match) !== date.length -1" />
             </template>
           </q-list>
         </template>
       </div>
-      <div class="col-md-4">
-        <q-list class="q-mb-xl" bordered padding v-if="basket.length > 0">
+      <div class="col-md-4 mobile-hide">
+        <q-list class="q-pb-none q-px-sm" bordered padding v-if="basket.length > 0">
           <q-item v-for="bet of basket" :key="bet.match">
             <q-item-section thumbnail>
-              <q-icon name="sports_soccer" />
+              <q-icon name="warning" v-if="alreadyBetOnMatch(bet.match)">
+                <q-tooltip class="bg-negative">
+                  Tu as déjà un pari sur ce match !
+                </q-tooltip>
+              </q-icon>
+              <q-icon name="sports_soccer" v-else />
             </q-item-section>
             <q-item-section>
               <q-item-label class="text-caption">
@@ -112,23 +177,20 @@
                 Résultat du match : {{ getFrCountryName(bet.bet.name) }}
               </q-item-label>
             </q-item-section>
-            <q-item-section>
-              <q-input v-model="bet.bet.stake" type="number" min="" max="5" label="Mise" outlined />
+            <q-item-section style="flex-shrink: 1;">
+              <q-input v-model="bet.bet.stake" type="numeric" min="" max="5" label="Mise" :rules="stakeRules"
+                       outlined />
             </q-item-section>
-            <q-item-section>
+            <q-item-section side class="q-mr-md text-weight-bold">
               <div>
-                Gain potentiel
+                Gain
               </div>
               <div>
-                {{
-                  new Intl.NumberFormat("fr-FR", {
-                    style: "currency",
-                    currency: "EUR"
-                  }).format(bet.bet.stake * bet.bet.odds)
-                }}6
+                {{ Math.round(bet.bet.stake * bet.bet.odds || 0) }}
+                <q-icon class="q-ml-xs" name="toll" />
               </div>
             </q-item-section>
-            <q-item-section side top>
+            <q-item-section side>
               <div class="text-caption">
                 Cote
               </div>
@@ -137,23 +199,164 @@
               </div>
             </q-item-section>
           </q-item>
+          <q-card>
+            <q-card-section class="flex column">
+              <div class="flex justify-between">
+                <div>
+                  Mise totale
+                </div>
+                <div>
+                  {{ totalStake }}
+                  <q-icon class="q-ml-xs" name="toll" />
+                </div>
+              </div>
+              <div class="flex justify-between q-mt-xs">
+                <div class="text-weight-bold">
+                  Total des gains
+                </div>
+                <div class="text-weight-bold">
+                  {{ totalProfit }}
+                  <q-icon class="q-ml-xs" name="toll" size="xs" />
+                </div>
+              </div>
+            </q-card-section>
+            <q-card-section class="flex justify-center q-mt-none">
+              <q-btn rounded color="amber-13" text-color="dark" size="lg" unelevated class="full-width"
+                     @click="validateBet" :disable="!allStakesFullfilled()">
+                Parier
+              </q-btn>
+            </q-card-section>
+          </q-card>
         </q-list>
         <q-card bordered flat v-else>
-          <img
-            src="https://lh3.googleusercontent.com/H2lTPeipM1RidN1PmxumJCra8-LF1gOngZXmDgkWOmDqSuxv0kpOpsgYAUXAxyuNwmW-z9KO53f4kn8JcafGrZhi-fEHHcSrXZA42q0=w600" />
+          <q-card-section class="flex justify-center">
+            <img
+              src="https://lh3.googleusercontent.com/H2lTPeipM1RidN1PmxumJCra8-LF1gOngZXmDgkWOmDqSuxv0kpOpsgYAUXAxyuNwmW-z9KO53f4kn8JcafGrZhi-fEHHcSrXZA42q0=w600"
+              style="width: 30%" />
+          </q-card-section>
           <q-card-section class="text-center">
             Commence par séléctionner un pari !
           </q-card-section>
         </q-card>
+      </div>
+      <div class="mobile-only">
+        <q-page-sticky position="bottom-right" :offset="[18, 18]">
+          <q-fab
+            icon="shopping_basket"
+            direction="up"
+            color="red"
+            @click="mobileBasket = true"
+          >
+          </q-fab>
+          <q-dialog v-model="mobileBasket" maximized>
+            <q-card class="flex column">
+              <q-card-section>
+                <div class="row no-wrap">
+                  <div class="col">
+                    <div class="text-h6">Panier</div>
+                  </div>
+                  <div class="col-auto">
+                    <q-btn v-close-popup icon="close" flat ></q-btn>
+                  </div>
+                </div>
+
+              </q-card-section>
+
+              <q-card-section class="q-pt-none">
+                <div class="mobileList">
+                  <template v-for="bet of basket" :key="bet.match">
+                    <div class="mobileList-item q-mb-md q-mt-sm">
+                      <div class="mobileList-item-match">
+                        <div class="q-mr-sm">
+                          <q-icon name="warning" v-if="alreadyBetOnMatch(bet.match)">-->
+                            <q-tooltip class="bg-negative">
+                              Tu as déjà un pari sur ce match !
+                            </q-tooltip>
+                          </q-icon>
+                          <q-icon name="sports_soccer" v-else size="sm" />
+                        </div>
+                        <div>
+                          <div class="text-caption">
+                            {{ getMatchName(bet) }}
+                          </div>
+                          <div class="text-weight-bold">
+                            Résultat du match : {{ getFrCountryName(bet.bet.name) }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="mobileList-item-stake q-mt-sm">
+                        <div class="mobileList-item-stake-odds q-mr-lg">
+                          <div>
+                            Cote
+                          </div>
+                          <div class="text-weight-bold">
+                            {{ bet.bet.odds }}
+                          </div>
+                        </div>
+                        <div class="q-mr-md">
+                          <q-input v-model="bet.bet.stake" type="numeric" min="" max="5" label="Mise"
+                                   :rules="stakeRules"
+                                   outlined />
+                        </div>
+                        <div class="mobileList-item-stake-winnings">
+                          <div>
+                            Gain
+                          </div>
+                          <div>
+                            {{ Math.round(bet.bet.stake * bet.bet.odds || 0) }}
+                            <q-icon class="q-ml-xs" name="toll" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </template>
+                </div>
+              </q-card-section>
+<!--              TODO empecher de pouvoir rentrer des valeurs décimales  + validation mobile + voir icon panier mobile-->
+              <q-space/>
+              <q-card-section class="flex column">
+                <div class="flex justify-between">
+                  <div>
+                    Mise totale
+                  </div>
+                  <div>
+                    {{ totalStake }}
+                    <q-icon class="q-ml-xs" name="toll" />
+                  </div>
+                </div>
+                <div class="flex justify-between q-mt-xs">
+                  <div class="text-weight-bold">
+                    Total des gains
+                  </div>
+                  <div class="text-weight-bold">
+                    {{ totalProfit }}
+                    <q-icon class="q-ml-xs" name="toll" size="xs" />
+                  </div>
+                </div>
+              </q-card-section>
+              <q-card-section class="flex justify-center q-mt-none">
+                <q-btn rounded color="amber-13" text-color="dark" size="md" unelevated class="full-width"
+                       @click="validateBet" :disable="!allStakesFullfilled()">
+                  Parier
+                </q-btn>
+              </q-card-section>
+<!--              <q-card-actions align="right">-->
+<!--                <q-btn flat label="OK" color="primary" v-close-popup />-->
+<!--              </q-card-actions>-->
+            </q-card>
+          </q-dialog>
+        </q-page-sticky>
       </div>
     </div>
   </q-page>
 </template>
 
 <script>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { getFrCountryName, getSchedule } from "src/getOddsApiData";
 import { useQuasar } from "quasar";
+import { auth, db } from "boot/firebaseConnection";
+import { doc, getDoc } from "firebase/firestore";
 
 
 export default {
@@ -163,6 +366,10 @@ export default {
     const schedule = ref([]);
     const basket = ref([]);
     const lastOddsUpdate = ref();
+    const stakeRules = ref([]);
+    const userCoins = ref(0);
+    const userBets = ref([]);
+    const mobileBasket = ref(false);
 
     function addItemToBasket(match, selected) {
       const matchAlreadyInBasket = basketContainsMatch(match);
@@ -177,7 +384,6 @@ export default {
         match: match,
         bet: selected
       });
-      console.log(basket.value);
     }
 
     function basketContainsMatch(match) {
@@ -201,7 +407,6 @@ export default {
 
 
     function buttonColor(match, countryName) {
-      //TODO regarder dans firestore si déjà un bet sur ce match (en plus du panier actuel)
       if (basketContainsBet(match, countryName))
         return "dark";
       return "amber-13";
@@ -227,20 +432,104 @@ export default {
       return name1 + " - " + name2;
     }
 
+    async function getUserData(user) {
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        return docSnap.data();
+      } else {
+        console.error("No such document!");
+      }
+    }
+
+    function getUserCoins(user) {
+      const coinsTab = user.score.coins;
+      return coinsTab[coinsTab.length - 1].amount;
+    }
+
+    async function validateBet() {
+      if (totalStake.value > userCoins.value) {
+        showNotif("Tu ne possèdes pas assez d'argent", "negative");
+        return;
+      }
+    }
+
+    function allStakesFullfilled() {
+      for (let item of basket.value) {
+        if (!item.bet.stake)
+          return false;
+      }
+      return true;
+    }
+
+    function isSameMatch(match1, match2) {
+      if (match1.country1.name !== match2.country1.name)
+        return false;
+      if (match1.country2.name !== match2.country2.name)
+        return false;
+      if (match1.date.getDate() !== match2.date.getDate())
+        return false;
+      return true;
+    }
+
+    function alreadyBetOnMatch(match) {
+      for (let bet of userBets.value) {
+        if (isSameMatch(bet.match, match))
+          return true;
+      }
+      return false;
+    }
+
+
+    const totalStake = computed(() => {
+      let total = 0;
+      for (let stake of basket.value) {
+        if (stake.bet.stake)
+          total += Number(stake.bet.stake);
+      }
+      return total || 0;
+    });
+
+    const totalProfit = computed(() => {
+      let total = 0;
+      for (let stake of basket.value) {
+        if (stake.bet.stake && stake.bet.odds)
+          total += Math.round(stake.bet.stake * stake.bet.odds);
+      }
+      return total || 0;
+    });
+
     return {
       schedule,
       basket,
       lastOddsUpdate,
+      stakeRules,
+      userCoins,
+      userBets,
+      mobileBasket,
       addItemToBasket,
       showNotif,
       getMatchName,
       buttonColor,
       getFrCountryName,
-      buttonTextColor
+      getUserData,
+      getUserCoins,
+      buttonTextColor,
+      allStakesFullfilled,
+      alreadyBetOnMatch,
+      validateBet,
+      totalStake,
+      totalProfit
     };
   },
-  mounted() {
-    const rawMatchesData = JSON.parse(sessionStorage.getItem("oddsApiData"));
+  async mounted() {
+    let rawMatchesData;
+    try {
+      rawMatchesData = JSON.parse(sessionStorage.getItem("oddsApiData"));
+    } catch (e) {
+      rawMatchesData = [];
+    }
     if (!rawMatchesData)
       return;
     //TODO faire qq ici si les données ne sont pas (encore) là
@@ -260,21 +549,60 @@ export default {
     this.schedule = dateSeparated;
     this.lastOddsUpdate = new Date(rawMatchesData.date);
 
+    const userData = await this.getUserData(auth.currentUser);
+    this.userCoins = this.getUserCoins(userData);
+    this.stakeRules = [val => val > 0 || "une mise positive non nulle de préférence", val => val <= this.userCoins || "tu ne possèdes pas assez d'argent"];
+
+    userData.bets.forEach((bet) => bet.match.date = bet.match.date.toDate());
+    this.userBets = userData.bets;
+
   }
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .country {
   width: 125px;
 }
 
 .buttonOdds {
-  width: 100px;
+  width: 30%;
 }
 
 .cote {
   width: 135px;
   text-align: right;
 }
+
+.mobileList {
+  display: flex;
+  flex-direction: column;
+
+  .mobileList-item {
+
+    .mobileList-item-match {
+      display: flex;
+      align-items: center;
+
+    }
+
+    .mobileList-item-stake {
+      display: flex;
+
+      .mobileList-item-stake-odds {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .mobileList-item-stake-winnings {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+    }
+  }
+
+}
+
 </style>

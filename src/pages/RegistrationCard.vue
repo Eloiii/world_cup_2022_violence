@@ -94,7 +94,8 @@ export default {
           forecasted: 0,
           correct: 0,
           wrong: 0
-        }
+        },
+        bets: []
       };
       try {
         const { user } = await createUserWithEmailAndPassword(auth, this.email, this.pass);
