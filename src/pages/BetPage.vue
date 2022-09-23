@@ -164,7 +164,7 @@
             <q-item-section thumbnail>
               <q-icon name="warning" v-if="alreadyBetOnMatch(bet.match)">
                 <q-tooltip class="bg-negative">
-                  Tu as déjà un pari sur ce match !
+                  Tu as déjà parié sur ce match !
                 </q-tooltip>
               </q-icon>
               <q-icon name="sports_soccer" v-else />
@@ -199,7 +199,7 @@
               </div>
             </q-item-section>
           </q-item>
-          <q-card>
+          <q-card class="q-mb-sm">
             <q-card-section class="flex column">
               <div class="flex justify-between">
                 <div>
@@ -242,112 +242,107 @@
       <div class="mobile-only">
         <q-page-sticky position="bottom-right" :offset="[18, 18]">
           <q-fab
-            icon="shopping_basket"
+            :icon="!mobileBasket ? 'shopping_basket' : 'close'"
             direction="up"
             color="red"
             @click="mobileBasket = true"
           >
           </q-fab>
-          <q-dialog v-model="mobileBasket" maximized>
-            <q-card class="flex column">
-              <q-card-section>
-                <div class="row no-wrap">
-                  <div class="col">
-                    <div class="text-h6">Panier</div>
-                  </div>
-                  <div class="col-auto">
-                    <q-btn v-close-popup icon="close" flat ></q-btn>
-                  </div>
-                </div>
-
-              </q-card-section>
-
-              <q-card-section class="q-pt-none">
-                <div class="mobileList">
-                  <template v-for="bet of basket" :key="bet.match">
-                    <div class="mobileList-item q-mb-md q-mt-sm">
-                      <div class="mobileList-item-match">
-                        <div class="q-mr-sm">
-                          <q-icon name="warning" v-if="alreadyBetOnMatch(bet.match)">-->
-                            <q-tooltip class="bg-negative">
-                              Tu as déjà un pari sur ce match !
-                            </q-tooltip>
-                          </q-icon>
-                          <q-icon name="sports_soccer" v-else size="sm" />
-                        </div>
-                        <div>
-                          <div class="text-caption">
-                            {{ getMatchName(bet) }}
-                          </div>
-                          <div class="text-weight-bold">
-                            Résultat du match : {{ getFrCountryName(bet.bet.name) }}
-                          </div>
-                        </div>
-                      </div>
-                      <div class="mobileList-item-stake q-mt-sm">
-                        <div class="mobileList-item-stake-odds q-mr-lg">
-                          <div>
-                            Cote
-                          </div>
-                          <div class="text-weight-bold">
-                            {{ bet.bet.odds }}
-                          </div>
-                        </div>
-                        <div class="q-mr-md">
-                          <q-input v-model="bet.bet.stake" type="numeric" min="" max="5" label="Mise"
-                                   :rules="stakeRules"
-                                   outlined />
-                        </div>
-                        <div class="mobileList-item-stake-winnings">
-                          <div>
-                            Gain
-                          </div>
-                          <div>
-                            {{ Math.round(bet.bet.stake * bet.bet.odds || 0) }}
-                            <q-icon class="q-ml-xs" name="toll" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </template>
-                </div>
-              </q-card-section>
-<!--              TODO empecher de pouvoir rentrer des valeurs décimales  + validation mobile + voir icon panier mobile-->
-              <q-space/>
-              <q-card-section class="flex column">
-                <div class="flex justify-between">
-                  <div>
-                    Mise totale
-                  </div>
-                  <div>
-                    {{ totalStake }}
-                    <q-icon class="q-ml-xs" name="toll" />
-                  </div>
-                </div>
-                <div class="flex justify-between q-mt-xs">
-                  <div class="text-weight-bold">
-                    Total des gains
-                  </div>
-                  <div class="text-weight-bold">
-                    {{ totalProfit }}
-                    <q-icon class="q-ml-xs" name="toll" size="xs" />
-                  </div>
-                </div>
-              </q-card-section>
-              <q-card-section class="flex justify-center q-mt-none">
-                <q-btn rounded color="amber-13" text-color="dark" size="md" unelevated class="full-width"
-                       @click="validateBet" :disable="!allStakesFullfilled()">
-                  Parier
-                </q-btn>
-              </q-card-section>
-<!--              <q-card-actions align="right">-->
-<!--                <q-btn flat label="OK" color="primary" v-close-popup />-->
-<!--              </q-card-actions>-->
-            </q-card>
-          </q-dialog>
         </q-page-sticky>
       </div>
     </div>
+    <q-dialog v-model="mobileBasket" maximized>
+      <q-card class="flex column">
+        <q-card-section>
+          <div class="row no-wrap">
+            <div class="col">
+              <div class="text-h6">Panier</div>
+            </div>
+            <div class="col-auto">
+              <q-btn v-close-popup icon="close" flat></q-btn>
+            </div>
+          </div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          <div class="mobileList">
+            <template v-for="bet of basket" :key="bet.match">
+              <div class="mobileList-item q-mb-md q-mt-sm">
+                <div class="mobileList-item-match">
+                  <div class="q-mr-sm">
+                    <q-icon name="warning" v-if="alreadyBetOnMatch(bet.match)" size="sm">
+                      <q-tooltip class="bg-negative">
+                        Tu as déjà un pari sur ce match !
+                      </q-tooltip>
+                    </q-icon>
+                    <q-icon name="sports_soccer" v-else size="sm" />
+                  </div>
+                  <div>
+                    <div class="text-caption">
+                      {{ getMatchName(bet) }}
+                    </div>
+                    <div class="text-weight-bold">
+                      Résultat du match : {{ getFrCountryName(bet.bet.name) }}
+                    </div>
+                  </div>
+                </div>
+                <div class="mobileList-item-stake q-mt-sm">
+                  <div class="mobileList-item-stake-odds q-mr-lg">
+                    <div>
+                      Cote
+                    </div>
+                    <div class="text-weight-bold">
+                      {{ bet.bet.odds }}
+                    </div>
+                  </div>
+                  <div class="q-mr-md">
+                    <q-input v-model="bet.bet.stake" type="numeric" min="" max="5" label="Mise"
+                             :rules="stakeRules"
+                             outlined />
+                  </div>
+                  <div class="mobileList-item-stake-winnings">
+                    <div>
+                      Gain
+                    </div>
+                    <div>
+                      {{ Math.round(bet.bet.stake * bet.bet.odds || 0) }}
+                      <q-icon class="q-ml-xs" name="toll" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </div>
+        </q-card-section>
+        <q-space/>
+        <q-card-section class="flex column">
+          <div class="flex justify-between">
+            <div>
+              Mise totale
+            </div>
+            <div>
+              {{ totalStake }}
+              <q-icon class="q-ml-xs" name="toll" />
+            </div>
+          </div>
+          <div class="flex justify-between q-mt-xs">
+            <div class="text-weight-bold">
+              Total des gains
+            </div>
+            <div class="text-weight-bold">
+              {{ totalProfit }}
+              <q-icon class="q-ml-xs" name="toll" size="xs" />
+            </div>
+          </div>
+        </q-card-section>
+        <q-card-section class="flex justify-center q-mt-none">
+          <q-btn rounded color="amber-13" text-color="dark" size="md" unelevated class="full-width"
+                 @click="validateBet" :disable="!allStakesFullfilled()">
+            Parier
+          </q-btn>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -356,7 +351,7 @@ import { computed, ref } from "vue";
 import { getFrCountryName, getSchedule } from "src/getOddsApiData";
 import { useQuasar } from "quasar";
 import { auth, db } from "boot/firebaseConnection";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 
 
 export default {
@@ -448,11 +443,25 @@ export default {
       return coinsTab[coinsTab.length - 1].amount;
     }
 
+    function isDecimal(num) {
+      return (num - Math.floor(num)) !== 0
+    }
+
     async function validateBet() {
+      if(isDecimal(totalStake.value)) {
+        showNotif("Ne rentre que des valeurs entières", "negative")
+        return
+      }
       if (totalStake.value > userCoins.value) {
         showNotif("Tu ne possèdes pas assez d'argent", "negative");
         return;
       }
+      const bets = [
+        ...userBets.value,
+        ...basket.value
+      ]
+      const docRef = doc(db, "users", auth.currentUser.uid);
+      await updateDoc(docRef, {bets: bets});
     }
 
     function allStakesFullfilled() {
@@ -468,9 +477,8 @@ export default {
         return false;
       if (match1.country2.name !== match2.country2.name)
         return false;
-      if (match1.date.getDate() !== match2.date.getDate())
-        return false;
-      return true;
+      return match1.date.getDate() === match2.date.getDate();
+
     }
 
     function alreadyBetOnMatch(match) {

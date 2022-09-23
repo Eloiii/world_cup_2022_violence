@@ -6,3 +6,4 @@
   - [ ] rank chart
 - [ ] Schedule page
 - [ ] Forecast page
+- [ ] Un max de points pour bet le vainqueur ?
