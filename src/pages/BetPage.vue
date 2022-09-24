@@ -456,12 +456,20 @@ export default {
         showNotif("Tu ne possèdes pas assez d'argent", "negative");
         return;
       }
-      const bets = [
-        ...userBets.value,
-        ...basket.value
-      ]
+      const finalBets = []
+      for(const userBet of userBets.value) {
+        for(const basketBet of basket.value) {
+          if(isSameMatch(basketBet.match, userBet.match)) {
+            finalBets.push(basketBet)
+          } else if (!finalBets.includes(basketBet))
+            finalBets.push(basketBet)
+          else if (!finalBets.includes(userBet))
+            finalBets.push(userBet)
+        }
+
+      }
       const docRef = doc(db, "users", auth.currentUser.uid);
-      await updateDoc(docRef, {bets: bets});
+      await updateDoc(docRef, {bets: finalBets});
     }
 
     function allStakesFullfilled() {
