@@ -132,7 +132,7 @@ import { defineComponent } from "vue";
 import { useQuasar } from "quasar";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth, db } from "boot/firebaseConnection";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, onSnapshot, query, collection} from "firebase/firestore";
 
 
 export default defineComponent({
@@ -205,10 +205,15 @@ export default defineComponent({
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         this.userData = await this.getUserData(user);
+        const q = query(collection(db, "users"))
+        onSnapshot(q, async (querySnapshot) => {
+          this.userData = await this.getUserData(user);
+        })
       } else {
         this.userData = null;
       }
     });
+
     const darkModeStored = localStorage.getItem("darkmode");
     if (darkModeStored === "true") {
       this.darkMode = true;

@@ -351,7 +351,7 @@ import { computed, ref } from "vue";
 import { getFrCountryName, getSchedule } from "src/getOddsApiData";
 import { useQuasar } from "quasar";
 import { auth, db } from "boot/firebaseConnection";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import {doc, getDoc, Timestamp, updateDoc} from "firebase/firestore";
 
 
 export default {
@@ -363,6 +363,7 @@ export default {
     const lastOddsUpdate = ref();
     const stakeRules = ref([]);
     const userCoins = ref(0);
+    const userData = ref({});
     const userBets = ref([]);
     const mobileBasket = ref(false);
 
@@ -456,7 +457,7 @@ export default {
         showNotif("Tu ne possèdes pas assez d'argent", "negative");
         return;
       }
-      const finalBets = []
+      let finalBets = []
       for(const userBet of userBets.value) {
         for(const basketBet of basket.value) {
           if(isSameMatch(basketBet.match, userBet.match)) {
@@ -468,8 +469,18 @@ export default {
         }
 
       }
+      if(finalBets.length === 0)
+        finalBets = [...basket.value]
+      const userScore = userData.value.score
+      //TODO ne pas enlever le totalStake quand changement de bet
+      //TODO rembourser l'ancier + débiter le nouveau (glhf)
+      //TODO idem dans le [] coins ?
+      userScore.coins.push({
+        amount: getUserCoins(userData.value) - totalStake.value,
+        date : Timestamp.fromDate(new Date())
+      })
       const docRef = doc(db, "users", auth.currentUser.uid);
-      await updateDoc(docRef, {bets: finalBets});
+      await updateDoc(docRef, {bets: finalBets, score: userScore});
     }
 
     function allStakesFullfilled() {
@@ -522,6 +533,7 @@ export default {
       lastOddsUpdate,
       stakeRules,
       userCoins,
+      userData,
       userBets,
       mobileBasket,
       addItemToBasket,
@@ -564,13 +576,17 @@ export default {
 
     this.schedule = dateSeparated;
     this.lastOddsUpdate = new Date(rawMatchesData.date);
+    try {
+      this.userData = await this.getUserData(auth.currentUser);
+      this.userCoins = this.getUserCoins(this.userData);
+      this.stakeRules = [val => val > 0 || "une mise positive non nulle de préférence", val => val <= this.userCoins || "tu ne possèdes pas assez d'argent"];
 
-    const userData = await this.getUserData(auth.currentUser);
-    this.userCoins = this.getUserCoins(userData);
-    this.stakeRules = [val => val > 0 || "une mise positive non nulle de préférence", val => val <= this.userCoins || "tu ne possèdes pas assez d'argent"];
-
-    userData.bets.forEach((bet) => bet.match.date = bet.match.date.toDate());
-    this.userBets = userData.bets;
+      this.userData.bets.forEach((bet) => bet.match.date = bet.match.date.toDate());
+      this.userBets = this.userData.bets;
+    }
+    catch (e) {
+      this.showNotif(e.message, "negative")
+    }
 
   }
 };
