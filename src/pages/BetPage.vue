@@ -1,8 +1,8 @@
 <template>
   <q-page padding>
     <div class="row q-col-gutter-xs-md q-mb-md" v-if="lastOddsUpdate">
-      <div class="col">
-        <q-badge color="red">
+      <div class="col-md-3">
+        <q-badge color="red" class="q-pa-sm">
           Toutes les cotes datent du {{
             lastOddsUpdate.toLocaleDateString("fr-FR", {
               year: "numeric",
@@ -14,6 +14,11 @@
               timeZoneName: "short"
             })
           }}
+        </q-badge>
+      </div>
+      <div class="col-md-4">
+        <q-badge color="red" class="q-pa-sm">
+          Une mise de 0 <q-icon class="q-mx-xs" name="toll" /> annule un pari existant (ou ne valide pas un pari)
         </q-badge>
       </div>
     </div>
@@ -179,7 +184,7 @@
             </q-item-section>
             <q-item-section style="flex-shrink: 1;">
               <q-input v-model="bet.bet.stake" type="numeric" min="" max="5" label="Mise" :rules="stakeRules"
-                       outlined />
+                       outlined/>
             </q-item-section>
             <q-item-section side class="q-mr-md text-weight-bold">
               <div>
@@ -199,7 +204,7 @@
               </div>
             </q-item-section>
           </q-item>
-          <q-card class="q-mb-sm">
+          <q-card class="q-my-sm">
             <q-card-section class="flex column">
               <div class="flex justify-between">
                 <div>
@@ -445,40 +450,50 @@ export default {
     }
 
     function isDecimal(num) {
-      return (num - Math.floor(num)) !== 0
+      return (num - Math.floor(num)) !== 0;
     }
 
     async function validateBet() {
       if(isDecimal(totalStake.value)) {
-        showNotif("Ne rentre que des valeurs entières", "negative")
-        return
+        showNotif("Ne rentre que des valeurs entières", "negative");
+        return;
       }
       if (totalStake.value > userCoins.value) {
         showNotif("Tu ne possèdes pas assez d'argent", "negative");
         return;
       }
-      let finalBets = []
-      for(const userBet of userBets.value) {
-        for(const basketBet of basket.value) {
-          if(isSameMatch(basketBet.match, userBet.match)) {
-            finalBets.push(basketBet)
-          } else if (!finalBets.includes(basketBet))
-            finalBets.push(basketBet)
-          else if (!finalBets.includes(userBet))
-            finalBets.push(userBet)
-        }
+      let finalBets = [...userBets.value];
+      let coinsToBeRefund = 0;
 
+      for(const bet of finalBets) {
+        for(const basketBet of basket.value) {
+          if(isSameMatch(basketBet.match, bet.match)) {
+            if(basketBet.bet.stake > 0)
+              finalBets.push(basketBet);
+            finalBets = finalBets.filter(b => b !== bet);
+            coinsToBeRefund += Number(bet.bet.stake);
+          } else if (!finalBets.includes(basketBet))
+            finalBets.push(basketBet);
+          else if (!finalBets.includes(bet))
+            finalBets.push(bet);
+        }
       }
-      if(finalBets.length === 0)
-        finalBets = [...basket.value]
+      //TODO attention quand 1 pari non nul + pari nul sans remboursement -> pas de panier mais débite les sousous
+      if(finalBets.length === 0 && !basket.value.some(bet => Number(bet.bet.stake) === 0)) {
+        finalBets = [...basket.value];
+      }
       const userScore = userData.value.score
-      //TODO ne pas enlever le totalStake quand changement de bet
-      //TODO rembourser l'ancier + débiter le nouveau (glhf)
-      //TODO idem dans le [] coins ?
+
+      console.log(finalBets);
+
+      //TODO afficher en plus de "mise totale" "rembourseement total ?"
+      //TODO showNotif apres clic parier
+
+      //TODO idem supprimer les entrées dans le [] coins (pour le remboursement) ?
       userScore.coins.push({
-        amount: getUserCoins(userData.value) - totalStake.value,
+        amount: (getUserCoins(userData.value) - totalStake.value) + coinsToBeRefund,
         date : Timestamp.fromDate(new Date())
-      })
+      });
       const docRef = doc(db, "users", auth.currentUser.uid);
       await updateDoc(docRef, {bets: finalBets, score: userScore});
     }
@@ -579,13 +594,13 @@ export default {
     try {
       this.userData = await this.getUserData(auth.currentUser);
       this.userCoins = this.getUserCoins(this.userData);
-      this.stakeRules = [val => val > 0 || "une mise positive non nulle de préférence", val => val <= this.userCoins || "tu ne possèdes pas assez d'argent"];
+      this.stakeRules = [val => val >= 0 || "une mise positive de préférence", val => val <= this.userCoins || "tu ne possèdes pas assez d'argent"];
 
       this.userData.bets.forEach((bet) => bet.match.date = bet.match.date.toDate());
       this.userBets = this.userData.bets;
     }
     catch (e) {
-      this.showNotif(e.message, "negative")
+      this.showNotif(e.message, "negative");
     }
 
   }
