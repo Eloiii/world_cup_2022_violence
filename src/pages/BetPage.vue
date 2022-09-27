@@ -235,7 +235,7 @@
               style="width: 30%" />
           </q-card-section>
           <q-card-section class="text-center">
-            Commence par séléctionner un pari !
+            Commence par séléctionner un match !
           </q-card-section>
         </q-card>
       </div>
