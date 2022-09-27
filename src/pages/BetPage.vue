@@ -232,7 +232,7 @@
           <q-card-section class="flex justify-center">
             <img
               src="https://lh3.googleusercontent.com/H2lTPeipM1RidN1PmxumJCra8-LF1gOngZXmDgkWOmDqSuxv0kpOpsgYAUXAxyuNwmW-z9KO53f4kn8JcafGrZhi-fEHHcSrXZA42q0=w600"
-              style="width: 30%" />
+              style="width: 30%"  alt="sadge"/>
           </q-card-section>
           <q-card-section class="text-center">
             Commence par séléctionner un match !
@@ -351,7 +351,7 @@ import { computed, ref } from "vue";
 import { getFrCountryName, getSchedule } from "src/getOddsApiData";
 import { useQuasar } from "quasar";
 import { auth, db } from "boot/firebaseConnection";
-import {doc, getDoc, Timestamp, updateDoc} from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot, query, Timestamp, updateDoc } from "firebase/firestore";
 
 
 export default {
@@ -477,16 +477,21 @@ export default {
       }
       const userScore = userData.value.score
 
-      //TODO afficher en plus de "mise totale" "rembourseement total ?"
-      //TODO showNotif apres clic parier
-      //TODO quand maj direct des coins -> faire comme dans mainLayout avec un listener pour mettre a jour direct
       //TODO idem supprimer les entrées dans le [] coins (pour le remboursement) ?
       userScore.coins.push({
         amount: (getUserCoins(userData.value) - Number(totalStake.value)) + coinsToBeRefund,
         date : Timestamp.fromDate(new Date())
       });
-      const docRef = doc(db, "users", auth.currentUser.uid);
-      await updateDoc(docRef, {bets: finalBets, score: userScore});
+      try {
+        const docRef = doc(db, "users", auth.currentUser.uid);
+        await updateDoc(docRef, {bets: finalBets, score: userScore});
+
+        showNotif("Pari(s) enregistré(s) !", "info")
+      } catch (e) {
+        showNotif(e.message, "negative")
+      }
+
+
     }
 
     function allStakesFullfilled() {
@@ -512,6 +517,15 @@ export default {
           return true;
       }
       return false;
+    }
+
+    async function loadUserData() {
+      this.userData = await this.getUserData(auth.currentUser);
+      this.userCoins = this.getUserCoins(this.userData);
+      this.stakeRules = [val => val > 0 || "une mise positive non nulle de préférence", val => val <= this.userCoins || "tu ne possèdes pas assez d'argent"];
+
+      this.userData.bets.forEach((bet) => bet.match.date = bet.match.date.toDate());
+      this.userBets = this.userData.bets;
     }
 
 
@@ -553,6 +567,7 @@ export default {
       allStakesFullfilled,
       alreadyBetOnMatch,
       validateBet,
+      loadUserData,
       totalStake,
       totalProfit
     };
@@ -583,17 +598,15 @@ export default {
     this.schedule = dateSeparated;
     this.lastOddsUpdate = new Date(rawMatchesData.date);
     try {
-      this.userData = await this.getUserData(auth.currentUser);
-      this.userCoins = this.getUserCoins(this.userData);
-      this.stakeRules = [val => val > 0 || "une mise positive non nulle de préférence", val => val <= this.userCoins || "tu ne possèdes pas assez d'argent"];
-
-      this.userData.bets.forEach((bet) => bet.match.date = bet.match.date.toDate());
-      this.userBets = this.userData.bets;
+      await this.loadUserData()
     }
     catch (e) {
       this.showNotif(e.message, "negative");
     }
-
+    const q = query(collection(db, "users"))
+    onSnapshot(q, async (querySnapshot) => {
+      await this.loadUserData()
+    })
   }
 };
 </script>
