@@ -16,11 +16,6 @@
           }}
         </q-badge>
       </div>
-      <div class="col-md-4">
-        <q-badge color="red" class="q-pa-sm">
-          Une mise de 0 <q-icon class="q-mx-xs" name="toll" /> annule un pari existant (ou ne valide pas un pari)
-        </q-badge>
-      </div>
     </div>
     <div class="row justify-around q-col-gutter-xs-md">
       <div class="col-md-8 col-12">
@@ -468,9 +463,8 @@ export default {
       for(const bet of finalBets) {
         for(const basketBet of basket.value) {
           if(isSameMatch(basketBet.match, bet.match)) {
-            if(basketBet.bet.stake > 0)
-              finalBets.push(basketBet);
             finalBets = finalBets.filter(b => b !== bet);
+            finalBets.push(basketBet);
             coinsToBeRefund += Number(bet.bet.stake);
           } else if (!finalBets.includes(basketBet))
             finalBets.push(basketBet);
@@ -478,20 +472,17 @@ export default {
             finalBets.push(bet);
         }
       }
-      //TODO attention quand 1 pari non nul + pari nul sans remboursement -> pas de panier mais débite les sousous
-      if(finalBets.length === 0 && !basket.value.some(bet => Number(bet.bet.stake) === 0)) {
+      if(finalBets.length === 0) {
         finalBets = [...basket.value];
       }
       const userScore = userData.value.score
 
-      console.log(finalBets);
-
       //TODO afficher en plus de "mise totale" "rembourseement total ?"
       //TODO showNotif apres clic parier
-
+      //TODO quand maj direct des coins -> faire comme dans mainLayout avec un listener pour mettre a jour direct
       //TODO idem supprimer les entrées dans le [] coins (pour le remboursement) ?
       userScore.coins.push({
-        amount: (getUserCoins(userData.value) - totalStake.value) + coinsToBeRefund,
+        amount: (getUserCoins(userData.value) - Number(totalStake.value)) + coinsToBeRefund,
         date : Timestamp.fromDate(new Date())
       });
       const docRef = doc(db, "users", auth.currentUser.uid);
@@ -594,7 +585,7 @@ export default {
     try {
       this.userData = await this.getUserData(auth.currentUser);
       this.userCoins = this.getUserCoins(this.userData);
-      this.stakeRules = [val => val >= 0 || "une mise positive de préférence", val => val <= this.userCoins || "tu ne possèdes pas assez d'argent"];
+      this.stakeRules = [val => val > 0 || "une mise positive non nulle de préférence", val => val <= this.userCoins || "tu ne possèdes pas assez d'argent"];
 
       this.userData.bets.forEach((bet) => bet.match.date = bet.match.date.toDate());
       this.userBets = this.userData.bets;

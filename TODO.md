@@ -7,3 +7,4 @@
 - [ ] Forecast page
 - [ ] Un max de points pour bet le vainqueur ?
 - [ ] My bets page
+  - [ ] Refund bets
