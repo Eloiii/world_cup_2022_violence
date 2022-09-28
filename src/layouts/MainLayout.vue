@@ -127,7 +127,7 @@
 
 
     <q-page-container>
-      <router-view />
+      <router-view/>
     </q-page-container>
 
   </q-layout>
@@ -150,7 +150,7 @@ export default defineComponent({
     };
   },
   methods: {
-    async getUserData(user) {
+    async getUserData(user=auth.currentUser) {
       const docRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(docRef);
 

@@ -4,7 +4,9 @@
   - [ ] notifs sur reco de la page pour les résultats et gains des derniers résultats
   - [ ] ranking table
   - [ ] rank chart
-- [ ] Forecast page
+- [ ] Bet page
+  - [ ] display match time (hour)
 - [ ] Un max de points pour bet le vainqueur ?
 - [ ] My bets page
   - [ ] Refund bets
+- [ ] Mettre des onAuth sur toutes les pages
