@@ -3,14 +3,18 @@
     <div class="row justify-center">
       <div class="col-8">
 <!--        TODO placer avatar (ou atre) du coté parié et trouver où mettre le montant parié-->
-        <MatchResult v-for="bet of userBets" :key="bet" :match="bet.match" :title="''" />
+        <div v-if="(userData && userBets).length > 0">
+          <BetRecap  v-for="bet of userBets" :key="bet"  :bet="bet" :userData="userData"/>
+        </div>
+        <MatchResultSkeleton v-else/>
       </div>
     </div>
   </q-page>
 </template>
 
 <script>
-import MatchResult from "./MatchResult.vue";
+import BetRecap from "./BetRecap.vue";
+import MatchResultSkeleton from "./MatchResultSkeleton.vue";
 import {collection, doc, getDoc, onSnapshot, query} from "firebase/firestore";
 import {auth, db} from "boot/firebaseConnection";
 import {getFrCountryName} from "src/getOddsApiData";
@@ -18,8 +22,8 @@ import {ref} from "vue";
 import {onAuthStateChanged} from "firebase/auth";
 
 export default {
-  name: "MyBets",
-  components: { MatchResult },
+  name: "BetList",
+  components: { BetRecap, MatchResultSkeleton },
   setup() {
     const userData = ref({})
     const userBets = ref([])
@@ -49,6 +53,10 @@ export default {
         const q = query(collection(db, "users"))
         onSnapshot(q, async (querySnapshot) => {
           this.userData = await this.getUserData(user);
+          console.log(querySnapshot)
+          //TODO recupérer TOUS les bets de tout le monde et les afficher
+          //TODO pouvoir supprimer uniquement ses propres paris
+          //TODO finir affichage avatar + stakes
         })
         this.userBets = this.userData.bets.map(function(bet) {
           bet.match.date = bet.match.date.toDate()

@@ -73,9 +73,9 @@
               Parier
             </q-item-section>
           </q-item>
-          <q-item v-ripple clickable to="/mybets">
+          <q-item v-ripple clickable to="/betlist">
             <q-item-section>
-              Mes paris
+              Les paris
             </q-item-section>
           </q-item>
         </q-list>
