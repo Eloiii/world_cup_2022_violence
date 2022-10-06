@@ -457,10 +457,14 @@ export default {
         showNotif("Tu ne possèdes pas assez d'argent", "negative");
         return;
       }
-      let finalBets = [...userBets.value];
+      let finalBets = []
+      let loopingBets = []
+      for(const userBet of userBets.value) {
+        loopingBets.push(userBet)
+      }
       let coinsToBeRefund = 0;
 
-      for(const bet of finalBets) {
+      for(const bet of loopingBets) {
         for(const basketBet of basket.value) {
           if(isSameMatch(basketBet.match, bet.match)) {
             finalBets = finalBets.filter(b => b !== bet);
@@ -477,7 +481,6 @@ export default {
       }
       const userScore = userData.value.score
 
-      //TODO idem supprimer les entrées dans le [] coins (pour le remboursement) ?
       userScore.coins.push({
         amount: (getUserCoins(userData.value) - Number(totalStake.value)) + coinsToBeRefund,
         date : Timestamp.fromDate(new Date())
