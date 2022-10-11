@@ -5,7 +5,7 @@
   - [ ] ranking table
   - [ ] rank chart
 - [ ] Bet page
-  - [ ] display match time (hour)
+  - [X] display match time (hour)
 - [ ] Un max de points pour bet le vainqueur ?
 - [ ] My bets page
   - [ ] Refund bets

@@ -39,7 +39,7 @@
                            height="32" width="32">
                       <div class="text-body2 q-mt-xs text-weight-bold">{{ getFrCountryName(match.country1.name) }}</div>
                     </div>
-                    &ndash;
+                        &ndash;
                     <div class="flex justify-center column items-center country">
                       <img :src="'https://countryflagsapi.com/svg/'+match.country2.name" alt="drapeau"
                            height="32" width="32">
@@ -88,7 +88,16 @@
                   </div>
                 </q-item-section>
                 <q-item-section side class="q-mt-xl text-caption">
-                  <span class="cote">
+                  <span class="text-italic">
+                    {{
+                      match.date.toLocaleTimeString("fr-FR", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        timeZoneName: "short"
+                      })
+                    }}
+                  </span>
+                  <span class="cote q-mt-sm text-weight-medium">
                     cotes de {{ match.service }}
                   </span>
                 </q-item-section>
@@ -153,7 +162,7 @@
                   </span>
                 </q-item-section>
               </q-item>
-              <q-separator v-if="date.indexOf(match) !== date.length -1" />
+              <q-separator v-if="date.indexOf(match) !== date.length -1"/>
             </template>
           </q-list>
         </template>
@@ -167,7 +176,7 @@
                   Tu as déjà parié sur ce match !
                 </q-tooltip>
               </q-icon>
-              <q-icon name="sports_soccer" v-else />
+              <q-icon name="sports_soccer" v-else/>
             </q-item-section>
             <q-item-section>
               <q-item-label class="text-caption">
@@ -187,7 +196,7 @@
               </div>
               <div>
                 {{ Math.round(bet.bet.stake * bet.bet.odds || 0) }}
-                <q-icon class="q-ml-xs" name="toll" />
+                <q-icon class="q-ml-xs" name="toll"/>
               </div>
             </q-item-section>
             <q-item-section side>
@@ -207,7 +216,7 @@
                 </div>
                 <div>
                   {{ totalStake }}
-                  <q-icon class="q-ml-xs" name="toll" />
+                  <q-icon class="q-ml-xs" name="toll"/>
                 </div>
               </div>
               <div class="flex justify-between q-mt-xs">
@@ -216,7 +225,7 @@
                 </div>
                 <div class="text-weight-bold">
                   {{ totalProfit }}
-                  <q-icon class="q-ml-xs" name="toll" size="xs" />
+                  <q-icon class="q-ml-xs" name="toll" size="xs"/>
                 </div>
               </div>
             </q-card-section>
@@ -232,7 +241,7 @@
           <q-card-section class="flex justify-center">
             <img
               src="https://lh3.googleusercontent.com/H2lTPeipM1RidN1PmxumJCra8-LF1gOngZXmDgkWOmDqSuxv0kpOpsgYAUXAxyuNwmW-z9KO53f4kn8JcafGrZhi-fEHHcSrXZA42q0=w600"
-              style="width: 30%"  alt="sadge"/>
+              style="width: 30%" alt="sadge"/>
           </q-card-section>
           <q-card-section class="text-center">
             Commence par séléctionner un match !
@@ -275,7 +284,7 @@
                         Tu as déjà un pari sur ce match !
                       </q-tooltip>
                     </q-icon>
-                    <q-icon name="sports_soccer" v-else size="sm" />
+                    <q-icon name="sports_soccer" v-else size="sm"/>
                   </div>
                   <div>
                     <div class="text-caption">
@@ -298,7 +307,7 @@
                   <div class="q-mr-md">
                     <q-input v-model="bet.bet.stake" type="numeric" min="" max="5" label="Mise"
                              :rules="stakeRules"
-                             outlined />
+                             outlined/>
                   </div>
                   <div class="mobileList-item-stake-winnings">
                     <div>
@@ -306,7 +315,7 @@
                     </div>
                     <div>
                       {{ Math.round(bet.bet.stake * bet.bet.odds || 0) }}
-                      <q-icon class="q-ml-xs" name="toll" />
+                      <q-icon class="q-ml-xs" name="toll"/>
                     </div>
                   </div>
                 </div>
@@ -322,7 +331,7 @@
             </div>
             <div>
               {{ totalStake }}
-              <q-icon class="q-ml-xs" name="toll" />
+              <q-icon class="q-ml-xs" name="toll"/>
             </div>
           </div>
           <div class="flex justify-between q-mt-xs">
@@ -331,7 +340,7 @@
             </div>
             <div class="text-weight-bold">
               {{ totalProfit }}
-              <q-icon class="q-ml-xs" name="toll" size="xs" />
+              <q-icon class="q-ml-xs" name="toll" size="xs"/>
             </div>
           </div>
         </q-card-section>
@@ -347,11 +356,11 @@
 </template>
 
 <script>
-import { computed, ref } from "vue";
-import { getFrCountryName, getSchedule } from "src/getOddsApiData";
-import { useQuasar } from "quasar";
-import { auth, db } from "boot/firebaseConnection";
-import { collection, doc, getDoc, onSnapshot, query, Timestamp, updateDoc } from "firebase/firestore";
+import {computed, ref} from "vue";
+import {getFrCountryName, getSchedule} from "src/getOddsApiData";
+import {useQuasar} from "quasar";
+import {auth, db} from "boot/firebaseConnection";
+import {collection, doc, getDoc, onSnapshot, query, Timestamp, updateDoc} from "firebase/firestore";
 
 
 export default {
@@ -449,7 +458,7 @@ export default {
     }
 
     async function validateBet() {
-      if(isDecimal(totalStake.value)) {
+      if (isDecimal(totalStake.value)) {
         showNotif("Ne rentre que des valeurs entières", "negative");
         return;
       }
@@ -459,14 +468,14 @@ export default {
       }
       let finalBets = []
       let loopingBets = []
-      for(const userBet of userBets.value) {
+      for (const userBet of userBets.value) {
         loopingBets.push(userBet)
       }
       let coinsToBeRefund = 0;
 
-      for(const bet of loopingBets) {
-        for(const basketBet of basket.value) {
-          if(isSameMatch(basketBet.match, bet.match)) {
+      for (const bet of loopingBets) {
+        for (const basketBet of basket.value) {
+          if (isSameMatch(basketBet.match, bet.match)) {
             finalBets = finalBets.filter(b => b !== bet);
             finalBets.push(basketBet);
             coinsToBeRefund += Number(bet.bet.stake);
@@ -476,14 +485,14 @@ export default {
             finalBets.push(bet);
         }
       }
-      if(finalBets.length === 0) {
+      if (finalBets.length === 0) {
         finalBets = [...basket.value];
       }
       const userScore = userData.value.score
 
       userScore.coins.push({
         amount: (getUserCoins(userData.value) - Number(totalStake.value)) + coinsToBeRefund,
-        date : Timestamp.fromDate(new Date())
+        date: Timestamp.fromDate(new Date())
       });
       try {
         const docRef = doc(db, "users", auth.currentUser.uid);
@@ -587,7 +596,7 @@ export default {
     //TODO faire qq ici si les données ne sont pas (encore) là
     const schedule = getSchedule(rawMatchesData.data).sort((a, b) => a.date.getTime() - b.date.getTime());
 
-    const dateSeparated = schedule.reduce(function(prev, curr) {
+    const dateSeparated = schedule.reduce(function (prev, curr) {
       const date = curr.date.getDate();
       if (!prev[date])
         prev[date] = [];
@@ -602,8 +611,7 @@ export default {
     this.lastOddsUpdate = new Date(rawMatchesData.date);
     try {
       await this.loadUserData()
-    }
-    catch (e) {
+    } catch (e) {
       this.showNotif(e.message, "negative");
     }
     const q = query(collection(db, "users"))
