@@ -10,3 +10,4 @@
 - [ ] My bets page
   - [ ] Refund bets
 - [ ] Mettre des onAuth sur toutes les pages
+- [ ] Mettre à jour tous les paris quand résultat
