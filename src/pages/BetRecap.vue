@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-center">
 
-  <q-card class="bg-red-5 q-mb-lg" square v-if="userID === connectedUserID">
+  <q-card class="bg-red-5 q-mb-lg shadow-2" square v-if="userID === connectedUserID">
     <q-tooltip>
       Annuler mon pari
     </q-tooltip>
@@ -11,7 +11,7 @@
       </q-btn>
     </q-card-section>
   </q-card>
-  <q-card class="card q-mb-lg" style="width:90%">
+  <q-card class="card q-mb-lg" style="width:90%" >
     <q-card-section>
       <q-list>
         <q-item-label class="q-pt-none q-pl-none flex justify-between" header>

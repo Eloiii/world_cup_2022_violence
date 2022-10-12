@@ -7,9 +7,8 @@
 - [ ] Bet page
   - [X] display match time (hour)
   - [ ] aussi pour mobile
-- [ ] Un max de points pour bet le vainqueur ?
-- [ ] My bets page
-  - [ ] Refund bets
-- [ ] Mettre des onAuth sur toutes les pages
+- [X] My bets page
+  - [X] Refund bets
+- [X] Mettre des onAuth sur toutes les pages
 - [ ] Mettre à jour tous les paris quand résultat
 - [ ] empêcher annuler pari quand match en cours
