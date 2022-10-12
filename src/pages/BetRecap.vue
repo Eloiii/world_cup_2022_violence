@@ -1,5 +1,17 @@
 <template>
-  <q-card class="card q-mb-lg">
+  <div class="flex justify-center">
+
+  <q-card class="bg-red-5 q-mb-lg" square v-if="userID === connectedUserID">
+    <q-tooltip>
+      Annuler mon pari
+    </q-tooltip>
+    <q-card-section horizontal class="full-height">
+      <q-btn icon="close" flat @click="$emit('removeBet', {bet: bet, userID: userID})">
+
+      </q-btn>
+    </q-card-section>
+  </q-card>
+  <q-card class="card q-mb-lg" style="width:90%">
     <q-card-section>
       <q-list>
         <q-item-label class="q-pt-none q-pl-none flex justify-between" header>
@@ -119,16 +131,28 @@
       </q-list>
     </q-card-section>
   </q-card>
+  </div>
 </template>
 <script>
 import { getFrCountryName } from "src/getOddsApiData";
+import {auth} from "boot/firebaseConnection";
+import {computed} from "vue";
 
 export default {
   name: "MatchResult",
   props: {
     userData: Object,
     date: Date,
-    bet: Object
+    bet: Object,
+    userID: Object
+  },
+  setup() {
+    const connectedUserID = computed(() => {
+      return auth.currentUser.uid
+    })
+    return {
+      connectedUserID
+    }
   },
   methods: {
     getFrCountryName
