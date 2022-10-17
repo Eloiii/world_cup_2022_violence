@@ -474,14 +474,18 @@ export default {
       let coinsToBeRefund = 0;
 
       for (const bet of loopingBets) {
+        let sameMatchFound = false
         for (const basketBet of basket.value) {
           if (isSameMatch(basketBet.match, bet.match)) {
-            finalBets = finalBets.filter(b => b !== bet);
+            finalBets = finalBets.filter(b => !isSameMatch(b.match, bet.match));
             finalBets.push(basketBet);
             coinsToBeRefund += Number(bet.bet.stake);
-          } else if (!finalBets.includes(basketBet))
+            sameMatchFound = true
+          }
+          else if (!finalBets.includes(basketBet)) {
             finalBets.push(basketBet);
-          else if (!finalBets.includes(bet))
+          }
+          if (!finalBets.includes(bet) && !sameMatchFound)
             finalBets.push(bet);
         }
       }
@@ -494,6 +498,7 @@ export default {
         amount: (getUserCoins(userData.value) - Number(totalStake.value)) + coinsToBeRefund,
         date: Timestamp.fromDate(new Date())
       });
+      basket.value = []
       try {
         const docRef = doc(db, "users", auth.currentUser.uid);
         await updateDoc(docRef, {bets: finalBets, score: userScore});
