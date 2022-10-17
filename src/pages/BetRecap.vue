@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-center ">
 
-    <q-card class="bg-red-5 q-mb-lg shadow-2 deleteForecast" square v-if="userID === connectedUserID" style="max-width: 65px">
+    <q-card class="bg-red-5 q-mb-lg shadow-2 deleteForecast" square v-if="userID === connectedUserID" style="max-width: 65px" :disabled="hasMatchStarted()">
       <q-tooltip>
         Annuler mon pari
       </q-tooltip>
@@ -146,12 +146,18 @@ export default {
     bet: Object,
     userID: Object
   },
-  setup() {
+  setup(props) {
     const connectedUserID = computed(() => {
       return auth.currentUser.uid;
     });
+
+    function hasMatchStarted() {
+      return props.bet.match.date < new Date()
+    }
+
     return {
-      connectedUserID
+      connectedUserID,
+      hasMatchStarted
     };
   },
   methods: {
