@@ -1,8 +1,8 @@
 <template>
-  <!--  TODO VERSION MOBILE-->
+<!--  TODO demander confirmation avant de suppr-->
   <q-page padding v-if="usersData">
     <div class="row justify-center">
-      <div class="col-8">
+      <div class="col-md-8 col-12">
         <q-tabs
           align="justify"
           v-model="tab"
@@ -14,9 +14,9 @@
       </div>
     </div>
     <div class="row justify-center q-mt-xl">
-      <div class="col-8">
-        <q-tab-panels v-model="tab" animated class="bg-transparent">
-          <q-tab-panel v-for="(item, userID) in usersData" :key="item.name" :name="item.name">
+      <div class="col-md-8 col-12">
+        <q-tab-panels v-model="tab" animated class="bg-transparent" swipeable>
+          <q-tab-panel v-for="(item, userID) in usersData" :key="item.name" :name="item.name" class="q-pa-none">
             <div v-if="usersData">
               <BetRecap v-for="bet of item.bets" :key="bet" :bet="bet" :userData="item" :userID="userID" @removeBet="removeBet"/>
             </div>
@@ -96,6 +96,7 @@ export default {
     };
   },
   async mounted() {
+    console.log(auth.currentUser.uid);
     const q = query(collection(db, "users"))
     onSnapshot(q, async (querySnapshot) => {
       await this.loadUsersData()
