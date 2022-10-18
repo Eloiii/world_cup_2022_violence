@@ -15,7 +15,7 @@
       </q-card-section>
 
       <q-card-actions vertical>
-        <q-btn color="primary" type="submit" >
+        <q-btn color="primary" type="submit">
           Connexion
         </q-btn>
       </q-card-actions>
@@ -31,7 +31,12 @@
 
 <script>
 import { useQuasar } from "quasar";
-import { browserLocalPersistence, setPersistence, signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
+import {
+  browserLocalPersistence,
+  sendPasswordResetEmail,
+  setPersistence,
+  signInWithEmailAndPassword
+} from "firebase/auth";
 import { auth } from "boot/firebaseConnection";
 
 export default {
@@ -55,20 +60,20 @@ export default {
             .catch((error) => {
               self.showNotif(error.code + "-" + error.message, "negative");
             });
-        })
+        });
 
     },
     async resetPassword() {
-      if(this.email === "" || this.email === null || this.email === undefined) {
-        this.showNotif("Rentre ton email", "negative")
-        return
+      if (this.email === "" || this.email === null || this.email === undefined) {
+        this.showNotif("Rentre ton email", "negative");
+        return;
       }
       try {
         await sendPasswordResetEmail(auth, this.email, {
           url: "http://localhost:9000"
-        })
+        });
         this.showNotif("E-mail envoyé", "positive");
-      } catch(error) {
+      } catch (error) {
         this.showNotif(error.code + "-" + error.message, "negative");
       }
 

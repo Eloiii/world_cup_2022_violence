@@ -24,7 +24,7 @@ export default defineComponent({
     if (sessionStorage.getItem("oddsApiData") === null || sessionStorage.getItem("oddsApiData") === "null") {
       const getOddsApiData = await axios.get("https://europe-west1-violence-qatar2022.cloudfunctions.net/getOddsApiData");
       sessionStorage.setItem("oddsApiData", JSON.stringify({
-        data: getOddsApiData.data ,
+        data: getOddsApiData.data,
         date: new Date()
       }));
     }

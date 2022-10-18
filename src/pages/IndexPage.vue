@@ -1,5 +1,5 @@
 <template>
-  <q-page padding class="q-col-gutter-xl">
+  <q-page class="q-col-gutter-xl" padding>
     <div class="row justify-evenly q-col-gutter-xs-md">
       <div class="col-md-3 col-12">
         <MatchResult v-if="lastResult" :match="lastResult" :title="'Dernier Résultat'" />
@@ -13,31 +13,31 @@
     <div class="row justify-center">
       <div class="col-md-8 col-sm-12">
         <q-table
+          v-if="rows"
+          v-model:pagination="pagination"
           :columns="columns"
+          :grid="tableGridView"
           :loading="loading"
           :rows="rows"
-          title="Leaderboard"
-          v-if="rows"
-          :grid="tableGridView"
-          row-key="name"
-          v-model:pagination="pagination"
           hide-bottom
+          row-key="name"
+          title="Leaderboard"
         >
           <template v-slot:top-right>
             <q-toggle v-model="tableGridView" color="purple" label="Grille" />
           </template>
           <template v-slot:body-cell="props">
             <q-td
-              :props="props"
               :class="rowBackground(props.row.name)"
+              :props="props"
             >
               {{ props.value }}
             </q-td>
           </template>
           <template v-slot:body-cell-coins="props">
-            <q-td :props="props" :class="rowBackground(props.row.name)">
+            <q-td :class="rowBackground(props.row.name)" :props="props">
               <div>
-                <q-badge :color="badgeColor(props.value)" rounded transparent class="text-dark">
+                <q-badge :color="badgeColor(props.value)" class="text-dark" rounded transparent>
                 <span class="text-caption">
                   {{ props.value }}
                 </span>
@@ -99,13 +99,13 @@
     </div>
     <div class="row justify-center">
       <div class="col-md-8">
-        <apexchart width="100%" height="300" type="line" :options="options" :series="series"></apexchart>
+        <apexchart :options="options" :series="series" height="300" type="line" width="100%"></apexchart>
       </div>
     </div>
   </q-page>
 </template>
 <script>
-import { computed, defineComponent, watch } from "vue";
+import { defineComponent } from "vue";
 import MatchResult from "./MatchResult.vue";
 import MatchResultSkeleton from "./MatchResultSkeleton.vue";
 import { getSchedule } from "src/getOddsApiData";
@@ -310,7 +310,7 @@ export default defineComponent({
     await this.getLeaderboardData();
     this.getChartData();
 
-    this.$emitter.on('toggleDarkMode', (dark) => {
+    this.$emitter.on("toggleDarkMode", (dark) => {
       this.options = {
         title: {
           text: "Évolutions de l'argent",
@@ -324,7 +324,7 @@ export default defineComponent({
           }
         },
         theme: {
-          mode: dark.dark ? "dark": ""
+          mode: dark.dark ? "dark" : ""
         },
         chart: {
           locales: [fr],
@@ -339,8 +339,8 @@ export default defineComponent({
         markers: {
           size: 5
         }
-      }
-    })
-  },
+      };
+    });
+  }
 });
 </script>

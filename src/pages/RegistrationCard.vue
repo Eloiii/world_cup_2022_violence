@@ -9,13 +9,18 @@
 
     <q-form @submit="submit">
       <q-card-section>
-        <q-input v-model="name" :rules="[val => val.length <= 10 || '10 caractères max', val => !!val || 'Champ requis']" class="q-mb-xs" label="Nom"
+        <q-input v-model="name"
+                 :rules="[val => val.length <= 10 || '10 caractères max', val => !!val || 'Champ requis']"
+                 class="q-mb-xs" label="Nom"
                  outlined />
         <q-input v-model="email" :rules="[val => !!val || 'Champ requis']" class="q-mb-xs" label="E-mail" outlined
                  type="email" />
-        <q-input v-model="pass" :rules="[val => val.length >= 6 || '6 caractères minimum stp', val => !!val || 'Champ requis']" class="q-mb-xs" label="Mot de passe" outlined
+        <q-input v-model="pass"
+                 :rules="[val => val.length >= 6 || '6 caractères minimum stp', val => !!val || 'Champ requis']"
+                 class="q-mb-xs" label="Mot de passe" outlined
                  type="password" />
-        <q-input v-model="passConfirmation" :rules="[val => !!val || 'Champ requis']" class="q-mb-xs" label="Confirmation mot de passe" outlined
+        <q-input v-model="passConfirmation" :rules="[val => !!val || 'Champ requis']" class="q-mb-xs"
+                 label="Confirmation mot de passe" outlined
                  type="password" />
         <q-input v-model="ppLink" label="Lien image de profil" outlined type="url" />
 

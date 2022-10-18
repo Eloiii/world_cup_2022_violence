@@ -6,7 +6,7 @@ const routes = [
       { path: "", name: "home", component: () => import("pages/IndexPage.vue") },
       { path: "login", name: "login", component: () => import("pages/LoginPage.vue") },
       { path: "bet", name: "bet", component: () => import("pages/BetPage.vue") },
-      { path: "betlist", name: "betlist", component: () => import("pages/BetList.vue") },
+      { path: "betlist", name: "betlist", component: () => import("pages/BetList.vue") }
     ]
   },
 

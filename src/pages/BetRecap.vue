@@ -1,14 +1,16 @@
 <template>
   <div class="flex justify-center ">
 
-    <q-card class="bg-red-5 q-mb-lg shadow-2 deleteForecast" square v-if="userID === connectedUserID" style="max-width: 65px">
+    <q-card v-if="userID === connectedUserID" class="bg-red-5 q-mb-lg shadow-2 deleteForecast" square
+            style="max-width: 65px">
       <q-tooltip>
         {{
           hasMatchStarted() ? "Le match est en cours ou terminé" : "Annuler mon pari"
         }}
       </q-tooltip>
-      <q-card-section horizontal class="full-height flex justify-center items-center">
-        <q-btn class="q-pa-none full-height full-width" icon="close" flat @click="$emit('removeBet', {bet: bet, userID: userID})" :disabled="hasMatchStarted()">
+      <q-card-section class="full-height flex justify-center items-center" horizontal>
+        <q-btn :disabled="hasMatchStarted()" class="q-pa-none full-height full-width" flat
+               icon="close" @click="$emit('removeBet', {bet: bet, userID: userID})">
 
         </q-btn>
       </q-card-section>
@@ -32,7 +34,7 @@
               <q-icon name="toll" />
             </div>
           </q-item-label>
-          <q-item >
+          <q-item>
             <q-item-section style="width: 25%">
               <div class="flex justify-center column items-center">
                 <img :src="'https://countryflagsapi.com/svg/'+bet.match.country1.name" alt="drapeau"
@@ -43,15 +45,15 @@
             </q-item-section>
 
 
-            <q-item-section v-if="bet.bet.name === bet.match.country1.name" style="width: 25%"
-                            class="force_items_center">
+            <q-item-section v-if="bet.bet.name === bet.match.country1.name" class="force_items_center"
+                            style="width: 25%">
               <q-avatar v-if="userData.avatar === ''" color="primary text-white" size="40px">
                 {{ userData.name?.substring(0, 2) }}
               </q-avatar>
               <q-avatar v-else size="40px">
                 <img :src="userData.avatar" alt="user profile picture">
               </q-avatar>
-              <q-badge color="positive" rounded class="text-dark q-mt-xs">
+              <q-badge class="text-dark q-mt-xs" color="positive" rounded>
                 <span class="text-subtitle2">
                   {{ bet.bet.stake }}
                 </span>
@@ -85,7 +87,7 @@
                 <q-avatar v-else size="40px">
                   <img :src="userData.avatar" alt="user profile picture">
                 </q-avatar>
-                <q-badge color="positive" rounded class="text-dark q-mt-xs">
+                <q-badge class="text-dark q-mt-xs" color="positive" rounded>
                 <span class="text-subtitle2">
                   {{ bet.bet.stake }}
                 </span>
@@ -102,15 +104,15 @@
               </q-item-label>
             </q-item-section>
 
-            <q-item-section v-if="bet.bet.name === bet.match.country2.name" style="width: 25%"
-                            class="force_items_center">
+            <q-item-section v-if="bet.bet.name === bet.match.country2.name" class="force_items_center"
+                            style="width: 25%">
               <q-avatar v-if="userData.avatar === ''" color="primary text-white" size="40px">
                 {{ userData.name?.substring(0, 2) }}
               </q-avatar>
               <q-avatar v-else size="40px">
                 <img :src="userData.avatar" alt="user profile picture">
               </q-avatar>
-              <q-badge color="positive" rounded class="text-dark q-mt-xs">
+              <q-badge class="text-dark q-mt-xs" color="positive" rounded>
                 <span class="text-subtitle2">
                   {{ bet.bet.stake }}
                 </span>
@@ -154,7 +156,7 @@ export default {
     });
 
     function hasMatchStarted() {
-      return props.bet.match.date < new Date()
+      return props.bet.match.date < new Date();
     }
 
     return {
@@ -167,7 +169,7 @@ export default {
   }
 };
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .force_items_center {
   align-items: center !important;
 }

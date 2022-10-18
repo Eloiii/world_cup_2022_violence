@@ -1,8 +1,8 @@
 <template>
   <q-page padding>
-    <div class="row q-col-gutter-xs-md q-mb-md" v-if="lastOddsUpdate">
+    <div v-if="lastOddsUpdate" class="row q-col-gutter-xs-md q-mb-md">
       <div class="col-md-3">
-        <q-badge color="red" class="q-pa-sm">
+        <q-badge class="q-pa-sm" color="red">
           Toutes les cotes datent du {{
             lastOddsUpdate.toLocaleDateString("fr-FR", {
               year: "numeric",
@@ -20,8 +20,8 @@
     <div class="row justify-around q-col-gutter-xs-md">
       <div class="col-md-8 col-12">
         <template v-for="date of schedule" :key="date">
-          <q-list class="q-mb-xl" bordered padding v-if="date">
-            <q-item-label header v-if="date">
+          <q-list v-if="date" bordered class="q-mb-xl" padding>
+            <q-item-label v-if="date" header>
               {{
                 date[0].date.toLocaleDateString("fr-FR", {
                   year: "numeric",
@@ -55,8 +55,8 @@
                 </q-item-section>
                 <q-item-section class="items-center">
                   <div class="flex justify-evenly" style="width:80%">
-                    <q-btn :color="buttonColor(match, match.country1.name)" class="buttonOdds"
-                           :text-color="buttonTextColor(match, match.country1.name)"
+                    <q-btn :color="buttonColor(match, match.country1.name)" :text-color="buttonTextColor(match, match.country1.name)"
+                           class="buttonOdds"
                            @click="addItemToBasket(match, match.country1)">
                       <div class="flex column no-wrap ellipsis">
                         <div class="text-caption ellipsis">
@@ -67,8 +67,8 @@
                         </div>
                       </div>
                     </q-btn>
-                    <q-btn :color="buttonColor(match, match.draw.name)" class="buttonOdds"
-                           :text-color="buttonTextColor(match, match.draw.name)"
+                    <q-btn :color="buttonColor(match, match.draw.name)" :text-color="buttonTextColor(match, match.draw.name)"
+                           class="buttonOdds"
                            @click="addItemToBasket(match, match.draw)">
                       <div class="flex column">
                         <div class="text-caption">
@@ -79,8 +79,8 @@
                         </div>
                       </div>
                     </q-btn>
-                    <q-btn :color="buttonColor(match, match.country2.name)" class="buttonOdds"
-                           :text-color="buttonTextColor(match, match.country2.name)"
+                    <q-btn :color="buttonColor(match, match.country2.name)" :text-color="buttonTextColor(match, match.country2.name)"
+                           class="buttonOdds"
                            @click="addItemToBasket(match, match.country2)">
                       <div class="flex column no-wrap ellipsis">
                         <div class="text-caption ellipsis">
@@ -93,7 +93,7 @@
                     </q-btn>
                   </div>
                 </q-item-section>
-                <q-item-section side class="q-mt-xl text-caption">
+                <q-item-section class="q-mt-xl text-caption" side>
                   <span class="text-italic">
                     {{
                       match.date.toLocaleTimeString("fr-FR", {
@@ -124,8 +124,8 @@
                 </q-item-section>
                 <q-item-section class="items-center q-mt-xl" style="margin-left: 0 !important;">
                   <div class="flex justify-between full-width">
-                    <q-btn :color="buttonColor(match, match.country1.name)" class="buttonOdds"
-                           :text-color="buttonTextColor(match, match.country1.name)"
+                    <q-btn :color="buttonColor(match, match.country1.name)" :text-color="buttonTextColor(match, match.country1.name)"
+                           class="buttonOdds"
                            @click="addItemToBasket(match, match.country1)">
                       <div class="flex column no-wrap ellipsis">
                         <div class="text-caption ellipsis">
@@ -136,8 +136,8 @@
                         </div>
                       </div>
                     </q-btn>
-                    <q-btn :color="buttonColor(match, match.draw.name)" class="buttonOdds"
-                           :text-color="buttonTextColor(match, match.draw.name)"
+                    <q-btn :color="buttonColor(match, match.draw.name)" :text-color="buttonTextColor(match, match.draw.name)"
+                           class="buttonOdds"
                            @click="addItemToBasket(match, match.draw)">
                       <div class="flex column">
                         <div class="text-caption">
@@ -148,8 +148,8 @@
                         </div>
                       </div>
                     </q-btn>
-                    <q-btn :color="buttonColor(match, match.country2.name)" class="buttonOdds"
-                           :text-color="buttonTextColor(match, match.country2.name)"
+                    <q-btn :color="buttonColor(match, match.country2.name)" :text-color="buttonTextColor(match, match.country2.name)"
+                           class="buttonOdds"
                            @click="addItemToBasket(match, match.country2)">
                       <div class="flex column no-wrap ellipsis">
                         <div class="text-caption ellipsis">
@@ -162,27 +162,27 @@
                     </q-btn>
                   </div>
                 </q-item-section>
-                <q-item-section side class="q-mt-xl text-caption">
+                <q-item-section class="q-mt-xl text-caption" side>
                   <span class="cote">
                     cotes de {{ match.service }}
                   </span>
                 </q-item-section>
               </q-item>
-              <q-separator v-if="date.indexOf(match) !== date.length -1"/>
+              <q-separator v-if="date.indexOf(match) !== date.length -1" />
             </template>
           </q-list>
         </template>
       </div>
       <div class="col-md-4 mobile-hide">
-        <q-list class="q-pb-none q-px-sm" bordered padding v-if="basket.length > 0">
+        <q-list v-if="basket.length > 0" bordered class="q-pb-none q-px-sm" padding>
           <q-item v-for="bet of basket" :key="bet.match">
             <q-item-section thumbnail>
-              <q-icon name="warning" v-if="alreadyBetOnMatch(bet.match)">
+              <q-icon v-if="alreadyBetOnMatch(bet.match)" name="warning">
                 <q-tooltip class="bg-negative">
                   Tu as déjà parié sur ce match !
                 </q-tooltip>
               </q-icon>
-              <q-icon name="sports_soccer" v-else/>
+              <q-icon v-else name="sports_soccer" />
             </q-item-section>
             <q-item-section>
               <q-item-label class="text-caption">
@@ -193,16 +193,16 @@
               </q-item-label>
             </q-item-section>
             <q-item-section style="flex-shrink: 1;">
-              <q-input v-model="bet.bet.stake" type="numeric" min="" max="5" label="Mise" :rules="stakeRules"
-                       outlined/>
+              <q-input v-model="bet.bet.stake" :rules="stakeRules" label="Mise" max="5" min="" outlined
+                       type="numeric" />
             </q-item-section>
-            <q-item-section side class="q-mr-md text-weight-bold">
+            <q-item-section class="q-mr-md text-weight-bold" side>
               <div>
                 Gain
               </div>
               <div>
                 {{ Math.round(bet.bet.stake * bet.bet.odds || 0) }}
-                <q-icon class="q-ml-xs" name="toll"/>
+                <q-icon class="q-ml-xs" name="toll" />
               </div>
             </q-item-section>
             <q-item-section side>
@@ -222,7 +222,7 @@
                 </div>
                 <div>
                   {{ totalStake }}
-                  <q-icon class="q-ml-xs" name="toll"/>
+                  <q-icon class="q-ml-xs" name="toll" />
                 </div>
               </div>
               <div class="flex justify-between q-mt-xs">
@@ -231,23 +231,23 @@
                 </div>
                 <div class="text-weight-bold">
                   {{ totalProfit }}
-                  <q-icon class="q-ml-xs" name="toll" size="xs"/>
+                  <q-icon class="q-ml-xs" name="toll" size="xs" />
                 </div>
               </div>
             </q-card-section>
             <q-card-section class="flex justify-center q-mt-none">
-              <q-btn rounded color="amber-13" text-color="dark" size="lg" unelevated class="full-width"
-                     @click="validateBet" :disable="!allStakesFullfilled()">
+              <q-btn :disable="!allStakesFullfilled()" class="full-width" color="amber-13" rounded size="lg" text-color="dark"
+                     unelevated @click="validateBet">
                 Parier
               </q-btn>
             </q-card-section>
           </q-card>
         </q-list>
-        <q-card bordered flat v-else>
+        <q-card v-else bordered flat>
           <q-card-section class="flex justify-center">
             <img
-              src="https://lh3.googleusercontent.com/H2lTPeipM1RidN1PmxumJCra8-LF1gOngZXmDgkWOmDqSuxv0kpOpsgYAUXAxyuNwmW-z9KO53f4kn8JcafGrZhi-fEHHcSrXZA42q0=w600"
-              style="width: 30%" alt="sadge"/>
+              alt="sadge"
+              src="https://lh3.googleusercontent.com/H2lTPeipM1RidN1PmxumJCra8-LF1gOngZXmDgkWOmDqSuxv0kpOpsgYAUXAxyuNwmW-z9KO53f4kn8JcafGrZhi-fEHHcSrXZA42q0=w600" style="width: 30%" />
           </q-card-section>
           <q-card-section class="text-center">
             Commence par séléctionner un match !
@@ -255,11 +255,11 @@
         </q-card>
       </div>
       <div class="mobile-only">
-        <q-page-sticky position="bottom-right" :offset="[18, 18]">
+        <q-page-sticky :offset="[18, 18]" position="bottom-right">
           <q-fab
             :icon="!mobileBasket ? 'shopping_basket' : 'close'"
-            direction="up"
             color="red"
+            direction="up"
             @click="mobileBasket = true"
           >
           </q-fab>
@@ -274,7 +274,7 @@
               <div class="text-h6">Panier</div>
             </div>
             <div class="col-auto">
-              <q-btn v-close-popup icon="close" flat></q-btn>
+              <q-btn v-close-popup flat icon="close"></q-btn>
             </div>
           </div>
         </q-card-section>
@@ -285,12 +285,12 @@
               <div class="mobileList-item q-mb-md q-mt-sm">
                 <div class="mobileList-item-match">
                   <div class="q-mr-sm">
-                    <q-icon name="warning" v-if="alreadyBetOnMatch(bet.match)" size="sm">
+                    <q-icon v-if="alreadyBetOnMatch(bet.match)" name="warning" size="sm">
                       <q-tooltip class="bg-negative">
                         Tu as déjà un pari sur ce match !
                       </q-tooltip>
                     </q-icon>
-                    <q-icon name="sports_soccer" v-else size="sm"/>
+                    <q-icon v-else name="sports_soccer" size="sm" />
                   </div>
                   <div>
                     <div class="text-caption">
@@ -311,9 +311,9 @@
                     </div>
                   </div>
                   <div class="q-mr-md">
-                    <q-input v-model="bet.bet.stake" type="numeric" min="" max="5" label="Mise"
-                             :rules="stakeRules"
-                             outlined/>
+                    <q-input v-model="bet.bet.stake" :rules="stakeRules" label="Mise" max="5" min=""
+                             outlined
+                             type="numeric" />
                   </div>
                   <div class="mobileList-item-stake-winnings">
                     <div>
@@ -321,7 +321,7 @@
                     </div>
                     <div>
                       {{ Math.round(bet.bet.stake * bet.bet.odds || 0) }}
-                      <q-icon class="q-ml-xs" name="toll"/>
+                      <q-icon class="q-ml-xs" name="toll" />
                     </div>
                   </div>
                 </div>
@@ -329,7 +329,7 @@
             </template>
           </div>
         </q-card-section>
-        <q-space/>
+        <q-space />
         <q-card-section class="flex column">
           <div class="flex justify-between">
             <div>
@@ -337,7 +337,7 @@
             </div>
             <div>
               {{ totalStake }}
-              <q-icon class="q-ml-xs" name="toll"/>
+              <q-icon class="q-ml-xs" name="toll" />
             </div>
           </div>
           <div class="flex justify-between q-mt-xs">
@@ -346,13 +346,13 @@
             </div>
             <div class="text-weight-bold">
               {{ totalProfit }}
-              <q-icon class="q-ml-xs" name="toll" size="xs"/>
+              <q-icon class="q-ml-xs" name="toll" size="xs" />
             </div>
           </div>
         </q-card-section>
         <q-card-section class="flex justify-center q-mt-none">
-          <q-btn rounded color="amber-13" text-color="dark" size="md" unelevated class="full-width"
-                 @click="validateBet" :disable="!allStakesFullfilled()">
+          <q-btn :disable="!allStakesFullfilled()" class="full-width" color="amber-13" rounded size="md" text-color="dark"
+                 unelevated @click="validateBet">
             Parier
           </q-btn>
         </q-card-section>
@@ -362,11 +362,11 @@
 </template>
 
 <script>
-import {computed, ref} from "vue";
-import {getFrCountryName, getSchedule} from "src/getOddsApiData";
-import {useQuasar} from "quasar";
-import {auth, db} from "boot/firebaseConnection";
-import {collection, doc, getDoc, onSnapshot, query, Timestamp, updateDoc} from "firebase/firestore";
+import { computed, ref } from "vue";
+import { getFrCountryName, getSchedule } from "src/getOddsApiData";
+import { useQuasar } from "quasar";
+import { auth, db } from "boot/firebaseConnection";
+import { collection, doc, getDoc, onSnapshot, query, Timestamp, updateDoc } from "firebase/firestore";
 
 
 export default {
@@ -472,21 +472,21 @@ export default {
         showNotif("Tu ne possèdes pas assez d'argent", "negative");
         return;
       }
-      let finalBets = []
-      let loopingBets = []
+      let finalBets = [];
+      let loopingBets = [];
       for (const userBet of userBets.value) {
-        loopingBets.push(userBet)
+        loopingBets.push(userBet);
       }
       let coinsToBeRefund = 0;
 
       for (const bet of loopingBets) {
-        let sameMatchFound = false
+        let sameMatchFound = false;
         for (const basketBet of basket.value) {
           if (isSameMatch(basketBet.match, bet.match)) {
             finalBets = finalBets.filter(b => !isSameMatch(b.match, bet.match));
             finalBets.push(basketBet);
             coinsToBeRefund += Number(bet.bet.stake);
-            sameMatchFound = true
+            sameMatchFound = true;
           } else if (!finalBets.includes(basketBet)) {
             finalBets.push(basketBet);
           }
@@ -497,20 +497,20 @@ export default {
       if (finalBets.length === 0) {
         finalBets = [...basket.value];
       }
-      const userScore = userData.value.score
+      const userScore = userData.value.score;
 
       userScore.coins.push({
         amount: (getUserCoins(userData.value) - Number(totalStake.value)) + coinsToBeRefund,
         date: Timestamp.fromDate(new Date())
       });
-      basket.value = []
+      basket.value = [];
       try {
         const docRef = doc(db, "users", auth.currentUser.uid);
-        await updateDoc(docRef, {bets: finalBets, score: userScore});
+        await updateDoc(docRef, { bets: finalBets, score: userScore });
 
-        showNotif("Pari(s) enregistré(s) !", "info")
+        showNotif("Pari(s) enregistré(s) !", "info");
       } catch (e) {
-        showNotif(e.message, "negative")
+        showNotif(e.message, "negative");
       }
 
 
@@ -606,7 +606,7 @@ export default {
     //TODO faire qq ici si les données ne sont pas (encore) là
     const schedule = getSchedule(rawMatchesData.data).sort((a, b) => a.date.getTime() - b.date.getTime());
 
-    const dateSeparated = schedule.reduce(function (prev, curr) {
+    const dateSeparated = schedule.reduce(function(prev, curr) {
       const date = curr.date.getDate();
       if (!prev[date])
         prev[date] = [];
@@ -619,15 +619,15 @@ export default {
 
     this.schedule = dateSeparated;
     this.lastOddsUpdate = new Date(rawMatchesData.date);
-    const q = query(collection(db, "users"))
+    const q = query(collection(db, "users"));
     onSnapshot(q, async (querySnapshot) => {
-      await this.loadUserData()
-    })
+      await this.loadUserData();
+    });
   }
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .country {
   width: 125px;
 }

@@ -1,14 +1,14 @@
 function getSchedule(data) {
-  const res = []
+  const res = [];
   for (const match of data) {
     let odds;
-    if(match.bookmakers.length > 0) {
-      odds = match.bookmakers.filter(bookmaker => bookmaker.key === "unibet")[0]
-      if(odds === undefined) {
-        odds = match.bookmakers[0]
+    if (match.bookmakers.length > 0) {
+      odds = match.bookmakers.filter(bookmaker => bookmaker.key === "unibet")[0];
+      if (odds === undefined) {
+        odds = match.bookmakers[0];
       }
     } else
-      odds = {key: null}
+      odds = { key: null };
     res.push({
       country1: {
         name: match.home_team,
@@ -28,14 +28,15 @@ function getSchedule(data) {
       date: new Date(match.commence_time)
     });
   }
-  return res
+  return res;
 }
 
 function retrievePrice(odds, teamName) {
-  if(odds.markets)
+  if (odds.markets)
     return odds.markets.filter(market => market.key === "h2h")[0].outcomes.filter(team => team.name === teamName)[0].price;
-  return null
+  return null;
 }
+
 function getFrCountryName(countryName) {
   switch (countryName) {
     case "Qatar":

@@ -39,17 +39,17 @@
             </q-item-section>
             <q-item-section side>
               <transition
-                type="animation"
-                mode="in-out"
                 enter-active-class="animated bounceInLeft"
                 leave-active-class="animated bounceInRight"
+                mode="in-out"
+                type="animation"
               >
-              <q-badge :color="badgeColor()" rounded class="text-dark">
+                <q-badge :color="badgeColor()" class="text-dark" rounded>
                 <span class="text-subtitle2">
                   {{ getUserCoins() }}
                 </span>
-                <q-icon class="q-ml-xs" name="toll" />
-              </q-badge>
+                  <q-icon class="q-ml-xs" name="toll" />
+                </q-badge>
               </transition>
             </q-item-section>
           </q-item>
@@ -129,7 +129,7 @@
 
 
     <q-page-container>
-      <router-view/>
+      <router-view />
     </q-page-container>
 
   </q-layout>
@@ -139,10 +139,10 @@ import { defineComponent } from "vue";
 import { useQuasar } from "quasar";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth, db } from "boot/firebaseConnection";
-import { doc, getDoc, onSnapshot, query, collection} from "firebase/firestore";
-import mitt from 'mitt'
+import { collection, doc, getDoc, onSnapshot, query } from "firebase/firestore";
+import mitt from "mitt";
 
-const emitter = mitt()
+const emitter = mitt();
 
 export default defineComponent({
   name: "MainLayout",
@@ -154,7 +154,7 @@ export default defineComponent({
     };
   },
   methods: {
-    async getUserData(user=auth.currentUser) {
+    async getUserData(user = auth.currentUser) {
       const docRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(docRef);
 
@@ -168,14 +168,13 @@ export default defineComponent({
       this.$q.dark.toggle();
       if (this.$q.dark.isActive) {
         localStorage.setItem("darkmode", "true");
-        this.$emitter.emit('toggleDarkMode', {
+        this.$emitter.emit("toggleDarkMode", {
           dark: true
-        })
-      }
-      else {
-        this.$emitter.emit('toggleDarkMode', {
+        });
+      } else {
+        this.$emitter.emit("toggleDarkMode", {
           dark: false
-        })
+        });
       }
     },
     getUserCoins() {
@@ -221,10 +220,10 @@ export default defineComponent({
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         this.userData = await this.getUserData(user);
-        const q = query(collection(db, "users"))
+        const q = query(collection(db, "users"));
         onSnapshot(q, async (querySnapshot) => {
           this.userData = await this.getUserData(user);
-        })
+        });
       } else {
         this.userData = null;
       }
@@ -243,6 +242,7 @@ export default defineComponent({
 .animation {
   animation: mymove 5s;
 }
+
 @keyframes mymove {
   from {
     background-color: red;
