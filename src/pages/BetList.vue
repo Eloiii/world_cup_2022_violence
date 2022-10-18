@@ -96,16 +96,15 @@ export default {
     };
   },
   async mounted() {
-    console.log(auth.currentUser.uid);
-    const q = query(collection(db, "users"))
-    onSnapshot(q, async (querySnapshot) => {
-      await this.loadUsersData()
-    })
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         await this.loadUsersData()
       }
     });
+    const q = query(collection(db, "users"))
+    onSnapshot(q, async (querySnapshot) => {
+      await this.loadUsersData()
+    })
   }
 };
 </script>

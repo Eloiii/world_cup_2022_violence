@@ -37,13 +37,19 @@
                     <div class="flex justify-center column items-center country">
                       <img :src="'https://countryflagsapi.com/svg/'+match.country1.name" alt="drapeau"
                            height="32" width="32">
-                      <div class="text-body2 q-mt-xs text-weight-bold">{{ getFrCountryName(match.country1.name) }}</div>
+                      <div class="text-body2 q-mt-xs text-weight-bold">{{
+                          getFrCountryName(match.country1.name)
+                        }}
+                      </div>
                     </div>
-                        &ndash;
+                    &ndash;
                     <div class="flex justify-center column items-center country">
                       <img :src="'https://countryflagsapi.com/svg/'+match.country2.name" alt="drapeau"
                            height="32" width="32">
-                      <div class="text-body2 q-mt-xs text-weight-bold">{{ getFrCountryName(match.country2.name) }}</div>
+                      <div class="text-body2 q-mt-xs text-weight-bold">{{
+                          getFrCountryName(match.country2.name)
+                        }}
+                      </div>
                     </div>
                   </div>
                 </q-item-section>
@@ -481,8 +487,7 @@ export default {
             finalBets.push(basketBet);
             coinsToBeRefund += Number(bet.bet.stake);
             sameMatchFound = true
-          }
-          else if (!finalBets.includes(basketBet)) {
+          } else if (!finalBets.includes(basketBet)) {
             finalBets.push(basketBet);
           }
           if (!finalBets.includes(bet) && !sameMatchFound)
@@ -540,7 +545,6 @@ export default {
       this.userData = await this.getUserData(auth.currentUser);
       this.userCoins = this.getUserCoins(this.userData);
       this.stakeRules = [val => val > 0 || "une mise positive non nulle de préférence", val => val <= this.userCoins || "tu ne possèdes pas assez d'argent"];
-
       this.userData.bets.forEach((bet) => bet.match.date = bet.match.date.toDate());
       this.userBets = this.userData.bets;
     }
@@ -598,6 +602,7 @@ export default {
     }
     if (!rawMatchesData)
       return;
+
     //TODO faire qq ici si les données ne sont pas (encore) là
     const schedule = getSchedule(rawMatchesData.data).sort((a, b) => a.date.getTime() - b.date.getTime());
 
@@ -614,11 +619,6 @@ export default {
 
     this.schedule = dateSeparated;
     this.lastOddsUpdate = new Date(rawMatchesData.date);
-    try {
-      await this.loadUserData()
-    } catch (e) {
-      this.showNotif(e.message, "negative");
-    }
     const q = query(collection(db, "users"))
     onSnapshot(q, async (querySnapshot) => {
       await this.loadUserData()

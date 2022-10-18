@@ -11,5 +11,6 @@
   - [X] Refund bets
 - [X] Mettre des onAuth sur toutes les pages
 - [ ] Mettre à jour tous les paris quand résultat
-- [ ] empêcher annuler pari quand match en cours
+- [X] empêcher annuler pari quand match en cours
 - [ ] annim des coins updated en haut à droite quand ya une maj
+- [ ] Fix BetPage performance

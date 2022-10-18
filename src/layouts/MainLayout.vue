@@ -38,12 +38,19 @@
               </q-item-label>
             </q-item-section>
             <q-item-section side>
+              <transition
+                type="animation"
+                mode="in-out"
+                enter-active-class="animated bounceInLeft"
+                leave-active-class="animated bounceInRight"
+              >
               <q-badge :color="badgeColor()" rounded class="text-dark">
                 <span class="text-subtitle2">
                   {{ getUserCoins() }}
                 </span>
                 <q-icon class="q-ml-xs" name="toll" />
               </q-badge>
+              </transition>
             </q-item-section>
           </q-item>
           <q-popup-proxy>
@@ -63,11 +70,6 @@
               Accueil
             </q-item-section>
           </q-item>
-          <q-item v-ripple clickable>
-            <q-item-section>
-              Programme
-            </q-item-section>
-          </q-item>
           <q-item v-ripple clickable to="/bet">
             <q-item-section>
               Parier
@@ -75,7 +77,7 @@
           </q-item>
           <q-item v-ripple clickable to="/betlist">
             <q-item-section>
-              Les paris
+              Voir les paris
             </q-item-section>
           </q-item>
         </q-list>
@@ -229,5 +231,15 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-
+.animation {
+  animation: mymove 5s;
+}
+@keyframes mymove {
+  from {
+    background-color: red;
+  }
+  to {
+    background-color: yellow;
+  }
+}
 </style>
