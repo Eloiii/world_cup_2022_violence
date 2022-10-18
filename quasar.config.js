@@ -33,7 +33,8 @@ module.exports = configure(function(/* ctx */) {
       "firebaseConnection",
       "axios",
       "apexcharts",
-      "mitt"
+      "mitt",
+      "numberAnimation"
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
@@ -116,11 +117,10 @@ module.exports = configure(function(/* ctx */) {
       ]
     },
 
-     animations: 'all', // --- includes all animations
+     //animations: 'all', // --- includes all animations
     // https://v2.quasar.dev/options/animations
     animations: [
-      'bounceInLeft',
-      'bounceOutRight'
+
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#property-sourcefiles

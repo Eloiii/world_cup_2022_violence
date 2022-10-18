@@ -38,19 +38,19 @@
               </q-item-label>
             </q-item-section>
             <q-item-section side>
-              <transition
-                enter-active-class="animated bounceInLeft"
-                leave-active-class="animated bounceInRight"
-                mode="in-out"
-                type="animation"
-              >
+
                 <q-badge :color="badgeColor()" class="text-dark" rounded>
                 <span class="text-subtitle2">
-                  {{ getUserCoins() }}
+                  <number
+
+                    :from="previousCoinsCount"
+                    :to="getUserCoins()"
+                    :duration="3"
+                  >
+                  </number>
                 </span>
                   <q-icon class="q-ml-xs" name="toll" />
                 </q-badge>
-              </transition>
             </q-item-section>
           </q-item>
           <q-popup-proxy>
@@ -150,7 +150,8 @@ export default defineComponent({
     return {
       drawer: false,
       darkMode: false,
-      userData: null
+      userData: null,
+      previousCoinsCount: 0
     };
   },
   methods: {
@@ -179,6 +180,7 @@ export default defineComponent({
     },
     getUserCoins() {
       const coinsTab = this.userData.score.coins;
+      this.previousCoinsCount = coinsTab[coinsTab.length - 2]
       return coinsTab[coinsTab.length - 1].amount;
     },
     badgeColor() {
@@ -239,16 +241,5 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-.animation {
-  animation: mymove 5s;
-}
 
-@keyframes mymove {
-  from {
-    background-color: red;
-  }
-  to {
-    background-color: yellow;
-  }
-}
 </style>
