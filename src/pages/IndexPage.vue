@@ -109,7 +109,7 @@ import { defineComponent } from "vue";
 import MatchResult from "./MatchResult.vue";
 import MatchResultSkeleton from "./MatchResultSkeleton.vue";
 import { getSchedule } from "src/getOddsApiData";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, doc, getDocs, Timestamp, updateDoc } from "firebase/firestore";
 import { auth, db } from "boot/firebaseConnection";
 import * as fr from "apexcharts/dist/locales/fr.json";
 
@@ -261,9 +261,9 @@ export default defineComponent({
         let data = [];
         for (const record of userData.score.coins) {
           const offset = Math.abs(record.date.toDate().getTimezoneOffset() / 60);
-          const roundDate = new Date(record.date.toDate().setHours(offset, 0, 0, 0));
+          const dateWithOffset = new Date(record.date.toDate().setHours(record.date.toDate().getHours()  + offset))
           data.push({
-            x: roundDate.getTime(),
+            x: dateWithOffset.getTime(),
             y: record.amount
           });
         }
@@ -291,6 +291,44 @@ export default defineComponent({
     }
   },
   async mounted() {
+
+      // const docRef = doc(db, "users", auth.currentUser.uid);
+      // await updateDoc(docRef, { bets: [], score: {
+      //   coins: [
+      //     {
+      //       amount: 1000,
+      //       date: Timestamp.fromDate(new Date(2022, 9, 19, 20, 43, 0))
+      //     },
+      //     {
+      //       amount: 650,
+      //       date: Timestamp.fromDate(new Date(2022, 9, 19, 21, 43, 0))
+      //     },
+      //     {
+      //       amount: 400,
+      //       date: Timestamp.fromDate(new Date(2022, 9, 19, 21, 59, 0))
+      //     },
+      //     {
+      //       amount: 200,
+      //       date: Timestamp.fromDate(new Date(2022, 9, 19, 23, 21, 0))
+      //     },
+      //     {
+      //       amount: 1200,
+      //       date: Timestamp.fromDate(new Date(2022, 9, 21, 12, 30, 0))
+      //     },
+      //     {
+      //       amount: 73,
+      //       date: Timestamp.fromDate(new Date(2022, 9, 21, 19, 33, 22))
+      //     },
+      //     {
+      //       amount: 560,
+      //       date: Timestamp.fromDate(new Date(2022, 9, 25, 9, 17, 0))
+      //     },
+      //
+      //   ],
+      //     correct: 0,
+      //     forecasted: 0,
+      //     wrong: 0
+      //   } })
 
     const oddsApiData = JSON.parse(sessionStorage.getItem("oddsApiData"));
     const schedule = getSchedule(oddsApiData.data);

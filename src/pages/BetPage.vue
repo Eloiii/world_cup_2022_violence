@@ -603,7 +603,7 @@ export default {
     if (!rawMatchesData)
       return;
 
-    //TODO faire qq ici si les données ne sont pas (encore) là
+
     const schedule = getSchedule(rawMatchesData.data).sort((a, b) => a.date.getTime() - b.date.getTime());
 
     const dateSeparated = schedule.reduce(function(prev, curr) {

@@ -92,8 +92,8 @@ export default {
         score: {
           coins: [
             {
-              amount: 100,
-              date: Timestamp.fromDate(new Date("2022-11-18"))
+              amount: 500,
+              date: Timestamp.fromDate(new Date())
             }
           ],
           forecasted: 0,

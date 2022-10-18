@@ -2,9 +2,10 @@
 
 - [ ] Index page
   - [ ] notifs sur reco de la page pour les résultats et gains des derniers résultats
-  - [ ] ranking table
-  - [ ] rank chart
-- [ ] Bet page
+  - [X] ranking table
+  - [X] rank chart
+    - [ ] default theme is light -> issue when landing with dark mode (need to double flip)
+- [X] Bet page
   - [X] display match time (hour)
   - [X] aussi pour mobile
 - [X] My bets page
