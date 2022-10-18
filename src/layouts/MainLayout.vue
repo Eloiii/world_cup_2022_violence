@@ -140,7 +140,9 @@ import { useQuasar } from "quasar";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth, db } from "boot/firebaseConnection";
 import { doc, getDoc, onSnapshot, query, collection} from "firebase/firestore";
+import mitt from 'mitt'
 
+const emitter = mitt()
 
 export default defineComponent({
   name: "MainLayout",
@@ -164,10 +166,17 @@ export default defineComponent({
     },
     toggleDarkMode() {
       this.$q.dark.toggle();
-      if (this.$q.dark.isActive)
+      if (this.$q.dark.isActive) {
         localStorage.setItem("darkmode", "true");
-      else
-        localStorage.setItem("darkmode", "false");
+        this.$emitter.emit('toggleDarkMode', {
+          dark: true
+        })
+      }
+      else {
+        this.$emitter.emit('toggleDarkMode', {
+          dark: false
+        })
+      }
     },
     getUserCoins() {
       const coinsTab = this.userData.score.coins;

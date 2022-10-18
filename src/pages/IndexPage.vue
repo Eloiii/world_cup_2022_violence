@@ -105,16 +105,13 @@
   </q-page>
 </template>
 <script>
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, watch } from "vue";
 import MatchResult from "./MatchResult.vue";
 import MatchResultSkeleton from "./MatchResultSkeleton.vue";
 import { getSchedule } from "src/getOddsApiData";
 import { collection, getDocs } from "firebase/firestore";
 import { auth, db } from "boot/firebaseConnection";
-import axios from "axios";
-
 import * as fr from "apexcharts/dist/locales/fr.json";
-import { useQuasar } from "quasar";
 
 export default defineComponent({
   name: "IndexPage",
@@ -165,6 +162,35 @@ export default defineComponent({
       pagination: {
         sortBy: "coins",
         descending: true
+      },
+      options: {
+        title: {
+          text: "Évolutions de l'argent",
+          offsetY: 10,
+          style: {
+            fontSize: "1rem",
+            fontWeight: "400",
+            lineHeight: "1.75rem",
+            letterSpacing: "0.00937em",
+            fontFamily: "Inter"
+          }
+        },
+        theme: {
+          mode: ""
+        },
+        chart: {
+          locales: [fr],
+          defaultLocale: "fr"
+        },
+        stroke: {
+          curve: "straight"
+        },
+        xaxis: {
+          type: "datetime"
+        },
+        markers: {
+          size: 5
+        }
       }
     };
   },
@@ -249,9 +275,6 @@ export default defineComponent({
       }
       this.series = res;
     },
-    bleu() {
-
-    },
     rowBackground(name) {
       if (this.currentUserData.name === name) {
         if (this.$q.dark.isActive)
@@ -286,11 +309,9 @@ export default defineComponent({
 
     await this.getLeaderboardData();
     this.getChartData();
-  },
-  setup() {
-    const $q = useQuasar();
-    const options = computed(() => {
-      const options = {
+
+    this.$emitter.on('toggleDarkMode', (dark) => {
+      this.options = {
         title: {
           text: "Évolutions de l'argent",
           offsetY: 10,
@@ -303,7 +324,7 @@ export default defineComponent({
           }
         },
         theme: {
-          mode: "dark"
+          mode: dark.dark ? "dark": ""
         },
         chart: {
           locales: [fr],
@@ -318,12 +339,8 @@ export default defineComponent({
         markers: {
           size: 5
         }
-      };
-      return options;
-    });
-    return {
-      options
-    };
-  }
+      }
+    })
+  },
 });
 </script>
