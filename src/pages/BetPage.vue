@@ -237,7 +237,7 @@
             </q-card-section>
             <q-card-section class="flex justify-center q-mt-none">
               <q-btn :disable="!allStakesFullfilled()" class="full-width" color="amber-13" rounded size="lg" text-color="dark"
-                     unelevated @click="validateBet">
+                     unelevated @click="validateBet" :loading="processingBet">
                 Parier
               </q-btn>
             </q-card-section>
@@ -352,7 +352,7 @@
         </q-card-section>
         <q-card-section class="flex justify-center q-mt-none">
           <q-btn :disable="!allStakesFullfilled()" class="full-width" color="amber-13" rounded size="md" text-color="dark"
-                 unelevated @click="validateBet">
+                 unelevated @click="validateBet" :loading="processingBet">
             Parier
           </q-btn>
         </q-card-section>
@@ -381,6 +381,7 @@ export default {
     const userData = ref({});
     const userBets = ref([]);
     const mobileBasket = ref(false);
+    let processingBet = ref(false);
 
     function addItemToBasket(match, selected) {
       const matchAlreadyInBasket = basketContainsMatch(match);
@@ -464,6 +465,7 @@ export default {
     }
 
     async function validateBet() {
+      processingBet.value = true
       if (isDecimal(totalStake.value)) {
         showNotif("Ne rentre que des valeurs entières", "negative");
         return;
@@ -513,7 +515,7 @@ export default {
         showNotif(e.message, "negative");
       }
 
-
+      processingBet = false
     }
 
     function allStakesFullfilled() {
@@ -577,6 +579,7 @@ export default {
       userData,
       userBets,
       mobileBasket,
+      processingBet,
       addItemToBasket,
       showNotif,
       getMatchName,
