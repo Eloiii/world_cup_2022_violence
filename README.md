@@ -1,43 +1,10 @@
-# Quasar App (test-quasar)
+# FIFA World Cup 2022 bets and forecasts for fun
 
-A Quasar Project
+Website handmade to bet on FIFA World Cup 2022 matches between friends (with fake coins).
 
-## Install the dependencies
+## Technologies used
 
-```bash
-yarn
-# or
-npm install
-```
-
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
-
-```bash
-quasar dev
-```
-
-### Lint the files
-
-```bash
-yarn lint
-# or
-npm run lint
-```
-
-### Format the files
-
-```bash
-yarn format
-# or
-npm run format
-```
-
-### Build the app for production
-
-```bash
-quasar build
-```
-
-### Customize the configuration
-
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
+- Vue 3
+- Quasar
+- Firebase
+- ApexChart.js
