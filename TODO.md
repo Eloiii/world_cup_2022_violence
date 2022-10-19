@@ -15,3 +15,4 @@
 - [X] empêcher annuler pari quand match en cours
 - [X] annim des coins updated en haut à droite quand ya une maj
 - [ ] Fix BetPage performance
+- [ ] mettre bouton parier en loading pendant requete envoie (attente longue pour larges requetes)
