@@ -16,3 +16,4 @@
 - [X] annim des coins updated en haut à droite quand ya une maj
 - [ ] Fix BetPage performance
 - [X] mettre bouton parier en loading pendant requete envoie (attente longue pour larges requetes)
+- [ ] update "forecasted" field when bet and delete bet

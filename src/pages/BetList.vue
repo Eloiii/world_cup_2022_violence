@@ -58,6 +58,8 @@ export default {
         date: Timestamp.fromDate(new Date())
       });
 
+      userScore.forecasted = userScore.forecasted - 1
+
       const docRef = doc(db, "users", data.userID);
       await updateDoc(docRef, { bets: finalBets, score: userScore });
     }

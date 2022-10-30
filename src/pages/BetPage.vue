@@ -505,6 +505,9 @@ export default {
         amount: (getUserCoins(userData.value) - Number(totalStake.value)) + coinsToBeRefund,
         date: Timestamp.fromDate(new Date())
       });
+
+      userScore.forecasted = userScore.forecasted + 1
+
       basket.value = [];
       try {
         const docRef = doc(db, "users", auth.currentUser.uid);

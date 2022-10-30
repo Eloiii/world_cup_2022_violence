@@ -339,7 +339,7 @@ export default defineComponent({
     for (let result of results) {
       result[1].date = new Date(result[1].date);
     }
-    results.sort((a, b) => a[1].date.getTime() - b[1].date.getTime());
+    results.sort((a, b) => b[1].date.getTime() - a[1].date.getTime());
     this.lastResult = results[0][1];
 
     await this.getCurrentUserData();
