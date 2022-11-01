@@ -65,7 +65,21 @@
             </q-item-section>
 
 
-            <q-item-section v-if="bet.match.country1.score !== '?'" class="text-center">
+            <q-item-section v-if="bet.match.country1.score !== '?'" class="text-center" style="width: 25%">
+              <div v-if="bet.bet.name === 'Nul'" class="justify-center flex column items-center">
+                <q-avatar v-if="userData.avatar === ''" color="primary text-white" size="40px">
+                  {{ userData.name?.substring(0, 2) }}
+                </q-avatar>
+                <q-avatar v-else size="40px">
+                  <img :src="userData.avatar" alt="user profile picture">
+                </q-avatar>
+                <q-badge class="text-dark q-mt-xs" color="positive" rounded>
+                <span class="text-subtitle2">
+                  {{ bet.bet.stake }}
+                </span>
+                  <q-icon class="q-ml-xs" name="toll" />
+                </q-badge>
+              </div>
               <q-item-label class="text-h6 flex justify-evenly">
                 <div>
                   {{ bet.match.country1.score }}
@@ -76,7 +90,6 @@
                 <div>
                   {{ bet.match.country2.score }}
                 </div>
-
               </q-item-label>
             </q-item-section>
             <q-item-section v-else style="width: 25%">
