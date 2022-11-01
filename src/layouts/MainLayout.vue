@@ -11,7 +11,7 @@
           <span class="text-h6">Pronostics de la coupe du monde 2022 de la violence</span>
         </q-btn>
         <q-space/>
-        <q-toggle v-model="darkMode" color="purple" icon="dark_mode"/>
+        <q-toggle v-model="darkMode" color="amber-13" icon="dark_mode"/>
         <q-card v-if="userData" id="cardData" class="q-mt-xs desktop-only cursor-pointer" flat>
           <q-item>
             <q-item-section avatar>
@@ -186,9 +186,9 @@ export default defineComponent({
     badgeColor() {
       const coinsTab = this.userData.score.coins;
       const coinsAmount = coinsTab[coinsTab.length - 1].amount;
-      if (coinsAmount >= 100)
+      if (coinsAmount >= 400)
         return "positive";
-      if (coinsAmount < 100 && coinsAmount >= 25)
+      if (coinsAmount < 400 && coinsAmount >= 100)
         return "warning";
       return "negative";
     },

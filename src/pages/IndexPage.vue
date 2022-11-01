@@ -40,7 +40,7 @@
           title="Leaderboard"
         >
           <template v-slot:top-right>
-            <q-toggle v-model="tableGridView" color="purple" label="Grille"/>
+            <q-toggle v-model="tableGridView" color="amber-13" label="Grille"/>
           </template>
           <template v-slot:body-cell="props">
             <q-td
@@ -62,7 +62,21 @@
               </div>
             </q-td>
           </template>
-
+          <template v-slot:body-cell-name="props">
+            <q-td :props="props" :class="rowBackground(props.row.name)">
+              <div class="flex items-center">
+                <q-avatar v-if="!userHasAvatar(props.value)" color="primary text-white" size="lg">
+                  {{ props.value.substring(0, 2) }}
+                </q-avatar>
+                <q-avatar v-else size="lg">
+                  <img :src="getUserAvatar(props.value)" alt="user profile picture">
+                </q-avatar>
+                <div class="q-ml-sm">
+                  {{ props.value }}
+                </div>
+              </div>
+            </q-td>
+          </template>
         </q-table>
         <q-markup-table v-else>
           <thead>
@@ -173,6 +187,14 @@ export default defineComponent({
           sortable: true,
           field: "wrong",
           required: true
+        },
+        {
+          name: "forecasted",
+          label: "Nb. pariés",
+          align: "center",
+          sortable: true,
+          field: "forecasted",
+          required: true
         }
       ],
       pagination: {
@@ -259,6 +281,30 @@ export default defineComponent({
       });
       this.usersData = res;
     },
+
+    getUserDataByName(name) {
+      for(const user of this.usersData) {
+        if(user.name === name)
+          return user
+      }
+      return null
+    },
+
+    userHasAvatar(userName) {
+      console.log(userName)
+      const user = this.getUserDataByName(userName)
+      return user.avatar !== ''
+    },
+
+    // getShortenName(userName) {
+    // .name?.substring(0, 2)
+    // },
+
+    getUserAvatar(userName) {
+      const user = this.getUserDataByName(userName)
+      return user.avatar
+    },
+
     async getLeaderboardData() {
       const res = [];
       for (const userData of this.usersData) {
@@ -268,7 +314,8 @@ export default defineComponent({
             name: userData.name,
             coins: userData.score.coins[userData.score.coins.length - 1].amount,
             correct: userData.score.correct,
-            wrong: userData.score.wrong
+            wrong: userData.score.wrong,
+            forecasted: userData.score.forecasted
           });
       }
       this.rows = res;
@@ -301,9 +348,9 @@ export default defineComponent({
       }
     },
     badgeColor(coinsAmount) {
-      if (coinsAmount >= 100)
+      if (coinsAmount >= 400)
         return "positive";
-      if (coinsAmount < 100 && coinsAmount >= 25)
+      if (coinsAmount < 400 && coinsAmount >= 100)
         return "warning";
       return "negative";
     }
