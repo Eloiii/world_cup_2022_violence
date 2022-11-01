@@ -2,7 +2,22 @@
   <q-page class="q-col-gutter-xl" padding>
     <div class="row justify-evenly q-col-gutter-xs-md">
       <div class="col-md-3 col-12">
-        <MatchResult v-if="lastResult" :match="lastResult" :title="'Dernier Résultat'" />
+        <q-card v-if="lastResult==='rien'">
+          <q-card-section>
+            <span class="text-body1">
+              Dernier résultat :
+            </span>
+          </q-card-section>
+          <q-card-section class="flex justify-center column items-center">
+            <img
+              alt="sadge"
+              src="https://lh3.googleusercontent.com/H2lTPeipM1RidN1PmxumJCra8-LF1gOngZXmDgkWOmDqSuxv0kpOpsgYAUXAxyuNwmW-z9KO53f4kn8JcafGrZhi-fEHHcSrXZA42q0=w600" style="width: 12%" />
+            <span class="text-body2">
+              Pas encore de match joué
+            </span>
+          </q-card-section>
+        </q-card>
+        <MatchResult v-else-if="lastResult" :match="lastResult" :title="'Dernier Résultat'" />
         <MatchResultSkeleton v-else />
       </div>
       <div class="col-md-3 col-12">
@@ -292,44 +307,6 @@ export default defineComponent({
   },
   async mounted() {
 
-      // const docRef = doc(db, "users", auth.currentUser.uid);
-      // await updateDoc(docRef, { bets: [], score: {
-      //   coins: [
-      //     {
-      //       amount: 1000,
-      //       date: Timestamp.fromDate(new Date(2022, 9, 19, 20, 43, 0))
-      //     },
-      //     {
-      //       amount: 650,
-      //       date: Timestamp.fromDate(new Date(2022, 9, 19, 21, 43, 0))
-      //     },
-      //     {
-      //       amount: 400,
-      //       date: Timestamp.fromDate(new Date(2022, 9, 19, 21, 59, 0))
-      //     },
-      //     {
-      //       amount: 200,
-      //       date: Timestamp.fromDate(new Date(2022, 9, 19, 23, 21, 0))
-      //     },
-      //     {
-      //       amount: 1200,
-      //       date: Timestamp.fromDate(new Date(2022, 9, 21, 12, 30, 0))
-      //     },
-      //     {
-      //       amount: 73,
-      //       date: Timestamp.fromDate(new Date(2022, 9, 21, 19, 33, 22))
-      //     },
-      //     {
-      //       amount: 560,
-      //       date: Timestamp.fromDate(new Date(2022, 9, 25, 9, 17, 0))
-      //     },
-      //
-      //   ],
-      //     correct: 0,
-      //     forecasted: 0,
-      //     wrong: 0
-      //   } })
-
     const oddsApiData = JSON.parse(sessionStorage.getItem("oddsApiData"));
     const schedule = getSchedule(oddsApiData.data);
     this.nextMatch = this.getNextMatch(schedule);
@@ -340,7 +317,10 @@ export default defineComponent({
       result[1].date = new Date(result[1].date);
     }
     results.sort((a, b) => b[1].date.getTime() - a[1].date.getTime());
-    this.lastResult = results[0][1];
+    if(results.length > 0)
+      this.lastResult = results[0][1];
+    else
+      this.lastResult = 'rien'
 
     await this.getCurrentUserData();
     await this.getUsersData();
