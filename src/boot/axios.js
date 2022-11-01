@@ -1,4 +1,4 @@
-import { boot } from "quasar/wrappers";
+import {boot} from "quasar/wrappers";
 import axios from "axios";
 
 // Be careful when using SSR for cross-request state pollution
@@ -9,7 +9,7 @@ import axios from "axios";
 // for each client)
 const api = axios.create();
 
-export default boot(({ app }) => {
+export default boot(({app}) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
 
   app.config.globalProperties.$axios = axios;
@@ -21,4 +21,4 @@ export default boot(({ app }) => {
   //       so you can easily perform requests against your app's API
 });
 
-export { api };
+export {api};

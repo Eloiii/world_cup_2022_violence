@@ -17,7 +17,7 @@
 
       </q-input>
 
-      <q-btn @click="validate()" color="amber-13">
+      <q-btn color="amber-13" @click="validate()">
         Valider
       </q-btn>
     </q-form>
@@ -25,10 +25,10 @@
 </template>
 
 <script>
-import { computed, ref } from "vue";
-import { getSchedule } from "src/getOddsApiData";
-import {collection, doc, getDocs, Timestamp, updateDoc, addDoc} from "firebase/firestore";
-import {auth, db} from "boot/firebaseConnection";
+import {ref} from "vue";
+import {getSchedule} from "src/getOddsApiData";
+import {addDoc, collection, doc, getDocs, Timestamp, updateDoc} from "firebase/firestore";
+import {db} from "boot/firebaseConnection";
 
 export default {
   name: "AddResults",
@@ -41,16 +41,16 @@ export default {
 
 
     function getMatch(country1Name, country2Name, data) {
-      for(const match of data) {
-        if(match.country1.name === country1Name && match.country2.name === country2Name)
+      for (const match of data) {
+        if (match.country1.name === country1Name && match.country2.name === country2Name)
           return match
       }
       return null
     }
 
     function getMatchFromBets(country1Name, country2Name, data) {
-      for(const match of data) {
-        if(match.match.country1.name === country1Name && match.match.country2.name === country2Name)
+      for (const match of data) {
+        if (match.match.country1.name === country1Name && match.match.country2.name === country2Name)
           return match
       }
       return null
@@ -71,7 +71,7 @@ export default {
 
       const match = getMatch(country1Name.value, country2Name.value, schedule)
 
-      if(!match)
+      if (!match)
         return;
 
       let res = {
@@ -88,7 +88,7 @@ export default {
       }
 
       processResult(res).then((status) => {
-        if(status)
+        if (status)
           console.log('oui')
         else
           console.log('non')
@@ -111,7 +111,7 @@ export default {
 
     async function processResult(result) {
       const usersData = await loadUsersData()
-      for(const userID in usersData) {
+      for (const userID in usersData) {
         const userData = usersData[userID]
         const userBets = userData.bets
         updateMatch(userBets, result)
@@ -127,7 +127,7 @@ export default {
     }
 
     async function updateResultDatabase(result) {
-     await addDoc(collection(db, "results"), result);
+      await addDoc(collection(db, "results"), result);
     }
 
     async function updateUser(userID, userData) {
@@ -143,16 +143,16 @@ export default {
       const match = getMatchFromBets(result.country1.name, result.country2.name, matches)
       match.match.country1.score = result.country1.score
       match.match.country2.score = result.country2.score
-      if(match.bet.name === result.country1.name)
+      if (match.bet.name === result.country1.name)
         match.bet.score = result.country1.score
-      if(match.bet.name === result.country2.name)
+      if (match.bet.name === result.country2.name)
         match.bet.score = result.country2.score
     }
 
     function updateCoins(userData, result) {
       const match = getMatchFromBets(result.country1.name, result.country2.name, userData.bets)
       const userScore = userData.score;
-      if(match.bet.name === result.winner) {
+      if (match.bet.name === result.winner) {
         userScore.coins.push({
           amount: Math.round(getUserCoins(userData) + (Number(match.bet.stake) * match.bet.odds)),
           date: Timestamp.fromDate(new Date())

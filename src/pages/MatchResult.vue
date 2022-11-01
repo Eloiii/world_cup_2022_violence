@@ -6,14 +6,16 @@
       </div>
       <q-list>
         <q-item-label class="q-pt-none q-pl-none" header>
-          {{ match.date.toLocaleDateString("fr-FR", {
-          weekday: "long",
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-          hour: "numeric",
-          minute: "numeric"
-        }) }}
+          {{
+            match.date.toLocaleDateString("fr-FR", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+              hour: "numeric",
+              minute: "numeric"
+            })
+          }}
         </q-item-label>
         <q-item>
           <q-item-section side>
@@ -58,7 +60,7 @@
   </q-card>
 </template>
 <script>
-import { getFrCountryName } from "src/getOddsApiData";
+import {getFrCountryName} from "src/getOddsApiData";
 
 export default {
   name: "MatchResult",

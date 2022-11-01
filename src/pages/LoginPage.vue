@@ -17,7 +17,7 @@ import RegistrationCard from "./RegistrationCard.vue";
 
 export default {
   name: "LoginPage",
-  components: { LoginCard, RegistrationCard },
+  components: {LoginCard, RegistrationCard},
   data: () => {
     return {
       loginView: true

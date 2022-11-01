@@ -20,18 +20,20 @@
         <q-list>
           <q-item-label class="q-pt-none q-pl-none flex justify-between" header>
             <div>
-              {{ bet.match.date.toLocaleDateString("fr-FR", {
-              weekday: "long",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-              hour: "numeric",
-              minute: "numeric"
-            }) }}
+              {{
+                bet.match.date.toLocaleDateString("fr-FR", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "numeric"
+                })
+              }}
             </div>
             <div>
               gain potentiel {{ Math.round(bet.bet.odds * bet.bet.stake) }}
-              <q-icon name="toll" />
+              <q-icon name="toll"/>
             </div>
           </q-item-label>
           <q-item>
@@ -57,7 +59,7 @@
                 <span class="text-subtitle2">
                   {{ bet.bet.stake }}
                 </span>
-                <q-icon class="q-ml-xs" name="toll" />
+                <q-icon class="q-ml-xs" name="toll"/>
               </q-badge>
             </q-item-section>
             <q-item-section v-else style="width: 25%">
@@ -77,7 +79,7 @@
                 <span class="text-subtitle2">
                   {{ bet.bet.stake }}
                 </span>
-                  <q-icon class="q-ml-xs" name="toll" />
+                  <q-icon class="q-ml-xs" name="toll"/>
                 </q-badge>
               </div>
               <q-item-label class="text-h6 flex justify-evenly">
@@ -104,7 +106,7 @@
                 <span class="text-subtitle2">
                   {{ bet.bet.stake }}
                 </span>
-                  <q-icon class="q-ml-xs" name="toll" />
+                  <q-icon class="q-ml-xs" name="toll"/>
                 </q-badge>
               </div>
               <q-item-label class="text-body1 flex justify-evenly column text-center">
@@ -129,7 +131,7 @@
                 <span class="text-subtitle2">
                   {{ bet.bet.stake }}
                 </span>
-                <q-icon class="q-ml-xs" name="toll" />
+                <q-icon class="q-ml-xs" name="toll"/>
               </q-badge>
             </q-item-section>
             <q-item-section v-else style="width: 25%">
@@ -151,9 +153,9 @@
   </div>
 </template>
 <script>
-import { getFrCountryName } from "src/getOddsApiData";
-import { auth } from "boot/firebaseConnection";
-import { computed } from "vue";
+import {getFrCountryName} from "src/getOddsApiData";
+import {auth} from "boot/firebaseConnection";
+import {computed} from "vue";
 
 export default {
   name: "MatchResult",

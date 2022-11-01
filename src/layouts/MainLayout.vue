@@ -3,15 +3,15 @@
     <q-header :class="bgColor" reveal>
       <q-toolbar>
         <q-btn v-if="!currentPageIsLogin" :icon="drawer ? 'menu_open' : 'menu'" class="q-mr-sm" dense flat round
-               @click="drawer = !drawer" />
+               @click="drawer = !drawer"/>
         <q-btn :to="currentPageIsLogin ? '/login' : '/'" flat rounded>
           <q-avatar class="q-mr-md">
             <img alt="logo" src="~assets/logo.png">
           </q-avatar>
           <span class="text-h6">Pronostics de la coupe du monde 2022 de la violence</span>
         </q-btn>
-        <q-space />
-        <q-toggle v-model="darkMode" color="purple" icon="dark_mode" />
+        <q-space/>
+        <q-toggle v-model="darkMode" color="purple" icon="dark_mode"/>
         <q-card v-if="userData" id="cardData" class="q-mt-xs desktop-only cursor-pointer" flat>
           <q-item>
             <q-item-section avatar>
@@ -39,18 +39,18 @@
             </q-item-section>
             <q-item-section side>
 
-                <q-badge :color="badgeColor()" class="text-dark" rounded>
+              <q-badge :color="badgeColor()" class="text-dark" rounded>
                 <span class="text-subtitle2">
                   <number
 
+                    :duration="3"
                     :from="previousCoinsCount"
                     :to="getUserCoins()"
-                    :duration="3"
                   >
                   </number>
                 </span>
-                  <q-icon class="q-ml-xs" name="toll" />
-                </q-badge>
+                <q-icon class="q-ml-xs" name="toll"/>
+              </q-badge>
             </q-item-section>
           </q-item>
           <q-popup-proxy>
@@ -82,7 +82,7 @@
           </q-item>
         </q-list>
       </q-scroll-area>
-      <q-space />
+      <q-space/>
       <q-card v-if="userData" bordered class="q-mt-xs mobile-only" flat>
         <q-item>
           <q-item-section avatar>
@@ -113,7 +113,7 @@
                 <span class="text-subtitle2">
                   {{ getUserCoins() }}
                 </span>
-              <q-icon class="q-ml-xs" name="toll" />
+              <q-icon class="q-ml-xs" name="toll"/>
             </q-badge>
           </q-item-section>
         </q-item>
@@ -129,17 +129,17 @@
 
 
     <q-page-container>
-      <router-view />
+      <router-view/>
     </q-page-container>
 
   </q-layout>
 </template>
 <script>
-import { defineComponent } from "vue";
-import { useQuasar } from "quasar";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth, db } from "boot/firebaseConnection";
-import { collection, doc, getDoc, onSnapshot, query } from "firebase/firestore";
+import {defineComponent} from "vue";
+import {useQuasar} from "quasar";
+import {onAuthStateChanged, signOut} from "firebase/auth";
+import {auth, db} from "boot/firebaseConnection";
+import {collection, doc, getDoc, onSnapshot, query} from "firebase/firestore";
 import mitt from "mitt";
 
 const emitter = mitt();

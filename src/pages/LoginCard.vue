@@ -9,9 +9,9 @@
     <q-form @submit="submit">
       <q-card-section>
         <q-input v-model="email" :rules="[val => !!val || 'Champ requis']" class="q-mb-xs" label="E-mail"
-                 outlined />
+                 outlined/>
         <q-input v-model="pass" :rules="[val => !!val || 'Champ requis']" class="q-mb-xs" label="Mot de passe" outlined
-                 type="password" />
+                 type="password"/>
       </q-card-section>
 
       <q-card-actions vertical>
@@ -30,14 +30,14 @@
 </template>
 
 <script>
-import { useQuasar } from "quasar";
+import {useQuasar} from "quasar";
 import {
   browserLocalPersistence,
   sendPasswordResetEmail,
   setPersistence,
   signInWithEmailAndPassword
 } from "firebase/auth";
-import { auth } from "boot/firebaseConnection";
+import {auth} from "boot/firebaseConnection";
 
 export default {
   name: "LoginCard",

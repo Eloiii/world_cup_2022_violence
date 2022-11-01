@@ -1,6 +1,6 @@
 <template>
   <q-card class="q-pa-lg card">
-    <q-btn flat icon="arrow_back" round @click="$emit('goBack')" />
+    <q-btn flat icon="arrow_back" round @click="$emit('goBack')"/>
     <q-card-section>
       <div class="text-h5">
         Créer un compte
@@ -12,21 +12,21 @@
         <q-input v-model="name"
                  :rules="[val => val.length <= 10 || '10 caractères max', val => !!val || 'Champ requis']"
                  class="q-mb-xs" label="Nom"
-                 outlined />
+                 outlined/>
         <q-input v-model="email" :rules="[val => !!val || 'Champ requis']" class="q-mb-xs" label="E-mail" outlined
-                 type="email" />
+                 type="email"/>
         <q-input v-model="pass"
                  :rules="[val => val.length >= 6 || '6 caractères minimum stp', val => !!val || 'Champ requis']"
                  class="q-mb-xs" label="Mot de passe" outlined
-                 type="password" />
+                 type="password"/>
         <q-input v-model="passConfirmation" :rules="[val => !!val || 'Champ requis']" class="q-mb-xs"
                  label="Confirmation mot de passe" outlined
-                 type="password" />
-        <q-input v-model="ppLink" label="Lien image de profil" outlined type="url" />
+                 type="password"/>
+        <q-input v-model="ppLink" label="Lien image de profil" outlined type="url"/>
 
       </q-card-section>
 
-      <q-separator />
+      <q-separator/>
 
       <q-card-section>
         <div class="text-h6 q-mb-md">
@@ -53,10 +53,10 @@
 </template>
 
 <script>
-import { useQuasar } from "quasar";
-import { auth, db } from "boot/firebaseConnection";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc, Timestamp } from "firebase/firestore";
+import {useQuasar} from "quasar";
+import {auth, db} from "boot/firebaseConnection";
+import {createUserWithEmailAndPassword} from "firebase/auth";
+import {doc, setDoc, Timestamp} from "firebase/firestore";
 
 export default {
   name: "RegistrationCard",
@@ -103,7 +103,7 @@ export default {
         bets: []
       };
       try {
-        const { user } = await createUserWithEmailAndPassword(auth, this.email, this.pass);
+        const {user} = await createUserWithEmailAndPassword(auth, this.email, this.pass);
         await setDoc(doc(db, "users", user.uid), newUser);
         self.showNotif("TOUT EST BON GO GO GO !", "positive");
         self.$emit("goBack");

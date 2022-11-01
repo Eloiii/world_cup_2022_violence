@@ -55,7 +55,8 @@
                 </q-item-section>
                 <q-item-section class="items-center">
                   <div class="flex justify-evenly" style="width:80%">
-                    <q-btn :color="buttonColor(match, match.country1.name)" :text-color="buttonTextColor(match, match.country1.name)"
+                    <q-btn :color="buttonColor(match, match.country1.name)"
+                           :text-color="buttonTextColor(match, match.country1.name)"
                            class="buttonOdds"
                            @click="addItemToBasket(match, match.country1)">
                       <div class="flex column no-wrap ellipsis">
@@ -67,7 +68,8 @@
                         </div>
                       </div>
                     </q-btn>
-                    <q-btn :color="buttonColor(match, match.draw.name)" :text-color="buttonTextColor(match, match.draw.name)"
+                    <q-btn :color="buttonColor(match, match.draw.name)"
+                           :text-color="buttonTextColor(match, match.draw.name)"
                            class="buttonOdds"
                            @click="addItemToBasket(match, match.draw)">
                       <div class="flex column">
@@ -79,7 +81,8 @@
                         </div>
                       </div>
                     </q-btn>
-                    <q-btn :color="buttonColor(match, match.country2.name)" :text-color="buttonTextColor(match, match.country2.name)"
+                    <q-btn :color="buttonColor(match, match.country2.name)"
+                           :text-color="buttonTextColor(match, match.country2.name)"
                            class="buttonOdds"
                            @click="addItemToBasket(match, match.country2)">
                       <div class="flex column no-wrap ellipsis">
@@ -124,7 +127,8 @@
                 </q-item-section>
                 <q-item-section class="items-center q-mt-xl" style="margin-left: 0 !important;">
                   <div class="flex justify-between full-width">
-                    <q-btn :color="buttonColor(match, match.country1.name)" :text-color="buttonTextColor(match, match.country1.name)"
+                    <q-btn :color="buttonColor(match, match.country1.name)"
+                           :text-color="buttonTextColor(match, match.country1.name)"
                            class="buttonOdds"
                            @click="addItemToBasket(match, match.country1)">
                       <div class="flex column no-wrap ellipsis">
@@ -136,7 +140,8 @@
                         </div>
                       </div>
                     </q-btn>
-                    <q-btn :color="buttonColor(match, match.draw.name)" :text-color="buttonTextColor(match, match.draw.name)"
+                    <q-btn :color="buttonColor(match, match.draw.name)"
+                           :text-color="buttonTextColor(match, match.draw.name)"
                            class="buttonOdds"
                            @click="addItemToBasket(match, match.draw)">
                       <div class="flex column">
@@ -148,7 +153,8 @@
                         </div>
                       </div>
                     </q-btn>
-                    <q-btn :color="buttonColor(match, match.country2.name)" :text-color="buttonTextColor(match, match.country2.name)"
+                    <q-btn :color="buttonColor(match, match.country2.name)"
+                           :text-color="buttonTextColor(match, match.country2.name)"
                            class="buttonOdds"
                            @click="addItemToBasket(match, match.country2)">
                       <div class="flex column no-wrap ellipsis">
@@ -168,7 +174,7 @@
                   </span>
                 </q-item-section>
               </q-item>
-              <q-separator v-if="date.indexOf(match) !== date.length -1" />
+              <q-separator v-if="date.indexOf(match) !== date.length -1"/>
             </template>
           </q-list>
         </template>
@@ -182,7 +188,7 @@
                   Tu as déjà parié sur ce match !
                 </q-tooltip>
               </q-icon>
-              <q-icon v-else name="sports_soccer" />
+              <q-icon v-else name="sports_soccer"/>
             </q-item-section>
             <q-item-section>
               <q-item-label class="text-caption">
@@ -194,7 +200,7 @@
             </q-item-section>
             <q-item-section style="flex-shrink: 1;">
               <q-input v-model="bet.bet.stake" :rules="stakeRules" label="Mise" max="5" min="" outlined
-                       type="numeric" />
+                       type="numeric"/>
             </q-item-section>
             <q-item-section class="q-mr-md text-weight-bold" side>
               <div>
@@ -202,7 +208,7 @@
               </div>
               <div>
                 {{ Math.round(bet.bet.stake * bet.bet.odds || 0) }}
-                <q-icon class="q-ml-xs" name="toll" />
+                <q-icon class="q-ml-xs" name="toll"/>
               </div>
             </q-item-section>
             <q-item-section side>
@@ -222,7 +228,7 @@
                 </div>
                 <div>
                   {{ totalStake }}
-                  <q-icon class="q-ml-xs" name="toll" />
+                  <q-icon class="q-ml-xs" name="toll"/>
                 </div>
               </div>
               <div class="flex justify-between q-mt-xs">
@@ -231,13 +237,14 @@
                 </div>
                 <div class="text-weight-bold">
                   {{ totalProfit }}
-                  <q-icon class="q-ml-xs" name="toll" size="xs" />
+                  <q-icon class="q-ml-xs" name="toll" size="xs"/>
                 </div>
               </div>
             </q-card-section>
             <q-card-section class="flex justify-center q-mt-none">
-              <q-btn :disable="!allStakesFullfilled()" class="full-width" color="amber-13" rounded size="lg" text-color="dark"
-                     unelevated @click="validateBet" :loading="processingBet">
+              <q-btn :disable="!allStakesFullfilled()" :loading="processingBet" class="full-width" color="amber-13" rounded
+                     size="lg"
+                     text-color="dark" unelevated @click="validateBet">
                 Parier
               </q-btn>
             </q-card-section>
@@ -247,7 +254,8 @@
           <q-card-section class="flex justify-center">
             <img
               alt="sadge"
-              src="https://lh3.googleusercontent.com/H2lTPeipM1RidN1PmxumJCra8-LF1gOngZXmDgkWOmDqSuxv0kpOpsgYAUXAxyuNwmW-z9KO53f4kn8JcafGrZhi-fEHHcSrXZA42q0=w600" style="width: 30%" />
+              src="https://lh3.googleusercontent.com/H2lTPeipM1RidN1PmxumJCra8-LF1gOngZXmDgkWOmDqSuxv0kpOpsgYAUXAxyuNwmW-z9KO53f4kn8JcafGrZhi-fEHHcSrXZA42q0=w600"
+              style="width: 30%"/>
           </q-card-section>
           <q-card-section class="text-center">
             Commence par séléctionner un match !
@@ -290,7 +298,7 @@
                         Tu as déjà un pari sur ce match !
                       </q-tooltip>
                     </q-icon>
-                    <q-icon v-else name="sports_soccer" size="sm" />
+                    <q-icon v-else name="sports_soccer" size="sm"/>
                   </div>
                   <div>
                     <div class="text-caption">
@@ -313,7 +321,7 @@
                   <div class="q-mr-md">
                     <q-input v-model="bet.bet.stake" :rules="stakeRules" label="Mise" max="5" min=""
                              outlined
-                             type="numeric" />
+                             type="numeric"/>
                   </div>
                   <div class="mobileList-item-stake-winnings">
                     <div>
@@ -321,7 +329,7 @@
                     </div>
                     <div>
                       {{ Math.round(bet.bet.stake * bet.bet.odds || 0) }}
-                      <q-icon class="q-ml-xs" name="toll" />
+                      <q-icon class="q-ml-xs" name="toll"/>
                     </div>
                   </div>
                 </div>
@@ -329,7 +337,7 @@
             </template>
           </div>
         </q-card-section>
-        <q-space />
+        <q-space/>
         <q-card-section class="flex column">
           <div class="flex justify-between">
             <div>
@@ -337,7 +345,7 @@
             </div>
             <div>
               {{ totalStake }}
-              <q-icon class="q-ml-xs" name="toll" />
+              <q-icon class="q-ml-xs" name="toll"/>
             </div>
           </div>
           <div class="flex justify-between q-mt-xs">
@@ -346,13 +354,14 @@
             </div>
             <div class="text-weight-bold">
               {{ totalProfit }}
-              <q-icon class="q-ml-xs" name="toll" size="xs" />
+              <q-icon class="q-ml-xs" name="toll" size="xs"/>
             </div>
           </div>
         </q-card-section>
         <q-card-section class="flex justify-center q-mt-none">
-          <q-btn :disable="!allStakesFullfilled()" class="full-width" color="amber-13" rounded size="md" text-color="dark"
-                 unelevated @click="validateBet" :loading="processingBet">
+          <q-btn :disable="!allStakesFullfilled()" :loading="processingBet" class="full-width" color="amber-13" rounded
+                 size="md"
+                 text-color="dark" unelevated @click="validateBet">
             Parier
           </q-btn>
         </q-card-section>
@@ -362,11 +371,11 @@
 </template>
 
 <script>
-import { computed, ref } from "vue";
-import { getFrCountryName, getSchedule } from "src/getOddsApiData";
-import { useQuasar } from "quasar";
-import { auth, db } from "boot/firebaseConnection";
-import { collection, doc, getDoc, onSnapshot, query, Timestamp, updateDoc } from "firebase/firestore";
+import {computed, ref} from "vue";
+import {getFrCountryName, getSchedule} from "src/getOddsApiData";
+import {useQuasar} from "quasar";
+import {auth, db} from "boot/firebaseConnection";
+import {collection, doc, getDoc, onSnapshot, query, Timestamp, updateDoc} from "firebase/firestore";
 
 
 export default {
@@ -511,7 +520,7 @@ export default {
       basket.value = [];
       try {
         const docRef = doc(db, "users", auth.currentUser.uid);
-        await updateDoc(docRef, { bets: finalBets, score: userScore });
+        await updateDoc(docRef, {bets: finalBets, score: userScore});
 
         showNotif("Pari(s) enregistré(s) !", "info");
       } catch (e) {
@@ -612,7 +621,7 @@ export default {
 
     const schedule = getSchedule(rawMatchesData.data).sort((a, b) => a.date.getTime() - b.date.getTime());
 
-    const dateSeparated = schedule.reduce(function(prev, curr) {
+    const dateSeparated = schedule.reduce(function (prev, curr) {
       const date = curr.date.getDate();
       if (!prev[date])
         prev[date] = [];

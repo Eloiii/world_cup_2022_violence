@@ -1,15 +1,15 @@
 <template>
   <router-view v-slot="{ Component }">
     <transition>
-      <component :is="Component" />
+      <component :is="Component"/>
     </transition>
   </router-view>
 </template>
 
 <script>
-import { auth } from "boot/firebaseConnection";
-import { defineComponent } from "vue";
-import { onAuthStateChanged } from "firebase/auth";
+import {auth} from "boot/firebaseConnection";
+import {defineComponent} from "vue";
+import {onAuthStateChanged} from "firebase/auth";
 import axios from "axios";
 
 export default defineComponent({

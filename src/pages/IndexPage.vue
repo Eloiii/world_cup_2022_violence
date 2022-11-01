@@ -11,18 +11,19 @@
           <q-card-section class="flex justify-center column items-center">
             <img
               alt="sadge"
-              src="https://lh3.googleusercontent.com/H2lTPeipM1RidN1PmxumJCra8-LF1gOngZXmDgkWOmDqSuxv0kpOpsgYAUXAxyuNwmW-z9KO53f4kn8JcafGrZhi-fEHHcSrXZA42q0=w600" style="width: 12%" />
+              src="https://lh3.googleusercontent.com/H2lTPeipM1RidN1PmxumJCra8-LF1gOngZXmDgkWOmDqSuxv0kpOpsgYAUXAxyuNwmW-z9KO53f4kn8JcafGrZhi-fEHHcSrXZA42q0=w600"
+              style="width: 12%"/>
             <span class="text-body2">
               Pas encore de match joué
             </span>
           </q-card-section>
         </q-card>
-        <MatchResult v-else-if="lastResult" :match="lastResult" :title="'Dernier Résultat'" />
-        <MatchResultSkeleton v-else />
+        <MatchResult v-else-if="lastResult" :match="lastResult" :title="'Dernier Résultat'"/>
+        <MatchResultSkeleton v-else/>
       </div>
       <div class="col-md-3 col-12">
-        <MatchResult v-if="nextMatch" :match="nextMatch" :title="'Prochain Match'" />
-        <MatchResultSkeleton v-else />
+        <MatchResult v-if="nextMatch" :match="nextMatch" :title="'Prochain Match'"/>
+        <MatchResultSkeleton v-else/>
       </div>
     </div>
     <div class="row justify-center">
@@ -39,7 +40,7 @@
           title="Leaderboard"
         >
           <template v-slot:top-right>
-            <q-toggle v-model="tableGridView" color="purple" label="Grille" />
+            <q-toggle v-model="tableGridView" color="purple" label="Grille"/>
           </template>
           <template v-slot:body-cell="props">
             <q-td
@@ -56,7 +57,7 @@
                 <span class="text-caption">
                   {{ props.value }}
                 </span>
-                  <q-icon class="q-ml-xs" name="toll" />
+                  <q-icon class="q-ml-xs" name="toll"/>
                 </q-badge>
               </div>
             </q-td>
@@ -67,22 +68,22 @@
           <thead>
           <tr>
             <th class="text-left" style="width: 150px">
-              <q-skeleton animation="blink" type="text" />
+              <q-skeleton animation="blink" type="text"/>
             </th>
             <th class="text-right">
-              <q-skeleton animation="blink" type="text" />
+              <q-skeleton animation="blink" type="text"/>
             </th>
             <th class="text-right">
-              <q-skeleton animation="blink" type="text" />
+              <q-skeleton animation="blink" type="text"/>
             </th>
             <th class="text-right">
-              <q-skeleton animation="blink" type="text" />
+              <q-skeleton animation="blink" type="text"/>
             </th>
             <th class="text-right">
-              <q-skeleton animation="blink" type="text" />
+              <q-skeleton animation="blink" type="text"/>
             </th>
             <th class="text-right">
-              <q-skeleton animation="blink" type="text" />
+              <q-skeleton animation="blink" type="text"/>
             </th>
           </tr>
           </thead>
@@ -90,22 +91,22 @@
           <tbody>
           <tr v-for="n in 5" :key="n">
             <td class="text-left">
-              <q-skeleton animation="blink" type="text" width="85px" />
+              <q-skeleton animation="blink" type="text" width="85px"/>
             </td>
             <td class="text-right">
-              <q-skeleton animation="blink" type="text" width="50px" />
+              <q-skeleton animation="blink" type="text" width="50px"/>
             </td>
             <td class="text-right">
-              <q-skeleton animation="blink" type="text" width="35px" />
+              <q-skeleton animation="blink" type="text" width="35px"/>
             </td>
             <td class="text-right">
-              <q-skeleton animation="blink" type="text" width="65px" />
+              <q-skeleton animation="blink" type="text" width="65px"/>
             </td>
             <td class="text-right">
-              <q-skeleton animation="blink" type="text" width="25px" />
+              <q-skeleton animation="blink" type="text" width="25px"/>
             </td>
             <td class="text-right">
-              <q-skeleton animation="blink" type="text" width="85px" />
+              <q-skeleton animation="blink" type="text" width="85px"/>
             </td>
           </tr>
           </tbody>
@@ -120,17 +121,17 @@
   </q-page>
 </template>
 <script>
-import { defineComponent } from "vue";
+import {defineComponent} from "vue";
 import MatchResult from "./MatchResult.vue";
 import MatchResultSkeleton from "./MatchResultSkeleton.vue";
-import { getSchedule } from "src/getOddsApiData";
-import {collection, doc, getDoc, getDocs, Timestamp, updateDoc} from "firebase/firestore";
-import { auth, db } from "boot/firebaseConnection";
+import {getSchedule} from "src/getOddsApiData";
+import {collection, doc, getDoc, getDocs} from "firebase/firestore";
+import {auth, db} from "boot/firebaseConnection";
 import * as fr from "apexcharts/dist/locales/fr.json";
 
 export default defineComponent({
   name: "IndexPage",
-  components: { MatchResult, MatchResultSkeleton },
+  components: {MatchResult, MatchResultSkeleton},
   data: () => {
     return {
       currentUserData: null,
@@ -253,7 +254,7 @@ export default defineComponent({
         const contains = this.currentUserData.groups.some(element => {
           return rawData.groups.includes(element);
         });
-        if(contains)
+        if (contains)
           res.push(rawData);
       });
       this.usersData = res;
@@ -278,7 +279,7 @@ export default defineComponent({
         let data = [];
         for (const record of userData.score.coins) {
           const offset = Math.abs(record.date.toDate().getTimezoneOffset() / 60);
-          const dateWithOffset = new Date(record.date.toDate().setHours(record.date.toDate().getHours()  + offset))
+          const dateWithOffset = new Date(record.date.toDate().setHours(record.date.toDate().getHours() + offset))
           data.push({
             x: dateWithOffset.getTime(),
             y: record.amount
@@ -319,7 +320,7 @@ export default defineComponent({
       result[1].date = new Date(result[1].date);
     }
     results.sort((a, b) => b[1].date.getTime() - a[1].date.getTime());
-    if(results.length > 0)
+    if (results.length > 0)
       this.lastResult = results[0][1];
     else
       this.lastResult = 'rien'

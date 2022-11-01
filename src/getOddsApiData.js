@@ -8,7 +8,7 @@ function getSchedule(data) {
         odds = match.bookmakers[0];
       }
     } else
-      odds = { key: null };
+      odds = {key: null};
     res.push({
       country1: {
         name: match.home_team,
@@ -112,4 +112,4 @@ function getFrCountryName(countryName) {
   }
 }
 
-export { getSchedule, getFrCountryName };
+export {getSchedule, getFrCountryName};
