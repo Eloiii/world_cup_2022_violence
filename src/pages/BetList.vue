@@ -19,9 +19,9 @@
           <q-tab-panel v-for="(item, userID) in usersData" :key="item.name" :name="item.name" class="q-pa-none">
             <div v-if="usersData">
               <BetRecap v-for="bet of item.bets" :key="bet" :bet="bet" :userData="item" :userID="userID"
-                        @removeBet="removeBet" />
+                        @removeBet="removeBet"/>
             </div>
-            <MatchResultSkeleton v-else />
+            <MatchResultSkeleton v-else/>
           </q-tab-panel>
         </q-tab-panels>
       </div>
@@ -32,15 +32,15 @@
 <script>
 import BetRecap from "./BetRecap.vue";
 import MatchResultSkeleton from "./MatchResultSkeleton.vue";
-import { collection, doc, getDocs, onSnapshot, query, Timestamp, updateDoc } from "firebase/firestore";
-import { auth, db } from "boot/firebaseConnection";
-import { getFrCountryName } from "src/getOddsApiData";
-import { ref } from "vue";
-import { onAuthStateChanged } from "firebase/auth";
+import {collection, doc, getDoc, getDocs, onSnapshot, query, Timestamp, updateDoc} from "firebase/firestore";
+import {auth, db} from "boot/firebaseConnection";
+import {getFrCountryName} from "src/getOddsApiData";
+import {ref} from "vue";
+import {onAuthStateChanged} from "firebase/auth";
 
 export default {
   name: "BetList",
-  components: { BetRecap, MatchResultSkeleton },
+  components: {BetRecap, MatchResultSkeleton},
   setup() {
     const userData = ref({});
     const usersData = ref({});
@@ -61,7 +61,7 @@ export default {
       userScore.forecasted = userScore.forecasted - 1
 
       const docRef = doc(db, "users", data.userID);
-      await updateDoc(docRef, { bets: finalBets, score: userScore });
+      await updateDoc(docRef, {bets: finalBets, score: userScore});
     }
 
     function getUserCoins(user) {
@@ -69,19 +69,37 @@ export default {
       return coinsTab[coinsTab.length - 1].amount;
     }
 
+    async function getCurrentUserData() {
+      const docRef = doc(db, "users", auth.currentUser.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        return docSnap.data();
+      } else {
+        return null
+      }
+    }
+
+
     async function loadUsersData() {
+      const currentUserData = await getCurrentUserData()
       let usersData = {};
       const querySnapshot = await getDocs(collection(db, "users"));
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        if (data.bets && data.bets.length > 0) {
-          data.bets = data.bets.map(function(bet) {
-            bet.match.date = bet.match.date.toDate();
-            return bet;
-          });
-          usersData[doc.id] = data;
-          if (!this.tab)
-            this.tab = data.name;
+        const contains = currentUserData.groups.some(element => {
+          return data.groups.includes(element);
+        });
+        if (contains) {
+          if (data.bets && data.bets.length > 0) {
+            data.bets = data.bets.map(function (bet) {
+              bet.match.date = bet.match.date.toDate();
+              return bet;
+            });
+            usersData[doc.id] = data;
+            if (!this.tab)
+              this.tab = data.name;
+          }
         }
       });
       this.usersData = usersData;

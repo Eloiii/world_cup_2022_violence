@@ -124,7 +124,7 @@ import { defineComponent } from "vue";
 import MatchResult from "./MatchResult.vue";
 import MatchResultSkeleton from "./MatchResultSkeleton.vue";
 import { getSchedule } from "src/getOddsApiData";
-import { collection, doc, getDocs, Timestamp, updateDoc } from "firebase/firestore";
+import {collection, doc, getDoc, getDocs, Timestamp, updateDoc} from "firebase/firestore";
 import { auth, db } from "boot/firebaseConnection";
 import * as fr from "apexcharts/dist/locales/fr.json";
 
@@ -236,23 +236,25 @@ export default defineComponent({
       return res;
     },
     async getCurrentUserData() {
-      const currentUserEmail = auth.currentUser.email;
-      const querySnapshot = await getDocs(collection(db, "users"));
-      let res = null;
-      querySnapshot.forEach((doc) => {
-        const rawData = doc.data();
-        if (rawData.email === currentUserEmail) {
-          res = rawData;
-        }
-      });
-      this.currentUserData = res;
+      const docRef = doc(db, "users", auth.currentUser.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        this.currentUserData = docSnap.data();
+      } else {
+        this.currentUserData = null
+      }
     },
     async getUsersData() {
       const querySnapshot = await getDocs(collection(db, "users"));
       const res = [];
       querySnapshot.forEach((doc) => {
         const rawData = doc.data();
-        res.push(rawData);
+        const contains = this.currentUserData.groups.some(element => {
+          return rawData.groups.includes(element);
+        });
+        if(contains)
+          res.push(rawData);
       });
       this.usersData = res;
     },

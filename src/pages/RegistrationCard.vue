@@ -88,7 +88,7 @@ export default {
         name: this.name,
         email: this.email,
         avatar: this.ppLink,
-        groups: ["Violence"],
+        groups: [],
         score: {
           coins: [
             {
