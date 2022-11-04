@@ -8,7 +8,7 @@
           <q-avatar class="q-mr-md">
             <img alt="logo" src="~assets/logo.png">
           </q-avatar>
-          <span class="text-h6">Pronostics de la coupe du monde 2022 de la violence</span>
+          <span class="text-h6">Pronostics de la coupe du monde 2022 {{ userData && userData.groups.includes("Violence") ? "de la Violence" : "" }}</span>
         </q-btn>
         <q-space/>
         <q-toggle v-model="darkMode" color="amber-13" icon="dark_mode"/>

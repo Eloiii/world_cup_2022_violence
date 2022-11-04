@@ -22,4 +22,4 @@
 - [X] Fix forecasted number increased only once (when clicking "bet")
 - [ ] Self group assignement ?
 - [ ] Fix Index page data not loading sometimes
-- [ ] Change title depending on group
+- [X] Change title depending on group
