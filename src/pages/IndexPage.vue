@@ -63,7 +63,7 @@
             </q-td>
           </template>
           <template v-slot:body-cell-name="props">
-            <q-td :props="props" :class="rowBackground(props.row.name)">
+            <q-td :class="rowBackground(props.row.name)" :props="props">
               <div class="flex items-center">
                 <q-avatar v-if="!userHasAvatar(props.value)" color="primary text-white" size="lg">
                   {{ props.value.substring(0, 2) }}
@@ -284,8 +284,8 @@ export default defineComponent({
     },
 
     getUserDataByName(name) {
-      for(const user of this.usersData) {
-        if(user.name === name)
+      for (const user of this.usersData) {
+        if (user.name === name)
           return user
       }
       return null
@@ -385,7 +385,6 @@ export default defineComponent({
       this.lastResult = results[0][1];
     else
       this.lastResult = 'rien'
-
 
 
     this.$emitter.on("toggleDarkMode", (dark) => {

@@ -242,7 +242,8 @@
               </div>
             </q-card-section>
             <q-card-section class="flex justify-center q-mt-none">
-              <q-btn :disable="!allStakesFullfilled()" :loading="processingBet" class="full-width" color="amber-13" rounded
+              <q-btn :disable="!allStakesFullfilled()" :loading="processingBet" class="full-width" color="amber-13"
+                     rounded
                      size="lg"
                      text-color="dark" unelevated @click="validateBet">
                 Parier

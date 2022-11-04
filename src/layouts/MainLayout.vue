@@ -8,7 +8,9 @@
           <q-avatar class="q-mr-md">
             <img alt="logo" src="~assets/logo.png">
           </q-avatar>
-          <span class="text-h6">Pronostics de la coupe du monde 2022 {{ userData && userData.groups.includes("Violence") ? "de la Violence" : "" }}</span>
+          <span class="text-h6">Pronostics de la coupe du monde 2022 {{
+              userData && userData.groups.includes("Violence") ? "de la Violence" : ""
+            }}</span>
         </q-btn>
         <q-space/>
         <q-toggle v-model="darkMode" color="amber-13" icon="dark_mode"/>
@@ -62,11 +64,11 @@
                 <q-list class="q-mt-sm">
                   <q-item v-for="group in userData.groups" :key="group">
                     <q-item-section side>
-                      <q-btn icon="close" color="amber-13" flat @click="removeGroup(group)"/>
+                      <q-btn color="amber-13" flat icon="close" @click="removeGroup(group)"/>
                     </q-item-section>
                     <q-item-section>
                       <q-item-label>
-                        {{group}}
+                        {{ group }}
                       </q-item-label>
                     </q-item-section>
                   </q-item>
@@ -150,11 +152,11 @@
               <q-list class="q-mt-sm">
                 <q-item v-for="group in userData.groups" :key="group">
                   <q-item-section side>
-                    <q-btn icon="close" color="amber-13" flat @click="removeGroup(group)"/>
+                    <q-btn color="amber-13" flat icon="close" @click="removeGroup(group)"/>
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>
-                      {{group}}
+                      {{ group }}
                     </q-item-label>
                   </q-item-section>
                 </q-item>
@@ -203,7 +205,7 @@ export default defineComponent({
   },
   methods: {
     async addGroup() {
-      if(this.newGroup === "") {
+      if (this.newGroup === "") {
         this.showNotif("Groupe vide !", "negative")
         return
       }
@@ -267,7 +269,7 @@ export default defineComponent({
       this.userData = await this.getUserData();
     },
     checkEmptyGroups() {
-      if(this.userData && this.userData.groups.length <= 0)
+      if (this.userData && this.userData.groups.length <= 0)
         this.showNotif("Tu ne fais partie d'aucun groupe ! Rentre le(s) groupe(s) dont tu fais partie en cliquant sur ton profil !", "warning", 5000)
     }
   },
@@ -290,7 +292,7 @@ export default defineComponent({
     const $q = useQuasar();
     return {
       $q,
-      showNotif(message, type, timeout=2500) {
+      showNotif(message, type, timeout = 2500) {
         $q.notify({
           message: message,
           type: type,
