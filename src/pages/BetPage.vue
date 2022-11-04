@@ -515,7 +515,7 @@ export default {
         date: Timestamp.fromDate(new Date())
       });
 
-      userScore.forecasted = userScore.forecasted + 1
+      userScore.forecasted = finalBets.length
 
       basket.value = [];
       try {
