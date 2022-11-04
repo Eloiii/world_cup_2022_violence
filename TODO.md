@@ -17,4 +17,8 @@
 - [ ] Fix BetPage performance
 - [X] mettre bouton parier en loading pendant requete envoie (attente longue pour larges requetes)
 - [X] update "forecasted" field when bet and delete bet
-- [ ] Afficher seulement les personnes du meme groupe
+- [X] Afficher seulement les personnes du meme groupe
+- [ ] Fix registration done user info display in layout
+- [ ] Fix forecasted number increased only once (when clicking "bet")
+- [ ] Self group assignement ?
+- [ ] Fix Index page data not loading sometimes
