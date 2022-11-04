@@ -105,8 +105,8 @@ export default {
       try {
         const {user} = await createUserWithEmailAndPassword(auth, this.email, this.pass);
         await setDoc(doc(db, "users", user.uid), newUser);
-        self.showNotif("TOUT EST BON GO GO GO !", "positive");
-        self.$emit("goBack");
+        self.showNotif("Tout est bon !", "positive");
+        self.$router.push("/")
       } catch (error) {
         self.showNotif(error.code + "-" + error.message, "negative");
       }
