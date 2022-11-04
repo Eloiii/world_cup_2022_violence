@@ -20,6 +20,6 @@
 - [X] Afficher seulement les personnes du meme groupe
 - [X] Fix registration done user info display in layout
 - [X] Fix forecasted number increased only once (when clicking "bet")
-- [ ] Self group assignement ?
+- [X] Self group assignement ?
 - [ ] Fix Index page data not loading sometimes
 - [X] Change title depending on group

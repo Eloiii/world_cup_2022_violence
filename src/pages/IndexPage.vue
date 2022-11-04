@@ -139,9 +139,10 @@ import {defineComponent} from "vue";
 import MatchResult from "./MatchResult.vue";
 import MatchResultSkeleton from "./MatchResultSkeleton.vue";
 import {getSchedule} from "src/getOddsApiData";
-import {collection, doc, getDoc, getDocs} from "firebase/firestore";
+import {collection, doc, getDoc, getDocs, onSnapshot, query} from "firebase/firestore";
 import {auth, db} from "boot/firebaseConnection";
 import * as fr from "apexcharts/dist/locales/fr.json";
+import {onAuthStateChanged} from "firebase/auth";
 
 export default defineComponent({
   name: "IndexPage",
@@ -291,14 +292,10 @@ export default defineComponent({
     },
 
     userHasAvatar(userName) {
-      console.log(userName)
       const user = this.getUserDataByName(userName)
       return user.avatar !== ''
     },
 
-    // getShortenName(userName) {
-    // .name?.substring(0, 2)
-    // },
 
     getUserAvatar(userName) {
       const user = this.getUserDataByName(userName)
@@ -353,6 +350,13 @@ export default defineComponent({
       if (coinsAmount < 400 && coinsAmount >= 100)
         return "warning";
       return "negative";
+    },
+
+    async loadBackEndData() {
+      await this.getCurrentUserData();
+      await this.getUsersData();
+      await this.getLeaderboardData();
+      this.getChartData();
     }
   },
   async mounted() {
@@ -372,11 +376,16 @@ export default defineComponent({
     else
       this.lastResult = 'rien'
 
-    await this.getCurrentUserData();
-    await this.getUsersData();
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        await this.loadBackEndData()
+      }
+    });
+    const q = query(collection(db, "users"));
+    onSnapshot(q, async (querySnapshot) => {
+      await this.loadBackEndData()
+    });
 
-    await this.getLeaderboardData();
-    this.getChartData();
 
     this.$emitter.on("toggleDarkMode", (dark) => {
       this.options = {

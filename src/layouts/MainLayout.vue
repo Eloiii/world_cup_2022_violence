@@ -54,9 +54,33 @@
             </q-item-section>
           </q-item>
           <q-popup-proxy>
-            <q-btn color="red" flat @click="disconnectUser">
-              Deconnexion
-            </q-btn>
+            <q-card>
+              <q-card-section v-if="userData">
+                <span class="text-h6">
+                  Mes groupes
+                </span>
+                <q-list class="q-mt-sm">
+                  <q-item v-for="group in userData.groups" :key="group">
+                    <q-item-section side>
+                      <q-btn icon="close" color="amber-13" flat @click="removeGroup(group)"/>
+                    </q-item-section>
+                    <q-item-section>
+                      <q-item-label>
+                        {{group}}
+                      </q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+                <q-form @submit="addGroup">
+                  <q-input v-model="newGroup" label="Ajouter un groupe"/>
+                </q-form>
+              </q-card-section>
+              <q-card-actions>
+                <q-btn color="red" flat @click="disconnectUser">
+                  Deconnexion
+                </q-btn>
+              </q-card-actions>
+            </q-card>
           </q-popup-proxy>
         </q-card>
       </q-toolbar>
@@ -119,9 +143,31 @@
         </q-item>
         <q-popup-proxy>
           <q-card>
-            <q-btn color="red" @click="disconnectUser">
-              Deconnexion
-            </q-btn>
+            <q-card-section v-if="userData">
+                <span class="text-h6">
+                  Mes groupes
+                </span>
+              <q-list class="q-mt-sm">
+                <q-item v-for="group in userData.groups" :key="group">
+                  <q-item-section side>
+                    <q-btn icon="close" color="amber-13" flat @click="removeGroup(group)"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>
+                      {{group}}
+                    </q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+              <q-form @submit="addGroup">
+                <q-input v-model="newGroup" label="Ajouter un groupe"/>
+              </q-form>
+            </q-card-section>
+            <q-card-actions>
+              <q-btn color="red" flat @click="disconnectUser">
+                Deconnexion
+              </q-btn>
+            </q-card-actions>
           </q-card>
         </q-popup-proxy>
       </q-card>
@@ -139,7 +185,7 @@ import {defineComponent} from "vue";
 import {useQuasar} from "quasar";
 import {onAuthStateChanged, signOut} from "firebase/auth";
 import {auth, db} from "boot/firebaseConnection";
-import {collection, doc, getDoc, onSnapshot, query} from "firebase/firestore";
+import {collection, doc, getDoc, onSnapshot, query, updateDoc} from "firebase/firestore";
 import mitt from "mitt";
 
 const emitter = mitt();
@@ -151,10 +197,34 @@ export default defineComponent({
       drawer: false,
       darkMode: false,
       userData: null,
-      previousCoinsCount: 0
+      previousCoinsCount: 0,
+      newGroup: ""
     };
   },
   methods: {
+    async addGroup() {
+      if(this.newGroup === "") {
+        this.showNotif("Groupe vide !", "negative")
+        return
+      }
+
+      const userGroups = this.userData.groups
+      userGroups.push(this.newGroup)
+
+      const docRef = doc(db, "users", auth.currentUser.uid);
+      await updateDoc(docRef, {groups: userGroups});
+
+      this.newGroup = ""
+    },
+
+    async removeGroup(removedGroup) {
+      let userGroups = this.userData.groups
+      userGroups = userGroups.filter(group => group !== removedGroup)
+
+      const docRef = doc(db, "users", auth.currentUser.uid);
+      await updateDoc(docRef, {groups: userGroups});
+    },
+
     async getUserData(user = auth.currentUser) {
       const docRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(docRef);
@@ -195,6 +265,10 @@ export default defineComponent({
     async disconnectUser() {
       await signOut(auth);
       this.userData = await this.getUserData();
+    },
+    checkEmptyGroups() {
+      if(this.userData && this.userData.groups.length <= 0)
+        this.showNotif("Tu ne fais partie d'aucun groupe ! Rentre le(s) groupe(s) dont tu fais partie en cliquant sur ton profil !", "warning", 5000)
     }
   },
   computed: {
@@ -215,7 +289,15 @@ export default defineComponent({
   setup() {
     const $q = useQuasar();
     return {
-      $q
+      $q,
+      showNotif(message, type, timeout=2500) {
+        $q.notify({
+          message: message,
+          type: type,
+          multiLine: true,
+          timeout: timeout
+        });
+      }
     };
   },
   async mounted() {
@@ -226,6 +308,7 @@ export default defineComponent({
         onSnapshot(q, async (querySnapshot) => {
           this.userData = await this.getUserData(user);
         });
+        this.checkEmptyGroups()
       } else {
         this.userData = null;
       }
