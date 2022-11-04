@@ -27,7 +27,7 @@
       </div>
     </div>
     <div class="row justify-center">
-      <div class="col-md-8 col-sm-12">
+      <div class="col-md-8 col-12">
         <q-table
           v-if="rows"
           v-model:pagination="pagination"
@@ -361,6 +361,16 @@ export default defineComponent({
   },
   async mounted() {
 
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        await this.loadBackEndData()
+      }
+    });
+    const q = query(collection(db, "users"));
+    onSnapshot(q, async (querySnapshot) => {
+      await this.loadBackEndData()
+    });
+
     const oddsApiData = JSON.parse(sessionStorage.getItem("oddsApiData"));
     const schedule = getSchedule(oddsApiData.data);
     this.nextMatch = this.getNextMatch(schedule);
@@ -376,15 +386,6 @@ export default defineComponent({
     else
       this.lastResult = 'rien'
 
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        await this.loadBackEndData()
-      }
-    });
-    const q = query(collection(db, "users"));
-    onSnapshot(q, async (querySnapshot) => {
-      await this.loadBackEndData()
-    });
 
 
     this.$emitter.on("toggleDarkMode", (dark) => {
