@@ -259,8 +259,8 @@ export default defineComponent({
       });
       return res;
     },
-    async getCurrentUserData() {
-      const docRef = doc(db, "users", auth.currentUser.uid);
+    async getCurrentUserData(user) {
+      const docRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
@@ -269,8 +269,9 @@ export default defineComponent({
         this.currentUserData = null
       }
     },
-    async getUsersData() {
-      const querySnapshot = await getDocs(collection(db, "users"));
+    async getUsersData(querySnapshot = null) {
+      if (!querySnapshot)
+        querySnapshot = await getDocs(collection(db, "users"));
       const res = [];
       querySnapshot.forEach((doc) => {
         const rawData = doc.data();
@@ -292,8 +293,10 @@ export default defineComponent({
     },
 
     userHasAvatar(userName) {
-      const user = this.getUserDataByName(userName)
-      return user.avatar !== ''
+      if (userName) {
+        const user = this.getUserDataByName(userName)
+        return user.avatar !== ''
+      }
     },
 
 
@@ -352,40 +355,42 @@ export default defineComponent({
       return "negative";
     },
 
-    async loadBackEndData() {
-      await this.getCurrentUserData();
-      await this.getUsersData();
+    async loadBackEndData(user = auth.currentUser, querySnapshot = null) {
+      await this.getCurrentUserData(user);
+      await this.getUsersData(querySnapshot);
       await this.getLeaderboardData();
       this.getChartData();
+    },
+
+    async loadOddsApiData() {
+      let oddsApiData = JSON.parse(sessionStorage.getItem("oddsApiData"));
+      const schedule = getSchedule(oddsApiData.data);
+      this.nextMatch = this.getNextMatch(schedule);
+
+      const rawResults = await this.getResults();
+      const results = Object.entries(rawResults);
+      for (let result of results) {
+        result[1].date = new Date(result[1].date);
+      }
+      results.sort((a, b) => b[1].date.getTime() - a[1].date.getTime());
+      if (results.length > 0)
+        this.lastResult = results[0][1];
+      else
+        this.lastResult = 'rien'
     }
   },
   async mounted() {
-
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        await this.loadBackEndData()
+        await this.loadBackEndData(user)
       }
     });
     const q = query(collection(db, "users"));
     onSnapshot(q, async (querySnapshot) => {
-      await this.loadBackEndData()
+      await this.loadBackEndData(auth.currentUser, querySnapshot)
     });
 
-    const oddsApiData = JSON.parse(sessionStorage.getItem("oddsApiData"));
-    const schedule = getSchedule(oddsApiData.data);
-    this.nextMatch = this.getNextMatch(schedule);
-
-    const rawResults = await this.getResults();
-    const results = Object.entries(rawResults);
-    for (let result of results) {
-      result[1].date = new Date(result[1].date);
-    }
-    results.sort((a, b) => b[1].date.getTime() - a[1].date.getTime());
-    if (results.length > 0)
-      this.lastResult = results[0][1];
-    else
-      this.lastResult = 'rien'
-
+    setTimeout(async () => await this.loadOddsApiData(), 500)
 
     this.$emitter.on("toggleDarkMode", (dark) => {
       this.options = {
