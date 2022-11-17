@@ -1,5 +1,7 @@
 <template>
   <q-page padding>
+    <q-scroll-observer @scroll="onScroll" />
+    <!--    TODO recup coordonées et décaler le panier ?-->
     <div v-if="lastOddsUpdate" class="row q-col-gutter-xs-md q-mb-md">
       <div class="col-md-3">
         <q-badge class="q-pa-sm" color="red">
@@ -174,94 +176,97 @@
                   </span>
                 </q-item-section>
               </q-item>
-              <q-separator v-if="date.indexOf(match) !== date.length -1"/>
+              <q-separator v-if="date.indexOf(match) !== date.length -1" />
             </template>
           </q-list>
         </template>
       </div>
+
       <div class="col-md-4 mobile-hide">
-        <q-list v-if="basket.length > 0" bordered class="q-pb-none q-px-sm" padding>
-          <q-item v-for="bet of basket" :key="bet.match">
-            <q-item-section thumbnail>
-              <q-icon v-if="alreadyBetOnMatch(bet.match)" name="warning">
-                <q-tooltip class="bg-negative">
-                  Tu as déjà parié sur ce match !
-                </q-tooltip>
-              </q-icon>
-              <q-icon v-else name="sports_soccer"/>
-            </q-item-section>
-            <q-item-section>
-              <q-item-label class="text-caption">
-                {{ getMatchName(bet) }}
-              </q-item-label>
-              <q-item-label class="text-subtitle2">
-                Résultat du match : {{ getFrCountryName(bet.bet.name) }}
-              </q-item-label>
-            </q-item-section>
-            <q-item-section style="flex-shrink: 1;">
-              <q-input v-model="bet.bet.stake" :rules="stakeRules" label="Mise" max="5" min="" outlined
-                       type="numeric"/>
-            </q-item-section>
-            <q-item-section class="q-mr-md text-weight-bold" side>
-              <div>
-                Gain
-              </div>
-              <div>
-                {{ Math.round(bet.bet.stake * bet.bet.odds || 0) }}
-                <q-icon class="q-ml-xs" name="toll"/>
-              </div>
-            </q-item-section>
-            <q-item-section side>
-              <div class="text-caption">
-                Cote
-              </div>
-              <div>
-                {{ bet.bet.odds }}
-              </div>
-            </q-item-section>
-          </q-item>
-          <q-card class="q-my-sm">
-            <q-card-section class="flex column">
-              <div class="flex justify-between">
+        <q-fixed-position>
+          <q-list v-if="basket.length > 0" bordered class="q-pb-none q-px-sm" padding>
+            <q-item v-for="bet of basket" :key="bet.match">
+              <q-item-section thumbnail>
+                <q-icon v-if="alreadyBetOnMatch(bet.match)" name="warning">
+                  <q-tooltip class="bg-negative">
+                    Tu as déjà parié sur ce match !
+                  </q-tooltip>
+                </q-icon>
+                <q-icon v-else name="sports_soccer" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label class="text-caption">
+                  {{ getMatchName(bet) }}
+                </q-item-label>
+                <q-item-label class="text-subtitle2">
+                  Résultat du match : {{ getFrCountryName(bet.bet.name) }}
+                </q-item-label>
+              </q-item-section>
+              <q-item-section style="flex-shrink: 1;">
+                <q-input v-model="bet.bet.stake" :rules="stakeRules" label="Mise" max="5" min="" outlined
+                         type="numeric" />
+              </q-item-section>
+              <q-item-section class="q-mr-md text-weight-bold" side>
                 <div>
-                  Mise totale
+                  Gain
                 </div>
                 <div>
-                  {{ totalStake }}
-                  <q-icon class="q-ml-xs" name="toll"/>
+                  {{ Math.round(bet.bet.stake * bet.bet.odds || 0) }}
+                  <q-icon class="q-ml-xs" name="toll" />
                 </div>
-              </div>
-              <div class="flex justify-between q-mt-xs">
-                <div class="text-weight-bold">
-                  Total des gains
+              </q-item-section>
+              <q-item-section side>
+                <div class="text-caption">
+                  Cote
                 </div>
-                <div class="text-weight-bold">
-                  {{ totalProfit }}
-                  <q-icon class="q-ml-xs" name="toll" size="xs"/>
+                <div>
+                  {{ bet.bet.odds }}
                 </div>
-              </div>
+              </q-item-section>
+            </q-item>
+            <q-card class="q-my-sm">
+              <q-card-section class="flex column">
+                <div class="flex justify-between">
+                  <div>
+                    Mise totale
+                  </div>
+                  <div>
+                    {{ totalStake }}
+                    <q-icon class="q-ml-xs" name="toll" />
+                  </div>
+                </div>
+                <div class="flex justify-between q-mt-xs">
+                  <div class="text-weight-bold">
+                    Total des gains
+                  </div>
+                  <div class="text-weight-bold">
+                    {{ totalProfit }}
+                    <q-icon class="q-ml-xs" name="toll" size="xs" />
+                  </div>
+                </div>
+              </q-card-section>
+              <q-card-section class="flex justify-center q-mt-none">
+                <q-btn :disable="!allStakesFullfilled()" :loading="processingBet" class="full-width" color="amber-13"
+                       rounded
+                       size="lg"
+                       text-color="dark" unelevated @click="validateBet">
+                  Parier
+                </q-btn>
+              </q-card-section>
+            </q-card>
+          </q-list>
+          <q-card v-else bordered flat>
+            <q-card-section class="flex justify-center">
+              <img
+                alt="sadge"
+                src="https://lh3.googleusercontent.com/H2lTPeipM1RidN1PmxumJCra8-LF1gOngZXmDgkWOmDqSuxv0kpOpsgYAUXAxyuNwmW-z9KO53f4kn8JcafGrZhi-fEHHcSrXZA42q0=w600"
+                style="width: 30%" />
             </q-card-section>
-            <q-card-section class="flex justify-center q-mt-none">
-              <q-btn :disable="!allStakesFullfilled()" :loading="processingBet" class="full-width" color="amber-13"
-                     rounded
-                     size="lg"
-                     text-color="dark" unelevated @click="validateBet">
-                Parier
-              </q-btn>
+            <q-card-section class="text-center">
+              Commence par séléctionner un match !
             </q-card-section>
           </q-card>
-        </q-list>
-        <q-card v-else bordered flat>
-          <q-card-section class="flex justify-center">
-            <img
-              alt="sadge"
-              src="https://lh3.googleusercontent.com/H2lTPeipM1RidN1PmxumJCra8-LF1gOngZXmDgkWOmDqSuxv0kpOpsgYAUXAxyuNwmW-z9KO53f4kn8JcafGrZhi-fEHHcSrXZA42q0=w600"
-              style="width: 30%"/>
-          </q-card-section>
-          <q-card-section class="text-center">
-            Commence par séléctionner un match !
-          </q-card-section>
-        </q-card>
+        </q-fixed-position>
       </div>
       <div class="mobile-only">
         <q-page-sticky :offset="[18, 18]" position="bottom-right">
@@ -372,11 +377,11 @@
 </template>
 
 <script>
-import {computed, ref} from "vue";
-import {getFrCountryName, getSchedule} from "src/getOddsApiData";
-import {useQuasar} from "quasar";
-import {auth, db} from "boot/firebaseConnection";
-import {collection, doc, getDoc, onSnapshot, query, Timestamp, updateDoc} from "firebase/firestore";
+import { computed, ref } from "vue";
+import { getFrCountryName, getSchedule } from "src/getOddsApiData";
+import { useQuasar } from "quasar";
+import { auth, db } from "boot/firebaseConnection";
+import { collection, doc, getDoc, onSnapshot, query, Timestamp, updateDoc } from "firebase/firestore";
 
 
 export default {
@@ -392,6 +397,11 @@ export default {
     const userBets = ref([]);
     const mobileBasket = ref(false);
     let processingBet = ref(false);
+    const scrollInfo = ref({});
+
+    function onScroll(info) {
+      scrollInfo.value = info;
+    }
 
     function addItemToBasket(match, selected) {
       const matchAlreadyInBasket = basketContainsMatch(match);
