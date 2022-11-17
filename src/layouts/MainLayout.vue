@@ -89,27 +89,27 @@
     </q-header>
 
     <q-drawer v-model="drawer" bordered class="rounded-borders" overlay>
-      <q-scroll-area class="fit">
+      <q-scroll-area class="fit" style="margin-top: 65px">
         <q-list separator>
-          <q-item v-ripple clickable to="/">
+          <q-item v-ripple :to="{name: 'home'}" clickable>
             <q-item-section>
               Accueil
             </q-item-section>
           </q-item>
-          <q-item v-ripple clickable to="/bet">
+          <q-item v-ripple :to="{name: 'bet'}" clickable>
             <q-item-section>
               Parier
             </q-item-section>
           </q-item>
-          <q-item v-ripple clickable to="/betlist">
+          <q-item v-ripple :to="{name: 'betlist'}" clickable>
             <q-item-section>
               Voir les paris
             </q-item-section>
           </q-item>
         </q-list>
       </q-scroll-area>
-      <q-space/>
-      <q-card v-if="userData" bordered class="q-mt-xs mobile-only" flat>
+
+      <q-card v-if="userData" class="q-mt-xs mobile-only absolute-top" flat>
         <q-item>
           <q-item-section avatar>
             <q-avatar v-if="userData.avatar === ''" class="q-mr-sm" color="primary text-white">
@@ -183,11 +183,11 @@
   </q-layout>
 </template>
 <script>
-import {defineComponent} from "vue";
-import {useQuasar} from "quasar";
-import {onAuthStateChanged, signOut} from "firebase/auth";
-import {auth, db} from "boot/firebaseConnection";
-import {collection, doc, getDoc, onSnapshot, query, updateDoc} from "firebase/firestore";
+import { defineComponent } from "vue";
+import { useQuasar } from "quasar";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth, db } from "boot/firebaseConnection";
+import { collection, doc, getDoc, onSnapshot, query, updateDoc } from "firebase/firestore";
 import mitt from "mitt";
 
 const emitter = mitt();
@@ -255,6 +255,7 @@ export default defineComponent({
       this.previousCoinsCount = coinsTab[coinsTab.length - 2]
       return coinsTab[coinsTab.length - 1].amount;
     },
+
     badgeColor() {
       const coinsTab = this.userData.score.coins;
       const coinsAmount = coinsTab[coinsTab.length - 1].amount;
@@ -326,5 +327,12 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
+.q-router-link--active {
+  color: unset;
+}
+
+.q-router-link--exact-active {
+  color: var(--q-primary);
+}
 
 </style>
