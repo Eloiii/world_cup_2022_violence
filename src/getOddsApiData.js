@@ -93,7 +93,7 @@ function getFrCountryName(countryName) {
       return "Brésil";
     case "Serbia":
       return "Serbie";
-    case "Switzeland":
+    case "Switzerland":
       return "Suisse";
     case "Cameroon":
       return "Cameroun";
