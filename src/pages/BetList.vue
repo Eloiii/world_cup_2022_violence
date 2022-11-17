@@ -1,5 +1,4 @@
 <template>
-  <!--  TODO demander confirmation avant de suppr-->
   <q-page v-if="usersData" padding>
     <div class="row justify-center">
       <div class="col-md-8 col-12">
@@ -32,15 +31,16 @@
 <script>
 import BetRecap from "./BetRecap.vue";
 import MatchResultSkeleton from "./MatchResultSkeleton.vue";
-import {collection, doc, getDoc, getDocs, onSnapshot, query, Timestamp, updateDoc} from "firebase/firestore";
-import {auth, db} from "boot/firebaseConnection";
-import {getFrCountryName} from "src/getOddsApiData";
-import {ref} from "vue";
-import {onAuthStateChanged} from "firebase/auth";
+import { collection, doc, getDoc, getDocs, onSnapshot, query, Timestamp, updateDoc } from "firebase/firestore";
+import { auth, db } from "boot/firebaseConnection";
+import { getFrCountryName } from "src/getOddsApiData";
+import { ref } from "vue";
+import { onAuthStateChanged } from "firebase/auth";
+
 
 export default {
   name: "BetList",
-  components: {BetRecap, MatchResultSkeleton},
+  components: { BetRecap, MatchResultSkeleton },
   setup() {
     const userData = ref({});
     const usersData = ref({});
@@ -76,14 +76,31 @@ export default {
       if (docSnap.exists()) {
         return docSnap.data();
       } else {
-        return null
+        return null;
       }
     }
 
+    function formatDate(userData) {
+      return userData.bets.map(function(bet) {
+        bet.match.date = bet.match.date.toDate();
+        return bet;
+      });
+    }
 
     async function loadUsersData() {
-      const currentUserData = await getCurrentUserData()
+      const currentUserData = await getCurrentUserData();
       let usersData = {};
+      if (currentUserData.groups.length === 0) {
+        if (currentUserData.bets && currentUserData.bets.length > 0) {
+          currentUserData.bets = formatDate(currentUserData);
+          usersData[auth.currentUser.uid] = currentUserData;
+          if (!this.tab)
+            this.tab = currentUserData.name;
+        }
+        this.usersData = usersData;
+        return;
+      }
+
       const querySnapshot = await getDocs(collection(db, "users"));
       querySnapshot.forEach((doc) => {
         const data = doc.data();
@@ -92,16 +109,14 @@ export default {
         });
         if (contains) {
           if (data.bets && data.bets.length > 0) {
-            data.bets = data.bets.map(function (bet) {
-              bet.match.date = bet.match.date.toDate();
-              return bet;
-            });
+            data.bets = formatDate(data);
             usersData[doc.id] = data;
             if (!this.tab)
               this.tab = data.name;
           }
         }
       });
+      console.log(this.usersData);
       this.usersData = usersData;
     }
 
