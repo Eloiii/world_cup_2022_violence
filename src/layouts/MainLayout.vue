@@ -89,7 +89,7 @@
     </q-header>
 
     <q-drawer v-model="drawer" bordered class="rounded-borders" overlay>
-      <q-scroll-area class="fit" style="margin-top: 65px">
+      <q-scroll-area :style="$q.screen.lt.md ? 'margin-top: 65px' : ''" class="fit">
         <q-list separator>
           <q-item v-ripple :to="{name: 'home'}" clickable>
             <q-item-section>
