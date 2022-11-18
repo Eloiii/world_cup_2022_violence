@@ -140,6 +140,8 @@ export default {
     }
 
     function updateMatch(matches, result) {
+      if(matches.length === 0)
+        return
       const match = getMatchFromBets(result.country1.name, result.country2.name, matches)
       match.match.country1.score = result.country1.score
       match.match.country2.score = result.country2.score
@@ -151,6 +153,8 @@ export default {
 
     function updateCoins(userData, result) {
       const match = getMatchFromBets(result.country1.name, result.country2.name, userData.bets)
+      if(!match)
+        return
       const userScore = userData.score;
       if (match.bet.name === result.winner) {
         userScore.coins.push({
