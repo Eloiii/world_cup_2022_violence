@@ -29,18 +29,15 @@
                 {{ userData.name }}
               </q-item-label>
               <q-item-label caption>
-                <span class="text-positive">
-                  + {{ userData.score.correct }}
+                  <span :class="getLastCoinChange() < 0 ? 'text-negative' : 'text-positive'">
+                    <q-tooltip>
+                      Dernière transaction
+                    </q-tooltip>
+                 {{ getLastCoinChange() }}
                 </span>
-                /
-                <span class="text-red">
-                   {{ userData.score.wrong }} -
-                </span>
-
               </q-item-label>
             </q-item-section>
             <q-item-section side>
-
               <q-badge :color="badgeColor()" class="text-dark" rounded>
                 <span class="text-subtitle2">
                   <number
@@ -124,14 +121,12 @@
               {{ userData.name }}
             </q-item-label>
             <q-item-label caption>
-                <span class="text-positive">
-                  + {{ userData.score.correct }}
-                </span>
-              /
-              <span class="text-negative">
-                   {{ userData.score.wrong }} -
-                </span>
-
+              <span :class="getLastCoinChange() < 0 ? 'text-negative' : 'text-positive'">
+                <q-tooltip>
+                  Dernière transaction
+                </q-tooltip>
+                {{ getLastCoinChange() }}
+              </span>
             </q-item-label>
           </q-item-section>
           <q-item-section side>
@@ -183,11 +178,11 @@
   </q-layout>
 </template>
 <script>
-import { defineComponent } from "vue";
-import { useQuasar } from "quasar";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth, db } from "boot/firebaseConnection";
-import { collection, doc, getDoc, onSnapshot, query, updateDoc } from "firebase/firestore";
+import {defineComponent} from "vue";
+import {useQuasar} from "quasar";
+import {onAuthStateChanged, signOut} from "firebase/auth";
+import {auth, db} from "boot/firebaseConnection";
+import {collection, doc, getDoc, onSnapshot, query, updateDoc} from "firebase/firestore";
 import mitt from "mitt";
 
 const emitter = mitt();
@@ -273,6 +268,13 @@ export default defineComponent({
     checkEmptyGroups() {
       if (this.userData && this.userData.groups.length <= 0)
         this.showNotif("Tu ne fais partie d'aucun groupe ! Rentre le(s) groupe(s) dont tu fais partie en cliquant sur ton profil !", "warning", 5000)
+    },
+    getLastCoinChange() {
+      if (!this.userData)
+        return "?"
+      const coinsTab = this.userData.score.coins;
+      const diff = coinsTab[coinsTab.length - 1].amount - this.previousCoinsCount.amount
+      return diff < 0 ? diff : "+" + diff
     }
   },
   computed: {
