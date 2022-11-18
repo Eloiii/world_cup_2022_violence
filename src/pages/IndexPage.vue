@@ -127,7 +127,7 @@
         </q-markup-table>
       </div>
     </div>
-    <div class="row justify-center">
+    <div v-show="!loading" class="row justify-center">
       <div class="col-md-8">
         <apexchart :options="options" :series="series" height="300" type="line" width="100%"></apexchart>
       </div>
@@ -154,6 +154,7 @@ export default defineComponent({
       lastResult: null,
       nextMatch: null,
       rows: null,
+      loading: true,
       tableGridView: false,
       series: [],
       columns: [
@@ -362,6 +363,7 @@ export default defineComponent({
       await this.getUsersData(querySnapshot);
       await this.getLeaderboardData();
       this.getChartData();
+      this.loading = false;
     },
 
     async loadOddsApiData() {
@@ -395,35 +397,38 @@ export default defineComponent({
     setTimeout(async () => await this.loadOddsApiData(), 500)
 
     this.$emitter.on("toggleDarkMode", (dark) => {
-      this.options = {
-        title: {
-          text: "Évolutions de l'argent",
-          offsetY: 10,
-          style: {
-            fontSize: "1rem",
-            fontWeight: "400",
-            lineHeight: "1.75rem",
-            letterSpacing: "0.00937em",
-            fontFamily: "Inter"
+      setTimeout(() =>
+        this.options = {
+          title: {
+            text: "Évolutions de l'argent",
+            offsetY: 10,
+            style: {
+              fontSize: "1rem",
+              fontWeight: "400",
+              lineHeight: "1.75rem",
+              letterSpacing: "0.00937em",
+              fontFamily: "Inter"
+            }
+          },
+          theme: {
+            mode: dark.dark ? "dark" : "light"
+          },
+          chart: {
+            locales: [fr],
+            defaultLocale: "fr"
+          },
+          stroke: {
+            curve: "straight"
+          },
+          xaxis: {
+            type: "datetime"
+          },
+          markers: {
+            size: 5
           }
-        },
-        theme: {
-          mode: dark.dark ? "dark" : ""
-        },
-        chart: {
-          locales: [fr],
-          defaultLocale: "fr"
-        },
-        stroke: {
-          curve: "straight"
-        },
-        xaxis: {
-          type: "datetime"
-        },
-        markers: {
-          size: 5
-        }
-      };
+        }, 50);
+
+
     });
   }
 });

@@ -245,6 +245,7 @@ export default defineComponent({
           dark: true
         });
       } else {
+        localStorage.setItem("darkmode", "false");
         this.$emitter.emit("toggleDarkMode", {
           dark: false
         });
