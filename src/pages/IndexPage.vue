@@ -135,18 +135,18 @@
   </q-page>
 </template>
 <script>
-import {defineComponent} from "vue";
+import { defineComponent } from "vue";
 import MatchResult from "./MatchResult.vue";
 import MatchResultSkeleton from "./MatchResultSkeleton.vue";
-import {getSchedule} from "src/getOddsApiData";
-import {collection, doc, getDoc, getDocs, onSnapshot, query} from "firebase/firestore";
-import {auth, db} from "boot/firebaseConnection";
+import { getSchedule } from "src/getOddsApiData";
+import { collection, doc, getDoc, getDocs, onSnapshot, query } from "firebase/firestore";
+import { auth, db } from "boot/firebaseConnection";
 import * as fr from "apexcharts/dist/locales/fr.json";
-import {onAuthStateChanged} from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default defineComponent({
   name: "IndexPage",
-  components: {MatchResult, MatchResultSkeleton},
+  components: { MatchResult, MatchResultSkeleton },
   data: () => {
     return {
       currentUserData: null,
@@ -324,19 +324,21 @@ export default defineComponent({
       const res = [];
       for (const userData of this.usersData) {
         let data = [];
-        for (const record of userData.score.coins) {
-          const offset = Math.abs(record.date.toDate().getTimezoneOffset() / 60);
-          const dateWithOffset = new Date(record.date.toDate().setHours(record.date.toDate().getHours() + offset))
+        const groupBy = (x, f) => x.reduce((a, b, i) => ((a[f(b, i, x)] ||= []).push(b), a), {}); //thanks stackoverflow
+        const offset = Math.abs(userData.score.coins[0].date.toDate().getTimezoneOffset() / 60);
+        const filteredByDateData = groupBy(userData.score.coins, v => v.date.toDate().setHours(offset, 0, 0, 0));
+        for (const date in filteredByDateData) {
+          const sortedRecords = filteredByDateData[date].sort((a, b) => b.date.toDate().getTime() - a.date.toDate().getTime());
+
           data.push({
-            x: dateWithOffset.getTime(),
-            y: record.amount
+            x: new Date(Number(date)).getTime(),
+            y: sortedRecords[0].amount
           });
         }
-        let userSeries = {
+        res.push({
           name: userData.name,
           data: data
-        };
-        res.push(userSeries);
+        });
       }
       this.series = res;
     },
