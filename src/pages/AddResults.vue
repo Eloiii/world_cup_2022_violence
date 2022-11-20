@@ -25,10 +25,9 @@
 </template>
 
 <script>
-import {ref} from "vue";
-import {getSchedule} from "src/getOddsApiData";
-import {addDoc, collection, doc, getDocs, Timestamp, updateDoc} from "firebase/firestore";
-import {db} from "boot/firebaseConnection";
+import { ref } from "vue";
+import { addDoc, collection, doc, getDocs, Timestamp, updateDoc } from "firebase/firestore";
+import { db } from "boot/firebaseConnection";
 
 export default {
   name: "AddResults",
@@ -51,28 +50,23 @@ export default {
     function getMatchFromBets(country1Name, country2Name, data) {
       for (const match of data) {
         if (match.match.country1.name === country1Name && match.match.country2.name === country2Name)
-          return match
+          return match;
       }
-      return null
+      return null;
     }
 
 
-    function validate() {
-      let rawMatchesData;
-      try {
-        rawMatchesData = JSON.parse(sessionStorage.getItem("oddsApiData"));
-      } catch (e) {
-        rawMatchesData = [];
+    async function validate() {
+      const usersData = await loadUsersData();
+
+      const schedule = usersData[Object.keys(usersData)[0]].bets;
+
+      const match = getMatchFromBets(country1Name.value, country2Name.value, schedule);
+
+      if (!match) {
+        console.log("match not found");
+        return;
       }
-      if (!rawMatchesData)
-        return;
-
-      const schedule = getSchedule(rawMatchesData.data)
-
-      const match = getMatch(country1Name.value, country2Name.value, schedule)
-
-      if (!match)
-        return;
 
       let res = {
         country1: {
@@ -83,16 +77,17 @@ export default {
           name: country2Name.value,
           score: country2Score.value
         },
-        date: Timestamp.fromDate(match.date),
+        date: Timestamp.fromDate(new Date(2022, 10, 20, 17)),
         winner: winnerName.value
-      }
+      };
+      console.log(res);
 
-      processResult(res).then((status) => {
+      processResult(res, usersData).then((status) => {
         if (status)
-          console.log('oui')
+          console.log("oui");
         else
-          console.log('non')
-      })
+          console.log("non");
+      });
     }
 
     async function loadUsersData() {
@@ -109,17 +104,16 @@ export default {
       return usersData
     }
 
-    async function processResult(result) {
-      const usersData = await loadUsersData()
+    async function processResult(result, usersData) {
       for (const userID in usersData) {
-        const userData = usersData[userID]
-        const userBets = userData.bets
-        updateMatch(userBets, result)
-        updateCoins(userData, result)
+        const userData = usersData[userID];
+        const userBets = userData.bets;
+        updateMatch(userBets, result);
+        updateCoins(userData, result);
         try {
-          await updateUser(userID, userData)
+          await updateUser(userID, userData);
         } catch (e) {
-          return false
+          return false;
         }
       }
       await updateResultDatabase(result)
