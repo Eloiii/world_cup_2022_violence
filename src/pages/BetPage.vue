@@ -59,7 +59,8 @@
                     <q-btn :color="buttonColor(match, match.country1.name)"
                            :text-color="buttonTextColor(match, match.country1.name)"
                            class="buttonOdds"
-                           @click="addItemToBasket(match, match.country1)">
+                           @click="addItemToBasket(match, match.country1)"
+                           :disable="hasMatchStarted(match)">
                       <div class="flex column no-wrap ellipsis">
                         <div class="text-caption ellipsis">
                           {{ getFrCountryName(match.country1.name) }}
@@ -72,7 +73,8 @@
                     <q-btn :color="buttonColor(match, match.draw.name)"
                            :text-color="buttonTextColor(match, match.draw.name)"
                            class="buttonOdds"
-                           @click="addItemToBasket(match, match.draw)">
+                           @click="addItemToBasket(match, match.draw)"
+                           :disable="hasMatchStarted(match)">
                       <div class="flex column">
                         <div class="text-caption">
                           {{ getFrCountryName(match.draw.name) }}
@@ -85,7 +87,8 @@
                     <q-btn :color="buttonColor(match, match.country2.name)"
                            :text-color="buttonTextColor(match, match.country2.name)"
                            class="buttonOdds"
-                           @click="addItemToBasket(match, match.country2)">
+                           @click="addItemToBasket(match, match.country2)"
+                           :disable="hasMatchStarted(match)">
                       <div class="flex column no-wrap ellipsis">
                         <div class="text-caption ellipsis">
                           {{ getFrCountryName(match.country2.name) }}
@@ -442,6 +445,9 @@ export default {
       return false;
     }
 
+    function hasMatchStarted(match) {
+      return match.date < new Date();
+    }
 
     function buttonColor(match, countryName) {
       if (basketContainsBet(match, countryName))
@@ -611,6 +617,7 @@ export default {
       processingBet,
       addItemToBasket,
       showNotif,
+      hasMatchStarted,
       onScroll,
       getScrollTranslation,
       getMatchName,
