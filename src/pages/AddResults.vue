@@ -77,10 +77,9 @@ export default {
           name: country2Name.value,
           score: country2Score.value
         },
-        date: match.date,
+        date: match.match.date,
         winner: winnerName.value
       };
-      console.log(res);
 
       processResult(res, usersData).then((status) => {
         if (status)
