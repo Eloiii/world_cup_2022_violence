@@ -77,7 +77,7 @@ export default {
           name: country2Name.value,
           score: country2Score.value
         },
-        date: Timestamp.fromDate(new Date(2022, 10, 20, 17)),
+        date: match.date,
         winner: winnerName.value
       };
       console.log(res);
