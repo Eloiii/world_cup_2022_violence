@@ -38,6 +38,7 @@
           hide-bottom
           row-key="name"
           title="Leaderboard"
+          :rows-per-page-options="[0]"
         >
           <template v-slot:top-right>
             <q-toggle v-model="tableGridView" color="amber-13" label="Grille"/>
