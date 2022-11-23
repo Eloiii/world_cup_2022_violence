@@ -1,8 +1,9 @@
 <template>
   <div class="flex justify-center ">
 
-    <q-card v-if="userID === connectedUserID && !hasMatchStarted()" class="bg-red-5 q-mb-lg shadow-2 deleteForecast" square
-            style="max-width: 65px">
+    <q-card v-if="userID === connectedUserID && !hasMatchStarted()" class="bg-red-5 q-mb-lg shadow-2 deleteForecast"
+            square
+            style="max-width: 50px">
       <q-card-section class="full-height flex justify-center items-center" horizontal>
         <q-btn class="q-pa-none full-height full-width" flat
                icon="close" @click="$emit('removeBet', {bet: bet, userID: userID})">
@@ -10,10 +11,7 @@
         </q-btn>
       </q-card-section>
     </q-card>
-    <q-card v-else class="deleteForecast shadow-0" style="max-width: 65px">
-
-    </q-card>
-    <q-card class="card q-mb-lg contentCard">
+    <q-card :class="hasMatchStarted() ? 'q-ml-xl' : ''" class="card q-mb-lg contentCard">
       <q-card-section>
         <q-list>
           <q-item-label class="q-pt-none q-pl-none flex justify-between" header>
@@ -151,9 +149,9 @@
   </div>
 </template>
 <script>
-import {getFrCountryName} from "src/getOddsApiData";
-import {auth} from "boot/firebaseConnection";
-import {computed} from "vue";
+import { getFrCountryName } from "src/getOddsApiData";
+import { auth } from "boot/firebaseConnection";
+import { computed } from "vue";
 
 export default {
   name: "MatchResult",
