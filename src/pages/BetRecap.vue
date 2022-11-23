@@ -1,19 +1,17 @@
 <template>
   <div class="flex justify-center ">
 
-    <q-card v-if="userID === connectedUserID" class="bg-red-5 q-mb-lg shadow-2 deleteForecast" square
+    <q-card v-if="userID === connectedUserID && !hasMatchStarted()" class="bg-red-5 q-mb-lg shadow-2 deleteForecast" square
             style="max-width: 65px">
-      <q-tooltip>
-        {{
-          hasMatchStarted() ? "Le match est en cours ou terminé" : "Annuler mon pari"
-        }}
-      </q-tooltip>
       <q-card-section class="full-height flex justify-center items-center" horizontal>
-        <q-btn :disabled="hasMatchStarted()" class="q-pa-none full-height full-width" flat
+        <q-btn class="q-pa-none full-height full-width" flat
                icon="close" @click="$emit('removeBet', {bet: bet, userID: userID})">
 
         </q-btn>
       </q-card-section>
+    </q-card>
+    <q-card v-else class="deleteForecast shadow-0" style="max-width: 65px">
+
     </q-card>
     <q-card class="card q-mb-lg contentCard">
       <q-card-section>

@@ -110,6 +110,7 @@ export default {
         if (contains) {
           if (data.bets && data.bets.length > 0) {
             data.bets = formatDate(data);
+            data.bets = data.bets.sort((a,b) => b.match.date.getTime() - a.match.date.getTime())
             usersData[doc.id] = data;
             if (!this.tab)
               this.tab = data.name;
