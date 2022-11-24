@@ -103,6 +103,11 @@
               Voir les paris
             </q-item-section>
           </q-item>
+          <q-item v-ripple :to="{name: 'statspage'}" clickable>
+            <q-item-section>
+              Statistiques
+            </q-item-section>
+          </q-item>
         </q-list>
       </q-scroll-area>
 
@@ -178,11 +183,11 @@
   </q-layout>
 </template>
 <script>
-import {defineComponent} from "vue";
-import {useQuasar} from "quasar";
-import {onAuthStateChanged, signOut} from "firebase/auth";
-import {auth, db} from "boot/firebaseConnection";
-import {collection, doc, getDoc, onSnapshot, query, updateDoc} from "firebase/firestore";
+import { defineComponent } from "vue";
+import { useQuasar } from "quasar";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth, db } from "boot/firebaseConnection";
+import { collection, doc, getDoc, onSnapshot, query, updateDoc } from "firebase/firestore";
 import mitt from "mitt";
 
 const emitter = mitt();

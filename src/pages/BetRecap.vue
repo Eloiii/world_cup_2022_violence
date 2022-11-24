@@ -11,7 +11,8 @@
         </q-btn>
       </q-card-section>
     </q-card>
-    <q-card :class="hasMatchStarted() || userID !== connectedUserID? 'q-ml-xl' : ''" class="card q-mb-lg contentCard">
+    <q-card :class="(hasMatchStarted() || userID !== connectedUserID) && !removeMargin ? 'q-ml-xl' : ''"
+            class="q-mb-lg contentCard">
       <q-card-section>
         <q-list>
           <q-item-label class="q-pt-none q-pl-none flex justify-between" header>
@@ -28,7 +29,7 @@
               }}
             </div>
             <div>
-              gain potentiel {{ Math.round(bet.bet.odds * bet.bet.stake) }}
+              gain {{ !hasMatchStarted() ? "potentiel" : "" }} {{ Math.round(bet.bet.odds * bet.bet.stake) }}
               <q-icon name="toll"/>
             </div>
           </q-item-label>
@@ -159,7 +160,8 @@ export default {
     userData: Object,
     date: Date,
     bet: Object,
-    userID: Object
+    userID: Object,
+    removeMargin: Boolean
   },
   setup(props) {
     const connectedUserID = computed(() => {

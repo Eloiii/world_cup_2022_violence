@@ -177,7 +177,7 @@ export default defineComponent({
         },
         {
           name: "correct",
-          label: "Corrects",
+          label: "Nb. Corrects",
           align: "center",
           sortable: true,
           field: "correct",
@@ -185,7 +185,7 @@ export default defineComponent({
         },
         {
           name: "wrong",
-          label: "Ratés",
+          label: "Nb. Manqués",
           align: "center",
           sortable: true,
           field: "wrong",
