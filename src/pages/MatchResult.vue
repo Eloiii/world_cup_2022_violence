@@ -20,7 +20,7 @@
         <q-item>
           <q-item-section side>
             <div class="flex justify-center column items-center">
-              <img :src="'https://countryflagsapi.com/svg/'+match.country1.name" alt="drapeau"
+              <img :src="getCountryFlag(match.country1.name)" alt="drapeau"
                    height="32" width="32">
               <div class="text-caption q-mt-xs">{{ getFrCountryName(match.country1.name) }}</div>
             </div>
@@ -49,7 +49,7 @@
 
           <q-item-section side>
             <div class="flex justify-center column items-center">
-              <img :src="'https://countryflagsapi.com/svg/'+match.country2.name" alt="drapeau"
+              <img :src="getCountryFlag(match.country2.name)" alt="drapeau"
                    height="32" width="32">
               <div class="text-caption q-mt-xs">{{ getFrCountryName(match.country2.name) }}</div>
             </div>
@@ -60,7 +60,7 @@
   </q-card>
 </template>
 <script>
-import {getFrCountryName} from "src/getOddsApiData";
+import { getFrCountryName } from "src/getOddsApiData";
 
 export default {
   name: "MatchResult",
@@ -70,7 +70,14 @@ export default {
     match: Object
   },
   methods: {
-    getFrCountryName
+    getFrCountryName,
+
+    getCountryFlag(countryName) {
+      if (countryName !== "South Korea")
+        return "https://countryflagsapi.com/svg/" + countryName;
+      else
+        return "https://countryflagsapi.com/svg/Southe Korea";
+    }
   }
 };
 </script>

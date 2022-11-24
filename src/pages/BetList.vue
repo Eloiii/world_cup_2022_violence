@@ -117,7 +117,6 @@ export default {
           }
         }
       });
-      console.log(this.usersData);
       this.usersData = usersData;
     }
 

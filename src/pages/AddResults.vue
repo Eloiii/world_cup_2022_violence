@@ -133,15 +133,19 @@ export default {
     }
 
     function updateMatch(matches, result) {
-      if(matches.length === 0)
-        return
-      const match = getMatchFromBets(result.country1.name, result.country2.name, matches)
-      match.match.country1.score = result.country1.score
-      match.match.country2.score = result.country2.score
+      if (matches.length === 0)
+        return;
+      const match = getMatchFromBets(result.country1.name, result.country2.name, matches);
+      if (!match) {
+        console.log("pas parié");
+        return;
+      }
+      match.match.country1.score = result.country1.score;
+      match.match.country2.score = result.country2.score;
       if (match.bet.name === result.country1.name)
-        match.bet.score = result.country1.score
+        match.bet.score = result.country1.score;
       if (match.bet.name === result.country2.name)
-        match.bet.score = result.country2.score
+        match.bet.score = result.country2.score;
     }
 
     function updateCoins(userData, result) {
