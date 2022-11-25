@@ -297,7 +297,7 @@ export default {
     }
 
     function biggestLoss(user) {
-      const betsLoss = getBetsWon(user);
+      const betsLoss = getBetsLost(user);
       betsLoss.sort((a, b) => b.bet.stake - a.bet.stake);
       return betsLoss[0];
     }
