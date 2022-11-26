@@ -70,7 +70,8 @@
                         </div>
                       </div>
                     </q-btn>
-                    <q-btn :color="buttonColor(match, match.draw.name)"
+                    <q-btn v-if="match.draw.odds !== null"
+                           :color="buttonColor(match, match.draw.name)"
                            :text-color="buttonTextColor(match, match.draw.name)"
                            class="buttonOdds"
                            @click="addItemToBasket(match, match.draw)"
@@ -144,7 +145,8 @@
                         </div>
                       </div>
                     </q-btn>
-                    <q-btn :color="buttonColor(match, match.draw.name)"
+                    <q-btn v-if="match.draw.odds !== null"
+                           :color="buttonColor(match, match.draw.name)"
                            :text-color="buttonTextColor(match, match.draw.name)"
                            class="buttonOdds"
                            @click="addItemToBasket(match, match.draw)">

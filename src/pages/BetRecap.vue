@@ -110,7 +110,7 @@
                 <div>
                   contre
                 </div>
-                <div class="text-caption">
+                <div v-if="bet.match.draw.odds !== null" class="text-caption">
                   ({{ bet.match.draw.odds }})
                 </div>
               </q-item-label>

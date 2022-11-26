@@ -32,8 +32,11 @@ function getSchedule(data) {
 }
 
 function retrievePrice(odds, teamName) {
-  if (odds.markets)
-    return odds.markets.filter(market => market.key === "h2h")[0].outcomes.filter(team => team.name === teamName)[0].price;
+  if (odds.markets) {
+    const h2h = odds.markets.filter(market => market.key === "h2h")[0].outcomes.filter(team => team.name === teamName)[0];
+    if (h2h)
+      return h2h.price;
+  }
   return null;
 }
 
