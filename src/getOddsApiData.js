@@ -115,4 +115,18 @@ function getFrCountryName(countryName) {
   }
 }
 
-export {getSchedule, getFrCountryName};
+async function getCountryCodes() {
+  const req = await fetch("https://flagcdn.com/en/codes.json")
+  const response = await req.json()
+  return response
+}
+
+function getFlagLinkForCountryName(countryName) {
+  if(countryName === "USA")
+    countryName = "United States"
+  let countryCodes = JSON.parse(sessionStorage.getItem("countryCodes"))
+  const key = Object.keys(countryCodes).find(k=>countryCodes[k]===countryName);
+  return "https://flagcdn.com/" + key + ".svg"
+}
+
+export {getSchedule, getFrCountryName, getFlagLinkForCountryName, getCountryCodes};

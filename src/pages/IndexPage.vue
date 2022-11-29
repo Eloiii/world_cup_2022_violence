@@ -395,7 +395,12 @@ export default defineComponent({
       await this.loadBackEndData(auth.currentUser, querySnapshot)
     });
 
-    setTimeout(async () => await this.loadOddsApiData(), 1000)
+
+    const timerOddsApi = setInterval(async () => {
+      if(this.nextMatch !== null)
+        clearInterval(timerOddsApi)
+      await this.loadOddsApiData()
+    }, 500)
 
     this.$emitter.on("toggleDarkMode", (dark) => {
       setTimeout(() =>

@@ -36,7 +36,7 @@
                 <q-item-section side>
                   <div class="flex">
                     <div class="flex justify-center column items-center country">
-                      <img :src="getCountryFlag(match.country1.name)" alt="drapeau"
+                      <img :src="getFlagLinkForCountryName(match.country1.name)" alt="drapeau"
                            height="32" width="32">
                       <div class="text-body2 q-mt-xs text-weight-bold">{{
                           getFrCountryName(match.country1.name)
@@ -45,7 +45,7 @@
                     </div>
                     &ndash;
                     <div class="flex justify-center column items-center country">
-                      <img :src="getCountryFlag(match.country2.name)" alt="drapeau"
+                      <img :src="getFlagLinkForCountryName(match.country2.name)" alt="drapeau"
                            height="32" width="32">
                       <div class="text-body2 q-mt-xs text-weight-bold">{{
                           getFrCountryName(match.country2.name)
@@ -119,13 +119,13 @@
               <q-item class="mobile-only block">
                 <q-item-section class="flex" style="flex-direction:row;">
                   <div class="flex justify-center column items-center country">
-                    <img :src="getCountryFlag(match.country1.name)" alt="drapeau"
+                    <img :src="getFlagLinkForCountryName(match.country1.name)" alt="drapeau"
                          height="32" width="32">
                     <div class="text-body2 q-mt-xs text-weight-bold">{{ getFrCountryName(match.country1.name) }}</div>
                   </div>
                   &ndash;
                   <div class="flex justify-center column items-center country">
-                    <img :src="getCountryFlag(match.country2.name)" alt="drapeau"
+                    <img :src="getFlagLinkForCountryName(match.country2.name)" alt="drapeau"
                          height="32" width="32">
                     <div class="text-body2 q-mt-xs text-weight-bold">{{ getFrCountryName(match.country2.name) }}</div>
                   </div>
@@ -380,7 +380,7 @@
 
 <script>
 import { computed, ref } from "vue";
-import { getFrCountryName, getSchedule } from "src/getOddsApiData";
+import { getFlagLinkForCountryName, getFrCountryName, getSchedule } from "src/getOddsApiData";
 import { useQuasar } from "quasar";
 import { auth, db } from "boot/firebaseConnection";
 import { collection, doc, getDoc, onSnapshot, query, Timestamp, updateDoc } from "firebase/firestore";
@@ -587,14 +587,6 @@ export default {
       this.userBets = this.userData.bets;
     }
 
-    function getCountryFlag(countryName) {
-      if (countryName !== "South Korea")
-        return "https://countryflagsapi.com/svg/" + countryName;
-      else
-        return "https://countryflagsapi.com/svg/Southe Korea";
-    }
-
-
     const totalStake = computed(() => {
       let total = 0;
       for (let stake of basket.value) {
@@ -639,7 +631,7 @@ export default {
       alreadyBetOnMatch,
       validateBet,
       loadUserData,
-      getCountryFlag,
+      getFlagLinkForCountryName,
       totalStake,
       totalProfit
     };
@@ -653,7 +645,6 @@ export default {
     }
     if (!rawMatchesData)
       return;
-
 
     const schedule = getSchedule(rawMatchesData.data).sort((a, b) => a.date.getTime() - b.date.getTime());
 

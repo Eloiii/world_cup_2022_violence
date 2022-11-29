@@ -36,7 +36,7 @@
           <q-item>
             <q-item-section style="width: 25%">
               <div class="flex justify-center column items-center">
-                <img :src="getCountryFlag(bet.match.country1.name)" alt="drapeau"
+                <img :src="getFlagLinkForCountryName(bet.match.country1.name)" alt="drapeau"
                      height="32" width="32">
                 <div class="text-caption q-mt-xs text-weight-bold">{{ getFrCountryName(bet.match.country1.name) }}</div>
                 <div>({{ bet.match.country1.odds }})</div>
@@ -137,7 +137,7 @@
 
             <q-item-section style="width: 25%">
               <div class="flex justify-center column items-center">
-                <img :src="getCountryFlag(bet.match.country2.name)" alt="drapeau"
+                <img :src="getFlagLinkForCountryName(bet.match.country2.name)" alt="drapeau"
                      height="32" width="32">
                 <div class="text-caption q-mt-xs text-weight-bold">{{ getFrCountryName(bet.match.country2.name) }}</div>
                 <div>({{ bet.match.country2.odds }})</div>
@@ -150,7 +150,7 @@
   </div>
 </template>
 <script>
-import { getFrCountryName } from "src/getOddsApiData";
+import { getFrCountryName, getFlagLinkForCountryName } from "src/getOddsApiData";
 import { auth } from "boot/firebaseConnection";
 import { computed } from "vue";
 
@@ -172,17 +172,11 @@ export default {
       return props.bet.match.date < new Date();
     }
 
-    function getCountryFlag(countryName) {
-      if (countryName !== "South Korea")
-        return "https://countryflagsapi.com/svg/" + countryName;
-      else
-        return "https://countryflagsapi.com/svg/Southe Korea";
-    }
 
     return {
       connectedUserID,
       hasMatchStarted,
-      getCountryFlag
+      getFlagLinkForCountryName
     };
   },
   methods: {

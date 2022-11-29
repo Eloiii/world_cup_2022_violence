@@ -11,6 +11,7 @@ import {auth} from "boot/firebaseConnection";
 import {defineComponent} from "vue";
 import {onAuthStateChanged} from "firebase/auth";
 import axios from "axios";
+import { getCountryCodes } from "src/getOddsApiData";
 
 export default defineComponent({
   name: "App",
@@ -27,6 +28,10 @@ export default defineComponent({
         data: getOddsApiData.data,
         date: new Date()
       }));
+    }
+    if(sessionStorage.getItem("countryCodes") === null) {
+      const countryCodes = await getCountryCodes()
+      sessionStorage.setItem("countryCodes", JSON.stringify(countryCodes))
     }
   }
 });
