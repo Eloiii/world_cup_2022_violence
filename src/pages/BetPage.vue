@@ -70,21 +70,21 @@
                         </div>
                       </div>
                     </q-btn>
-                    <q-btn v-if="match.draw.odds !== null"
-                           :color="buttonColor(match, match.draw.name)"
-                           :text-color="buttonTextColor(match, match.draw.name)"
-                           class="buttonOdds"
-                           @click="addItemToBasket(match, match.draw)"
-                           :disable="hasMatchStarted(match)">
-                      <div class="flex column">
-                        <div class="text-caption">
-                          {{ getFrCountryName(match.draw.name) }}
-                        </div>
-                        <div>
-                          {{ match.draw.odds }}
-                        </div>
-                      </div>
-                    </q-btn>
+                    <!--                    <q-btn v-if="match.draw.odds !== null"-->
+                    <!--                           :color="buttonColor(match, match.draw.name)"-->
+                    <!--                           :text-color="buttonTextColor(match, match.draw.name)"-->
+                    <!--                           class="buttonOdds"-->
+                    <!--                           @click="addItemToBasket(match, match.draw)"-->
+                    <!--                           :disable="hasMatchStarted(match)">-->
+                    <!--                      <div class="flex column">-->
+                    <!--                        <div class="text-caption">-->
+                    <!--                          {{ getFrCountryName(match.draw.name) }}-->
+                    <!--                        </div>-->
+                    <!--                        <div>-->
+                    <!--                          {{ match.draw.odds }}-->
+                    <!--                        </div>-->
+                    <!--                      </div>-->
+                    <!--                    </q-btn>-->
                     <q-btn :color="buttonColor(match, match.country2.name)"
                            :text-color="buttonTextColor(match, match.country2.name)"
                            class="buttonOdds"
@@ -145,20 +145,20 @@
                         </div>
                       </div>
                     </q-btn>
-                    <q-btn v-if="match.draw.odds !== null"
-                           :color="buttonColor(match, match.draw.name)"
-                           :text-color="buttonTextColor(match, match.draw.name)"
-                           class="buttonOdds"
-                           @click="addItemToBasket(match, match.draw)">
-                      <div class="flex column">
-                        <div class="text-caption">
-                          {{ getFrCountryName(match.draw.name) }}
-                        </div>
-                        <div>
-                          {{ match.draw.odds }}
-                        </div>
-                      </div>
-                    </q-btn>
+                    <!--                    <q-btn v-if="match.draw.odds !== null"-->
+                    <!--                           :color="buttonColor(match, match.draw.name)"-->
+                    <!--                           :text-color="buttonTextColor(match, match.draw.name)"-->
+                    <!--                           class="buttonOdds"-->
+                    <!--                           @click="addItemToBasket(match, match.draw)">-->
+                    <!--                      <div class="flex column">-->
+                    <!--                        <div class="text-caption">-->
+                    <!--                          {{ getFrCountryName(match.draw.name) }}-->
+                    <!--                        </div>-->
+                    <!--                        <div>-->
+                    <!--                          {{ match.draw.odds }}-->
+                    <!--                        </div>-->
+                    <!--                      </div>-->
+                    <!--                    </q-btn>-->
                     <q-btn :color="buttonColor(match, match.country2.name)"
                            :text-color="buttonTextColor(match, match.country2.name)"
                            class="buttonOdds"
