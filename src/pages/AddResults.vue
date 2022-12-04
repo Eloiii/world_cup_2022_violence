@@ -48,6 +48,7 @@ export default {
     }
 
     function getMatchFromBets(country1Name, country2Name, data) {
+      console.log(data);
       for (const match of data) {
         if (match.match.country1.name === country1Name && match.match.country2.name === country2Name)
           return match;
@@ -59,7 +60,7 @@ export default {
     async function validate() {
       const usersData = await loadUsersData();
 
-      const schedule = usersData[Object.keys(usersData)[0]].bets;
+      const schedule = usersData["70jtchTx1ISxHIOdtldRBHf9md62"].bets;
 
       const match = getMatchFromBets(country1Name.value, country2Name.value, schedule);
 
