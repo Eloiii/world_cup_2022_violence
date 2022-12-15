@@ -22,8 +22,23 @@
         <MatchResultSkeleton v-else/>
       </div>
       <div class="col-md-3 col-12">
-        <MatchResult v-if="nextMatch" :match="nextMatch" :title="'Prochain Match'"/>
-        <MatchResultSkeleton v-else/>
+        <MatchResult v-if="nextMatch" :match="nextMatch" :title="'Prochain Match'" />
+        <q-card v-else flat>
+          <q-card-section>
+            <div class="text-subtitle1">
+              Prochain match
+            </div>
+          </q-card-section>
+          <q-card-section class="flex justify-center q-pa-none">
+            <img
+              alt="sadge"
+              src="https://lh3.googleusercontent.com/H2lTPeipM1RidN1PmxumJCra8-LF1gOngZXmDgkWOmDqSuxv0kpOpsgYAUXAxyuNwmW-z9KO53f4kn8JcafGrZhi-fEHHcSrXZA42q0=w600"
+              style="width: 15%" />
+          </q-card-section>
+          <q-card-section class="text-center">
+            C'est fini
+          </q-card-section>
+        </q-card>
       </div>
     </div>
     <div class="row justify-center">
